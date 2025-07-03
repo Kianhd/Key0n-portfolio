@@ -1,0 +1,9 @@
+/* Subway Berlin OT Font */
+@font-face {
+  font-family: 'Subway Berlin OT';
+  src: local('Subway Berlin OT'),
+       url('/fonts/Subway Berlin OT Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

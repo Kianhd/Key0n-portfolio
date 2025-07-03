@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Cloudinary Connection</title>
+</head>
+<body>
+    <h1>Test Your Cloudinary Videos</h1>
+    <p>Replace YOUR_CLOUD_NAME and YOUR_VIDEO_ID below, then open this file in a browser:</p>
+    
+    <h2>Test Video URL:</h2>
+    <code id="url">https://res.cloudinary.com/YOUR_CLOUD_NAME/video/upload/f_auto,q_auto/YOUR_VIDEO_ID</code>
+    
+    <h2>Test Video:</h2>
+    <video width="400" controls>
+        <source src="https://res.cloudinary.com/YOUR_CLOUD_NAME/video/upload/f_auto,q_auto/YOUR_VIDEO_ID.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    
+    <script>
+        // Update these values
+        const CLOUD_NAME = 'YOUR_CLOUD_NAME';
+        const VIDEO_ID = 'nike-summer'; // or any of your video IDs
+        
+        // Update the displayed URL and video source
+        document.getElementById('url').textContent = `https://res.cloudinary.com/${CLOUD_NAME}/video/upload/f_auto,q_auto/${VIDEO_ID}`;
+        document.querySelector('video source').src = `https://res.cloudinary.com/${CLOUD_NAME}/video/upload/f_auto,q_auto/${VIDEO_ID}.mp4`;
+        document.querySelector('video').load();
+    </script>
+</body>
+</html>
