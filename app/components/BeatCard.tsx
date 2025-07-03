@@ -246,7 +246,7 @@ export default function BeatCard({ beat, onCustomize }: BeatCardProps) {
               {beat.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-2 py-1 text-xs bg-[#FFC60B]/10 text-[#FFC60B] rounded-full border border-[#FFC60B]/20"
+                  className="px-2 py-1 text-xs bg-zinc-800/50 text-muted rounded-full border border-zinc-700"
                 >
                   {tag}
                 </span>
@@ -282,21 +282,14 @@ export default function BeatCard({ beat, onCustomize }: BeatCardProps) {
                   </div>
                 </motion.div>
 
-                <div className="relative">
-                  <motion.button
-                    onClick={onCustomize}
-                    className="px-4 py-2 border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background text-xs font-semibold uppercase rounded-sm transition-all duration-300 relative z-10 group"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    REQUEST CUSTOM
-                    <div className="absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="absolute inset-0 border-2 border-foreground rounded-sm" />
-                      <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-sm" />
-                      <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-md opacity-50" />
-                    </div>
-                  </motion.button>
-                </div>
+                <motion.button
+                  onClick={onCustomize}
+                  className="px-4 py-2 border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background text-xs font-semibold uppercase rounded-sm transition-all duration-300 relative z-10"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  REQUEST CUSTOM
+                </motion.button>
               </div>
             </div>
           </div>
