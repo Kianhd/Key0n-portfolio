@@ -158,8 +158,9 @@ export default function BeatsPage() {
               BEATS
               <div className="absolute inset-0 animate-pulse" style={{ animationDuration: '3s' }}>
                 <span className="absolute inset-0 text-[#FFC60B]" style={{ fontFamily: 'Subway Berlin OT, sans-serif', fontWeight: '400' }}>BEATS</span>
-                <span className="absolute inset-0 text-[#FFC60B] blur-[2px] opacity-90" style={{ fontFamily: 'Subway Berlin OT, sans-serif', fontWeight: '400' }}>BEATS</span>
-                <span className="absolute inset-0 text-[#FFC60B] blur-[4px] opacity-60" style={{ fontFamily: 'Subway Berlin OT, sans-serif', fontWeight: '400' }}>BEATS</span>
+                <span className="absolute inset-0 text-[#FFC60B] blur-[4px] opacity-90" style={{ fontFamily: 'Subway Berlin OT, sans-serif', fontWeight: '400' }}>BEATS</span>
+                <span className="absolute inset-0 text-[#FFC60B] blur-[8px] opacity-70" style={{ fontFamily: 'Subway Berlin OT, sans-serif', fontWeight: '400' }}>BEATS</span>
+                <span className="absolute inset-0 text-[#FFC60B] blur-[16px] opacity-50" style={{ fontFamily: 'Subway Berlin OT, sans-serif', fontWeight: '400' }}>BEATS</span>
               </div>
             </span>
             <br />
