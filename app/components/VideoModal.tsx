@@ -163,6 +163,12 @@ export default function VideoModal({ project, initialVideoIndex = 0, onClose }: 
                       controls
                       autoPlay
                       playsInline
+                      controlsList="nodownload"
+                      onLoadedMetadata={(e) => {
+                        // Set initial volume to 70%
+                        const video = e.target as HTMLVideoElement;
+                        video.volume = 0.7;
+                      }}
                     />
                   ) : (
                     <iframe

@@ -1,11 +1,9 @@
 "use client";
 
 import Navigation from "./components/Navigation";
-import VideoModal from "./components/VideoModal";
 import VideoCarousel from "./components/VideoCarousel";
 import Waves from "./components/Waves";
 import SchemaMarkup from "./components/SchemaMarkup";
-import { useState } from "react";
 import { motion } from "motion/react";
 import { useScrollAnimation } from "./hooks/useScrollAnimation";
 import { generateProjectVideos, projectFolders, brandDescriptions, getCloudinaryUrl } from "../lib/cloudinary";
@@ -28,11 +26,7 @@ interface Project {
 }
 
 export default function Home() {
-  const [expandedVideo, setExpandedVideo] = useState<Project | null>(null);
-  const [selectedVideoIndex, setSelectedVideoIndex] = useState<number>(0);
-
   useScrollAnimation();
-
 
   const projects: Project[] = [
     {
@@ -257,13 +251,6 @@ export default function Home() {
                 <div className="w-full lg:w-3/5 max-w-full">
                   <VideoCarousel
                     videos={project.videos}
-                    onVideoClick={(video) => {
-                      const videoIndex = project.videos.findIndex(
-                        (v) => v.id === video.id
-                      );
-                      setSelectedVideoIndex(videoIndex);
-                      setExpandedVideo(project);
-                    }}
                     autoSlide={true}
                   />
                 </div>
@@ -477,11 +464,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-      <VideoModal
-        project={expandedVideo}
-        initialVideoIndex={selectedVideoIndex}
-        onClose={() => setExpandedVideo(null)}
-      />
     </div>
   );
 }

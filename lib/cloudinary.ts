@@ -11,10 +11,12 @@ export const getCloudinaryUrl = (
   const resourceType = options.type === "video" ? "video" : "image";
   const transform = options.transformations || "f_auto,q_auto";
   
-  // Properly encode the publicId to handle special characters and spaces
-  const encodedPublicId = encodeURIComponent(publicId).replace(/%2F/g, '/');
+  // Don't encode the publicId - Cloudinary expects it as-is
+  // Just use the publicId directly
+  const url = `${baseUrl}/${resourceType}/upload/${transform}/${publicId}`;
   
-  return `${baseUrl}/${resourceType}/upload/${transform}/${encodedPublicId}`;
+  console.log('Generated Cloudinary URL:', url);
+  return url;
 };
 
 // Real Cloudinary folder mapping with video files
@@ -114,10 +116,13 @@ export const generateProjectVideos = (folderKey: string): Video[] => {
     const fullVideoPath = `${folderKey}/${videoFileName}`;
     const justVideoId = videoFileName;
     
+    // Add .mp4 extension for video files
+    const videoWithExtension = `${justVideoId}.mp4`;
+    
     // Try just the video ID first (more common in Cloudinary)
     const videoUrl = getCloudinaryUrl(justVideoId, {
       type: "video",
-      transformations: "f_auto,q_auto,vc_auto",
+      transformations: "f_mp4,vc_auto,q_auto",
     });
     
     const thumbnailUrl = getCloudinaryUrl(justVideoId, {

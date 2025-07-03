@@ -328,6 +328,59 @@ body > * {
   outline-offset: 2px;
 }
 
+/* Custom video player range inputs */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-track {
+  background: transparent;
+  height: 100%;
+  border-radius: 3px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--color-foreground);
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--color-background);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+input[type="range"]:hover::-webkit-slider-thumb {
+  opacity: 1;
+}
+
+input[type="range"]::-moz-range-track {
+  background: transparent;
+  height: 100%;
+  border-radius: 3px;
+  border: none;
+}
+
+input[type="range"]::-moz-range-thumb {
+  background: var(--color-foreground);
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--color-background);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+input[type="range"]:hover::-moz-range-thumb {
+  opacity: 1;
+}
+
 /* Better mobile video container */
 @media (max-width: 768px) {
   .aspect-video {

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'motion/react';
+import VideoPlayer from './VideoPlayer';
 
 interface Video {
   id: string;
@@ -12,7 +13,7 @@ interface Video {
 
 interface VideoCarouselProps {
   videos: Video[];
-  onVideoClick: (video: Video) => void;
+  onVideoClick?: (video: Video) => void;
   autoSlide?: boolean;
   className?: string;
 }
@@ -74,31 +75,9 @@ export default function VideoCarousel({
         event.preventDefault();
         handleNext();
         break;
-      case ' ':
-      case 'Enter':
-        event.preventDefault();
-        handlePlayPause();
-        break;
-      case 'Escape':
-        event.preventDefault();
-        if (isPlaying) {
-          handlePlayPause();
-        }
-        break;
     }
   };
 
-  const handlePlayPause = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-        setIsPlaying(false);
-      } else {
-        videoRef.current.play();
-        setIsPlaying(true);
-      }
-    }
-  };
 
   // Swipe handling with better mobile sensitivity
   const handleDragEnd = (event: any, info: PanInfo) => {
@@ -158,21 +137,23 @@ export default function VideoCarousel({
             dragElastic={0.1}
             onDragEnd={handleDragEnd}
             className="absolute inset-0"
-            onClick={() => onVideoClick(currentVideo)}
           >
             {currentVideo.videoFile && (
-              <video
-                ref={videoRef}
+              <VideoPlayer
                 src={currentVideo.videoFile}
                 poster={currentVideo.thumbnail}
-                className="w-full h-full object-cover"
-                loop
-                muted
-                playsInline
-                preload="metadata"
+                className="w-full h-full"
+                showControls={true}
+                autoPlay={false}
                 onPlay={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}
-                onEnded={() => setIsPlaying(false)}
+                onEnded={() => {
+                  setIsPlaying(false);
+                  // Auto-advance to next video if available
+                  if (videos.length > 1) {
+                    setTimeout(() => handleNext(), 1000);
+                  }
+                }}
                 onError={(e) => {
                   console.error('Video load error:', e);
                   console.error('Video URL:', currentVideo.videoFile);
@@ -234,59 +215,6 @@ export default function VideoCarousel({
           </>
         )}
 
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        
-        {/* Centered Play/Pause Button */}
-        <motion.div
-          className="absolute inset-0 flex items-center justify-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <motion.button
-            className="w-16 h-16 md:w-20 md:h-20 bg-black/60 backdrop-blur-sm rounded-full flex items-center justify-center text-foreground cursor-pointer border border-foreground/20"
-            onClick={(e) => {
-              e.stopPropagation();
-              handlePlayPause();
-            }}
-            whileHover={{ scale: 1.1, backgroundColor: "rgba(0,0,0,0.8)" }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-          >
-            {/* Animated Icon */}
-            <AnimatePresence mode="wait">
-              {!isPlaying ? (
-                <motion.svg
-                  key="play"
-                  className="w-8 h-8 ml-1"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  initial={{ scale: 0, rotate: -90 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  exit={{ scale: 0, rotate: 90 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                >
-                  <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                </motion.svg>
-              ) : (
-                <motion.svg
-                  key="pause"
-                  className="w-7 h-7"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  initial={{ scale: 0, rotate: -90 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  exit={{ scale: 0, rotate: 90 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                >
-                  <path d="M5.5 3.5A1.5 1.5 0 017 2h.5a1.5 1.5 0 011.5 1.5v13A1.5 1.5 0 017.5 18H7a1.5 1.5 0 01-1.5-1.5v-13zM11.5 3.5A1.5 1.5 0 0113 2h.5a1.5 1.5 0 011.5 1.5v13a1.5 1.5 0 01-1.5 1.5H13a1.5 1.5 0 01-1.5-1.5v-13z" />
-                </motion.svg>
-              )}
-            </AnimatePresence>
-            
-          </motion.button>
-        </motion.div>
       </div>
 
       {/* Dot Navigation */}
