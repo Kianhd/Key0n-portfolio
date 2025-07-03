@@ -173,6 +173,11 @@ export default function VideoCarousel({
                 onPlay={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}
                 onEnded={() => setIsPlaying(false)}
+                onError={(e) => {
+                  console.error('Video load error:', e);
+                  console.error('Video URL:', currentVideo.videoFile);
+                  console.error('Thumbnail URL:', currentVideo.thumbnail);
+                }}
               />
             )}
             {!currentVideo.videoFile && currentVideo.thumbnail && (

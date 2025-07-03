@@ -10,7 +10,11 @@ export const getCloudinaryUrl = (
   const baseUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}`;
   const resourceType = options.type === "video" ? "video" : "image";
   const transform = options.transformations || "f_auto,q_auto";
-  return `${baseUrl}/${resourceType}/upload/${transform}/${publicId}`;
+  
+  // Properly encode the publicId to handle special characters and spaces
+  const encodedPublicId = encodeURIComponent(publicId).replace(/%2F/g, '/');
+  
+  return `${baseUrl}/${resourceType}/upload/${transform}/${encodedPublicId}`;
 };
 
 // Real Cloudinary folder mapping with video files
@@ -105,20 +109,33 @@ export const generateProjectVideos = (folderKey: string): Video[] => {
   return project.videoFiles.map((videoFileName, index) => {
     const videoId = `${folderKey.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-')}-${index}`;
     
-    // Construct the full path: folder/filename
+    // Try both with folder path and without (just the video ID)
+    // Cloudinary might store videos with just their public ID
     const fullVideoPath = `${folderKey}/${videoFileName}`;
+    const justVideoId = videoFileName;
+    
+    // Try just the video ID first (more common in Cloudinary)
+    const videoUrl = getCloudinaryUrl(justVideoId, {
+      type: "video",
+      transformations: "f_auto,q_auto,vc_auto",
+    });
+    
+    const thumbnailUrl = getCloudinaryUrl(justVideoId, {
+      type: "video",
+      transformations: "f_auto,q_auto,so_0,w_800,c_fill",
+    });
+    
+    // Debug log to help troubleshoot
+    if (typeof window !== 'undefined') {
+      console.log('Trying video ID:', justVideoId);
+      console.log('Video URL:', videoUrl);
+    }
     
     return {
       id: videoId,
-      videoFile: getCloudinaryUrl(fullVideoPath, {
-        type: "video",
-        transformations: "f_auto,q_auto,vc_auto",
-      }),
+      videoFile: videoUrl,
       videoUrl: `https://www.youtube.com/embed/dQw4w9WgXcQ`, // Fallback
-      thumbnail: getCloudinaryUrl(fullVideoPath, {
-        type: "video",
-        transformations: "f_auto,q_auto,so_0,w_800,c_fill",
-      }),
+      thumbnail: thumbnailUrl,
     };
   });
 };
