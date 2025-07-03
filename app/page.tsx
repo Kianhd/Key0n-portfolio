@@ -8,6 +8,7 @@ import SchemaMarkup from "./components/SchemaMarkup";
 import { useState } from "react";
 import { motion } from "motion/react";
 import { useScrollAnimation } from "./hooks/useScrollAnimation";
+import { generateProjectVideos, projectFolders, brandDescriptions, getCloudinaryUrl } from "../lib/cloudinary";
 
 interface Video {
   id: string;
@@ -21,6 +22,7 @@ interface Project {
   title: string;
   client: string;
   type: string;
+  category: string;
   videos: Video[];
   description: string;
 }
@@ -31,227 +33,77 @@ export default function Home() {
 
   useScrollAnimation();
 
-  // Replace with your actual Cloudinary cloud name from your dashboard
-  const CLOUDINARY_CLOUD_NAME = "dwzp6d4lb"; // e.g., "dxxxxxxxxx" or "mycompany"
-
-  // Helper function to generate Cloudinary URLs with transformations
-  const getCloudinaryUrl = (
-    publicId: string,
-    options: {
-      type: "video" | "image";
-      transformations?: string;
-    }
-  ) => {
-    const baseUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}`;
-    const resourceType = options.type === "video" ? "video" : "image";
-    const transform = options.transformations || "f_auto,q_auto";
-    return `${baseUrl}/${resourceType}/upload/${transform}/${publicId}`;
-  };
 
   const projects: Project[] = [
     {
       id: 1,
-      title: "Summer Campaign Soundtrack",
-      client: "Nike",
-      type: "commercial",
-      videos: [
-        {
-          id: "nike-summer-1",
-          videoFile: getCloudinaryUrl("nike-summer", {
-            type: "video",
-            transformations: "f_auto,q_auto,vc_auto",
-          }),
-          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-          thumbnail: getCloudinaryUrl("nike-summer", {
-            type: "video",
-            transformations: "f_auto,q_auto,so_0,w_800,c_fill",
-          }),
-        },
-        {
-          id: "nike-summer-2",
-          videoFile: getCloudinaryUrl("nike-summer-alt", {
-            type: "video",
-            transformations: "f_auto,q_auto,vc_auto",
-          }),
-          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-          thumbnail: getCloudinaryUrl("nike-summer-alt", {
-            type: "video",
-            transformations: "f_auto,q_auto,so_0,w_800,c_fill",
-          }),
-        },
-        {
-          id: "nike-summer-3",
-          videoFile: getCloudinaryUrl("nike-summer-extended", {
-            type: "video",
-            transformations: "f_auto,q_auto,vc_auto",
-          }),
-          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-          thumbnail: getCloudinaryUrl("nike-summer-extended", {
-            type: "video",
-            transformations: "f_auto,q_auto,so_0,w_800,c_fill",
-          }),
-        },
-      ],
+      title: "Always Generic Pack",
+      client: "Independent Artist",
+      type: "hiphop",
+      category: "music composition",
+      videos: generateProjectVideos('Always Generic pack - music composition - hiphop'),
       description:
-        "Created an energetic, motivational soundtrack for Nike's summer campaign. Blending electronic elements with orchestral arrangements to capture the spirit of athletic excellence.",
+        "Hard-hitting hip-hop beats with soulful samples and modern trap influences. A versatile collection of production-ready tracks designed for emerging artists and creative collaborations.",
     },
     {
       id: 2,
-      title: "Electric Dreams",
-      client: "Artist Collaboration",
-      type: "edm",
-      videos: [
-        {
-          id: "electric-dreams-1",
-          videoFile: getCloudinaryUrl("electric-dreams", {
-            type: "video",
-            transformations: "f_auto,q_auto,vc_auto",
-          }),
-          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-          thumbnail: getCloudinaryUrl("electric-dreams", {
-            type: "video",
-            transformations: "f_auto,q_auto,so_0,w_800,c_fill",
-          }),
-        },
-        {
-          id: "electric-dreams-2",
-          videoFile: getCloudinaryUrl("electric-dreams-remix", {
-            type: "video",
-            transformations: "f_auto,q_auto,vc_auto",
-          }),
-          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-          thumbnail: getCloudinaryUrl("electric-dreams-remix", {
-            type: "video",
-            transformations: "f_auto,q_auto,so_0,w_800,c_fill",
-          }),
-        },
-      ],
+      title: "Clorox Platinum Campaign",
+      client: "Clorox",
+      type: "commercial",
+      category: "music composition",
+      videos: generateProjectVideos('Clorox - platinum campaign - "mhhmm..." - music composition - commercial'),
       description:
-        "Atmospheric EDM production featuring synthesized textures and driving basslines. Collaborated with emerging artists to create a sonic journey through digital landscapes.",
+        "Premium commercial soundtrack for Clorox's Platinum campaign. Leading global manufacturer of cleaning products, this composition captures the brand's commitment to health, wellness, and superior cleaning power with an uplifting, fresh sonic identity.",
     },
     {
       id: 3,
-      title: "Urban Nights",
-      client: "Independent Artist",
-      type: "hiphop",
-      videos: [
-        {
-          id: "urban-nights-1",
-          videoFile: getCloudinaryUrl("urban-nights", {
-            type: "video",
-            transformations: "f_auto,q_auto,vc_auto",
-          }),
-          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-          thumbnail: getCloudinaryUrl("urban-nights", {
-            type: "video",
-            transformations: "f_auto,q_auto,so_0,w_800,c_fill",
-          }),
-        },
-      ],
+      title: "Evvoli Sound Design",
+      client: "Evvoli",
+      type: "commercial",
+      category: "sound design",
+      videos: generateProjectVideos('Evvoli - sound design'),
       description:
-        "Hard-hitting hip-hop beats with soulful samples and modern trap influences. Crafted to capture the raw energy and authenticity of street culture.",
+        "Sophisticated sound design for Evvoli's premium home appliances. This Italian luxury brand blends human-centric technology with neo-modern designs, requiring audio that embodies innovation, elegance, and cutting-edge functionality.",
     },
     {
       id: 4,
-      title: "Pop Anthem",
-      client: "Sony Music",
-      type: "pop",
-      videos: [
-        {
-          id: "pop-anthem-1",
-          videoFile: getCloudinaryUrl("pop-anthem", {
-            type: "video",
-            transformations: "f_auto,q_auto,vc_auto",
-          }),
-          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-          thumbnail: getCloudinaryUrl("pop-anthem", {
-            type: "video",
-            transformations: "f_auto,q_auto,so_0,w_800,c_fill",
-          }),
-        },
-        {
-          id: "pop-anthem-2",
-          videoFile: getCloudinaryUrl("pop-anthem-acoustic", {
-            type: "video",
-            transformations: "f_auto,q_auto,vc_auto",
-          }),
-          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-          thumbnail: getCloudinaryUrl("pop-anthem-acoustic", {
-            type: "video",
-            transformations: "f_auto,q_auto,so_0,w_800,c_fill",
-          }),
-        },
-      ],
+      title: "KEY0N Resume Music Video",
+      client: "KEY0N",
+      type: "hiphop",
+      category: "music composition",
+      videos: generateProjectVideos('Key0n Resume - Music Video - music composition - hiphop trap'),
       description:
-        "Catchy pop production with infectious hooks and radio-ready polish. Combined modern production techniques with timeless songwriting principles.",
+        "Personal music video showcase featuring trap-influenced hip-hop production. A dynamic representation of KEY0N's versatility as a producer, combining modern trap elements with classic hip-hop foundations.",
     },
     {
       id: 5,
-      title: "Tech Product Launch",
-      client: "Apple",
+      title: "LG Dual Sense",
+      client: "LG",
       type: "commercial",
-      videos: [
-        {
-          id: "apple-launch-1",
-          videoFile: getCloudinaryUrl("apple-launch", {
-            type: "video",
-            transformations: "f_auto,q_auto,vc_auto",
-          }),
-          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-          thumbnail: getCloudinaryUrl("apple-launch", {
-            type: "video",
-            transformations: "f_auto,q_auto,so_0,w_800,c_fill",
-          }),
-        },
-      ],
+      category: "sound design",
+      videos: generateProjectVideos('LG Dual Sense - Sound Design'),
       description:
-        "Minimalist electronic score emphasizing innovation and elegance. Created a sonic identity that mirrors the product's cutting-edge design philosophy.",
+        "Innovative sound design for LG's advanced home appliance technology. Global technology leader LG required audio that represents their dual inverter innovations, smart AI features, and energy-efficient solutions.",
     },
     {
       id: 6,
-      title: "Festival Banger",
-      client: "Ultra Music",
-      type: "edm",
-      videos: [
-        {
-          id: "festival-banger-1",
-          videoFile: getCloudinaryUrl("festival-banger", {
-            type: "video",
-            transformations: "f_auto,q_auto,vc_auto",
-          }),
-          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-          thumbnail: getCloudinaryUrl("festival-banger", {
-            type: "video",
-            transformations: "f_auto,q_auto,so_0,w_800,c_fill",
-          }),
-        },
-        {
-          id: "festival-banger-2",
-          videoFile: getCloudinaryUrl("festival-banger-vip", {
-            type: "video",
-            transformations: "f_auto,q_auto,vc_auto",
-          }),
-          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-          thumbnail: getCloudinaryUrl("festival-banger-vip", {
-            type: "video",
-            transformations: "f_auto,q_auto,so_0,w_800,c_fill",
-          }),
-        },
-        {
-          id: "festival-banger-3",
-          videoFile: getCloudinaryUrl("festival-banger-extended", {
-            type: "video",
-            transformations: "f_auto,q_auto,vc_auto",
-          }),
-          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-          thumbnail: getCloudinaryUrl("festival-banger-extended", {
-            type: "video",
-            transformations: "f_auto,q_auto,so_0,w_800,c_fill",
-          }),
-        },
-      ],
+      title: "Nolte Küchen Campaign",
+      client: "Nolte Küchen",
+      type: "commercial",
+      category: "music composition + sound design",
+      videos: generateProjectVideos('Nolte Kuchen - Music composition + Sound design - commercial'),
       description:
-        "High-energy festival anthem designed for massive crowds. Features explosive drops, euphoric builds, and memorable vocal chops that ignite dance floors.",
+        "Premium audio branding for Germany's favorite kitchen manufacturer. Nolte Küchen's 65+ years of German precision and luxury design required sophisticated music composition and sound design that reflects their award-winning quality and craftsmanship.",
+    },
+    {
+      id: 7,
+      title: "Oral-B Overnight Toothpaste",
+      client: "Oral-B",
+      type: "commercial",
+      category: "music composition",
+      videos: generateProjectVideos('Oral B - overnight toothpaste - music composition'),
+      description:
+        "Gentle, reassuring musical composition for Oral-B's overnight toothpaste campaign. The world's leading oral care brand trusted by dentists worldwide, featuring soothing melodies that convey nighttime care and morning freshness.",
     },
   ];
 
@@ -300,7 +152,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
             >
-              BEYOND
+              MUSIC THAT
             </motion.span>
             <br />
             <motion.span 
@@ -309,7 +161,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
             >
-              THE
+              TELLS
             </motion.span>
             <br />
             <motion.span 
@@ -318,7 +170,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
             >
-              BEAT
+              YOUR STORY
             </motion.span>
           </motion.h1>
           <motion.p 

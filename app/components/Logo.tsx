@@ -132,7 +132,7 @@ export const Logo = ({
         height={height}
         className="relative z-10 w-full h-full object-contain"
         style={{
-          filter: "drop-shadow(0 0 8px rgba(255,255,255,0.2))",
+          filter: "invert(1) brightness(1) drop-shadow(0 0 8px rgba(255,255,255,0.2))",
         }}
       />
     </motion.div>
