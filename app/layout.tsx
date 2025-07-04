@@ -5,22 +5,20 @@ import "./fonts/fonts.css";
 
 export const metadata: Metadata = {
   title: "KEY0N | Professional Music Producer | Where Sound Becomes Emotion",
-  description: "KEY0N is a professional music producer crafting sonic experiences that resonate with audiences worldwide. Creating distinctive soundscapes for global brands and artists with over 100M+ streams.",
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-    ],
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    ],
-    other: [
-      { url: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
-      { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
-    ],
-  },
-  keywords: ["music producer", "music production", "commercial music", "beat maker", "KEY0N", "music production services", "mixing", "mastering", "sonic branding", "audio production"],
+  description:
+    "KEY0N is a professional music producer crafting sonic experiences that resonate with audiences worldwide. Creating distinctive soundscapes for global brands and artists with over 100M+ streams.",
+  keywords: [
+    "music producer",
+    "music production",
+    "commercial music",
+    "beat maker",
+    "KEY0N",
+    "music production services",
+    "mixing",
+    "mastering",
+    "sonic branding",
+    "audio production",
+  ],
   authors: [{ name: "KEY0N" }],
   creator: "KEY0N",
   publisher: "KEY0N",
@@ -30,7 +28,8 @@ export const metadata: Metadata = {
     url: "https://key0n.com",
     siteName: "KEY0N Music Production",
     title: "KEY0N | Professional Music Producer",
-    description: "Crafting sonic experiences that resonate with audiences worldwide. Where sound becomes emotion.",
+    description:
+      "Crafting sonic experiences that resonate with audiences worldwide. Where sound becomes emotion.",
     images: [
       {
         url: "/og-image.jpg",
@@ -43,7 +42,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "KEY0N | Professional Music Producer",
-    description: "Crafting sonic experiences that resonate with audiences worldwide. Where sound becomes emotion.",
+    description:
+      "Crafting sonic experiences that resonate with audiences worldwide. Where sound becomes emotion.",
     images: ["/og-image.jpg"],
     creator: "@key0n",
   },
