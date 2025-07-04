@@ -28,18 +28,13 @@ export default function VideoCarousel({
   const [direction, setDirection] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isUnmuted, setIsUnmuted] = useState(false);
   const autoSlideRef = useRef<NodeJS.Timeout | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Auto-slide functionality
+  // Cleanup timeouts
   useEffect(() => {
-    if (autoSlide && !isHovered && videos.length > 1) {
-      autoSlideRef.current = setInterval(() => {
-        handleNext();
-      }, 4000);
-    }
-    
     return () => {
       if (autoSlideRef.current) {
         clearInterval(autoSlideRef.current);
@@ -48,7 +43,7 @@ export default function VideoCarousel({
         clearTimeout(hoverTimeoutRef.current);
       }
     };
-  }, [currentIndex, isHovered, autoSlide, videos.length]);
+  }, []);
 
   const handleNext = () => {
     // Pause current video before changing
@@ -149,15 +144,15 @@ export default function VideoCarousel({
               poster={currentVideo.thumbnail}
               className="w-full h-full bg-card"
               showControls={true}
-              autoPlay={false}
+              autoPlay={currentIndex === 0}
+              muted={!isUnmuted}
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
+              onUnmute={() => {
+                // Callback when unmuted
+              }}
               onEnded={() => {
                 setIsPlaying(false);
-                // Auto-advance to next video if available
-                if (videos.length > 1) {
-                  setTimeout(() => handleNext(), 1000);
-                }
               }}
               onError={(e) => {
                 console.error('Video load error:', e);
@@ -175,6 +170,25 @@ export default function VideoCarousel({
             />
           )}
         </div>
+
+        {/* Unmute Button Overlay */}
+        {!isUnmuted && isPlaying && (
+          <motion.button
+            className="absolute top-4 left-4 w-12 h-12 bg-black/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white border border-white/20 transition-all duration-300 z-20 cursor-pointer"
+            onClick={() => {
+              setIsUnmuted(true);
+            }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            whileHover={{ scale: 1.1, backgroundColor: "rgba(0,0,0,0.9)" }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="Unmute and replay video"
+          >
+            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.764L4.394 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.394l3.989-3.764a1 1 0 011.626.076zM12.22 6.22a.75.75 0 011.06 0L15 7.94l1.72-1.72a.75.75 0 111.06 1.06L16.06 9l1.72 1.72a.75.75 0 11-1.06 1.06L15 10.06l-1.72 1.72a.75.75 0 11-1.06-1.06L13.94 9l-1.72-1.72a.75.75 0 010-1.06z" clipRule="evenodd" />
+            </svg>
+          </motion.button>
+        )}
 
         {/* Navigation Arrows */}
         {videos.length > 1 && (

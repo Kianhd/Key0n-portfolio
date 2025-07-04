@@ -13,6 +13,8 @@ interface VideoPlayerProps {
   className?: string;
   showControls?: boolean;
   autoPlay?: boolean;
+  muted?: boolean;
+  onUnmute?: () => void;
 }
 
 export default function VideoPlayer({
@@ -24,7 +26,9 @@ export default function VideoPlayer({
   onError,
   className = '',
   showControls = true,
-  autoPlay = false
+  autoPlay = false,
+  muted = false,
+  onUnmute
 }: VideoPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.7);
@@ -173,6 +177,18 @@ export default function VideoPlayer({
     };
   }, [volume, onPlay, onPause, onEnded, src]);
 
+  // Handle unmute and replay (only on initial unmute)
+  const [hasBeenUnmuted, setHasBeenUnmuted] = useState(false);
+  
+  useEffect(() => {
+    if (onUnmute && !muted && !hasBeenUnmuted && videoRef.current) {
+      const video = videoRef.current;
+      video.currentTime = 0;
+      video.play();
+      setHasBeenUnmuted(true);
+    }
+  }, [muted, onUnmute, hasBeenUnmuted]);
+
   const togglePlayPause = () => {
     const video = videoRef.current;
     if (!video) return;
@@ -241,6 +257,7 @@ export default function VideoPlayer({
         className="w-full h-full transition-all duration-300 object-contain bg-transparent"
         playsInline
         autoPlay={autoPlay}
+        muted={muted}
         onError={onError}
       />
 
