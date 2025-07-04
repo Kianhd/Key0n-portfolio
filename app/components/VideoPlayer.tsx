@@ -238,9 +238,7 @@ export default function VideoPlayer({
         ref={videoRef}
         src={src}
         poster={poster}
-        className={`w-full h-full transition-all duration-300 ${
-          isVertical ? 'object-contain bg-transparent' : 'object-cover bg-card'
-        }`}
+        className="w-full h-full transition-all duration-300 object-contain bg-transparent"
         playsInline
         autoPlay={autoPlay}
         onError={onError}
