@@ -225,8 +225,8 @@ export default function Home() {
 
       <section id="work" className="py-16 overflow-hidden">
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-title font-bold mb-4 uppercase scroll-fade-in">
+          <div className="text-center mb-40 md:mb-52 lg:mb-64">
+            <h2 className="text-title font-bold mb-8 uppercase scroll-fade-in">
               Featured Work
             </h2>
             <p className="text-muted text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
