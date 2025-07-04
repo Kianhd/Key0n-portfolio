@@ -120,9 +120,12 @@ export const generateProjectVideos = (folderKey: string): Video[] => {
     const videoWithExtension = `${justVideoId}.mp4`;
     
     // Try just the video ID first (more common in Cloudinary)
+    // Standard transformations for all videos
+    const videoTransformations = "f_mp4,vc_auto,q_auto";
+    
     const videoUrl = getCloudinaryUrl(justVideoId, {
       type: "video",
-      transformations: "f_mp4,vc_auto,q_auto",
+      transformations: videoTransformations,
     });
     
     const thumbnailUrl = getCloudinaryUrl(justVideoId, {

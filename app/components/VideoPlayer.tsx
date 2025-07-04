@@ -32,8 +32,10 @@ export default function VideoPlayer({
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [loadError, setLoadError] = useState(false);
+  const [isVertical, setIsVertical] = useState(false);
+  const [loadProgress, setLoadProgress] = useState(0);
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const volumeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -42,6 +44,16 @@ export default function VideoPlayer({
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+    
+    // Only reset states when src actually changes, not on every render
+    const currentSrc = video.src;
+    if (currentSrc !== src) {
+      setIsLoading(true);
+      setLoadError(false);
+      setCurrentTime(0);
+      setDuration(0);
+      setLoadProgress(0);
+    }
 
     const handleTimeUpdate = () => {
       setCurrentTime(video.currentTime);
@@ -52,26 +64,44 @@ export default function VideoPlayer({
       setDuration(video.duration);
       video.volume = volume;
       setIsLoading(false);
+      
+      // Check if video is vertical (portrait)
+      const aspectRatio = video.videoWidth / video.videoHeight;
+      setIsVertical(aspectRatio < 1);
+      console.log('Video aspect ratio:', aspectRatio, 'Is vertical:', aspectRatio < 1);
     };
     
     const handleLoadStart = () => {
       console.log('Video loading started:', video.src);
-      setIsLoading(true);
+      // Only show loading if video is not already loaded
+      if (video.readyState < 2) {
+        setIsLoading(true);
+      }
       setLoadError(false);
       
-      // Set a timeout for loading - if video doesn't load in 10 seconds, show error
+      // Set a timeout for loading - if video doesn't load in 30 seconds, show error
+      // Increased timeout for larger video files
       if (loadTimeoutRef.current) clearTimeout(loadTimeoutRef.current);
       loadTimeoutRef.current = setTimeout(() => {
-        if (isLoading) {
-          console.error('Video loading timeout');
+        // Use video.readyState to check if video is still loading instead of stale isLoading state
+        if (video.readyState === 0 || video.readyState === 1) {
+          console.error('Video loading timeout after 30s');
           setIsLoading(false);
           setLoadError(true);
         }
-      }, 10000);
+      }, 30000); // Increased from 10s to 30s
     };
     
     const handleCanPlay = () => {
       console.log('Video can play:', video.src);
+      console.log('Video ready state:', video.readyState);
+      setIsLoading(false);
+      setLoadError(false);
+      if (loadTimeoutRef.current) clearTimeout(loadTimeoutRef.current);
+    };
+    
+    const handleLoadedData = () => {
+      console.log('Video data loaded:', video.src);
       setIsLoading(false);
       setLoadError(false);
       if (loadTimeoutRef.current) clearTimeout(loadTimeoutRef.current);
@@ -80,6 +110,8 @@ export default function VideoPlayer({
     const handleError = (e: Event) => {
       console.error('Video error event:', e);
       console.error('Video src:', video.src);
+      console.error('Video error details:', video.error);
+      console.error('Video ready state:', video.readyState);
       setIsLoading(false);
       setLoadError(true);
       if (loadTimeoutRef.current) clearTimeout(loadTimeoutRef.current);
@@ -101,26 +133,45 @@ export default function VideoPlayer({
       onEnded?.();
     };
 
+    const handleProgress = (e: Event) => {
+      const video = e.target as HTMLVideoElement;
+      if (video.buffered.length > 0) {
+        const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+        const duration = video.duration;
+        if (duration > 0) {
+          setLoadProgress((bufferedEnd / duration) * 100);
+        }
+      }
+    };
+
     video.addEventListener('timeupdate', handleTimeUpdate);
     video.addEventListener('loadedmetadata', handleLoadedMetadata);
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
     video.addEventListener('ended', handleEnded);
     video.addEventListener('canplay', handleCanPlay);
+    video.addEventListener('loadeddata', handleLoadedData);
     video.addEventListener('loadstart', handleLoadStart);
     video.addEventListener('error', handleError);
+    video.addEventListener('progress', handleProgress);
 
     return () => {
+      // Clean up timeouts on unmount
+      if (loadTimeoutRef.current) clearTimeout(loadTimeoutRef.current);
+      if (volumeTimeoutRef.current) clearTimeout(volumeTimeoutRef.current);
+      
       video.removeEventListener('timeupdate', handleTimeUpdate);
       video.removeEventListener('loadedmetadata', handleLoadedMetadata);
       video.removeEventListener('play', handlePlay);
       video.removeEventListener('pause', handlePause);
       video.removeEventListener('ended', handleEnded);
       video.removeEventListener('canplay', handleCanPlay);
+      video.removeEventListener('loadeddata', handleLoadedData);
       video.removeEventListener('loadstart', handleLoadStart);
       video.removeEventListener('error', handleError);
+      video.removeEventListener('progress', handleProgress);
     };
-  }, [volume, onPlay, onPause, onEnded]);
+  }, [volume, onPlay, onPause, onEnded, src]);
 
   const togglePlayPause = () => {
     const video = videoRef.current;
@@ -177,21 +228,37 @@ export default function VideoPlayer({
   };
 
   return (
-    <div className={`relative group ${className}`}>
+    <div className={`relative group ${isVertical ? 'bg-background/40' : 'bg-card'} ${className}`}>
+      {/* Subtle gradient for vertical videos */}
+      {isVertical && (
+        <div className="absolute inset-0 bg-gradient-to-br from-card/30 via-transparent to-card/30 pointer-events-none" />
+      )}
+      
       <video
         ref={videoRef}
         src={src}
         poster={poster}
-        className="w-full h-full object-cover"
+        className={`w-full h-full transition-all duration-300 ${
+          isVertical ? 'object-contain bg-transparent' : 'object-cover bg-card'
+        }`}
         playsInline
         autoPlay={autoPlay}
         onError={onError}
       />
 
-      {/* Loading Spinner */}
+      {/* Loading Spinner with Progress */}
       {isLoading && !loadError && (
-        <div className="absolute inset-0 flex items-center justify-center bg-background/90 backdrop-blur-sm">
-          <div className="w-8 h-8 border-2 border-border border-t-foreground/40 rounded-full animate-spin" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/90 backdrop-blur-sm">
+          <div className="w-8 h-8 border-2 border-border border-t-foreground/40 rounded-full animate-spin mb-3" />
+          {loadProgress > 0 && (
+            <div className="w-32 h-1 bg-border/30 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-foreground/60 transition-all duration-300"
+                style={{ width: `${loadProgress}%` }}
+              />
+            </div>
+          )}
+          <p className="text-xs text-muted mt-2">Loading video...</p>
         </div>
       )}
       

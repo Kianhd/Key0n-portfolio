@@ -30,6 +30,7 @@ export default function VideoCarousel({
   const [isPlaying, setIsPlaying] = useState(false);
   const autoSlideRef = useRef<NodeJS.Timeout | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-slide functionality
   useEffect(() => {
@@ -43,25 +44,40 @@ export default function VideoCarousel({
       if (autoSlideRef.current) {
         clearInterval(autoSlideRef.current);
       }
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
     };
   }, [currentIndex, isHovered, autoSlide, videos.length]);
 
   const handleNext = () => {
+    // Pause current video before changing
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
     setDirection(1);
+    setIsPlaying(false);
     setCurrentIndex((prev) => (prev + 1) % videos.length);
-    setIsPlaying(false); // Reset play state when changing videos
   };
 
   const handlePrev = () => {
+    // Pause current video before changing
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
     setDirection(-1);
+    setIsPlaying(false);
     setCurrentIndex((prev) => (prev - 1 + videos.length) % videos.length);
-    setIsPlaying(false); // Reset play state when changing videos
   };
 
   const handleDotClick = (index: number) => {
+    // Pause current video before changing
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
     setDirection(index > currentIndex ? 1 : -1);
+    setIsPlaying(false);
     setCurrentIndex(index);
-    setIsPlaying(false); // Reset play state when changing videos
   };
 
   // Keyboard navigation
@@ -110,67 +126,55 @@ export default function VideoCarousel({
       {/* Main video container */}
       <div 
         className="relative aspect-video rounded-lg overflow-hidden bg-card border border-border group z-10 focus-within:ring-2 focus-within:ring-foreground/20 transition-all duration-300"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onMouseEnter={() => {
+          if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+          setIsHovered(true);
+        }}
+        onMouseLeave={() => {
+          if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+          hoverTimeoutRef.current = setTimeout(() => setIsHovered(false), 100);
+        }}
         onKeyDown={handleKeyDown}
         tabIndex={0}
         role="region"
         aria-label={`Video carousel, ${currentIndex + 1} of ${videos.length}`}
       >
       {/* Main Video Display */}
-      <div className="relative w-full h-full">
-        <AnimatePresence mode="wait" custom={direction}>
-          <motion.div
-            key={currentIndex}
-            custom={direction}
-            initial={{ x: direction > 0 ? "100%" : "-100%", opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: direction > 0 ? "-100%" : "100%", opacity: 0 }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 30,
-              mass: 0.8
-            }}
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.1}
-            onDragEnd={handleDragEnd}
-            className="absolute inset-0"
-          >
-            {currentVideo.videoFile && (
-              <VideoPlayer
-                src={currentVideo.videoFile}
-                poster={currentVideo.thumbnail}
-                className="w-full h-full"
-                showControls={true}
-                autoPlay={false}
-                onPlay={() => setIsPlaying(true)}
-                onPause={() => setIsPlaying(false)}
-                onEnded={() => {
-                  setIsPlaying(false);
-                  // Auto-advance to next video if available
-                  if (videos.length > 1) {
-                    setTimeout(() => handleNext(), 1000);
-                  }
-                }}
-                onError={(e) => {
-                  console.error('Video load error:', e);
-                  console.error('Video URL:', currentVideo.videoFile);
-                  console.error('Thumbnail URL:', currentVideo.thumbnail);
-                }}
-              />
-            )}
-            {!currentVideo.videoFile && currentVideo.thumbnail && (
-              <img 
-                src={currentVideo.thumbnail} 
-                alt={`Video ${currentIndex + 1}`}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            )}
-          </motion.div>
-        </AnimatePresence>
+      <div className="relative w-full h-full overflow-hidden bg-card">
+        <div className="absolute inset-0 w-full h-full">
+          {currentVideo.videoFile && (
+            <VideoPlayer
+              key={`${currentVideo.id}-${currentIndex}`}
+              src={currentVideo.videoFile}
+              poster={currentVideo.thumbnail}
+              className="w-full h-full bg-card"
+              showControls={true}
+              autoPlay={false}
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+              onEnded={() => {
+                setIsPlaying(false);
+                // Auto-advance to next video if available
+                if (videos.length > 1) {
+                  setTimeout(() => handleNext(), 1000);
+                }
+              }}
+              onError={(e) => {
+                console.error('Video load error:', e);
+                console.error('Video URL:', currentVideo.videoFile);
+                console.error('Thumbnail URL:', currentVideo.thumbnail);
+              }}
+            />
+          )}
+          {!currentVideo.videoFile && currentVideo.thumbnail && (
+            <img 
+              src={currentVideo.thumbnail} 
+              alt={`Video ${currentIndex + 1}`}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          )}
+        </div>
 
         {/* Navigation Arrows */}
         {videos.length > 1 && (
@@ -217,33 +221,6 @@ export default function VideoCarousel({
 
       </div>
 
-      {/* Dot Navigation */}
-      {videos.length > 1 && (
-        <motion.div 
-          className="absolute bottom-3 md:bottom-4 left-1/2 -translate-x-1/2 flex gap-2 md:gap-3 p-2"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          {videos.map((video, index) => (
-            <motion.button
-              key={video.id}
-              className={`w-3 h-3 md:w-4 md:h-4 rounded-full border transition-all duration-300 cursor-pointer touch-manipulation ${
-                index === currentIndex 
-                  ? 'bg-foreground border-foreground' 
-                  : 'bg-transparent border-foreground/30 hover:border-foreground/60'
-              }`}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDotClick(index);
-              }}
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.9 }}
-              aria-label={`Go to video ${index + 1}`}
-            />
-          ))}
-        </motion.div>
-      )}
 
       {/* Video Counter */}
       {videos.length > 1 && (
@@ -257,6 +234,34 @@ export default function VideoCarousel({
         </motion.div>
       )}
       </div>
+
+      {/* Dot Navigation - Outside video container */}
+      {videos.length > 1 && (
+        <motion.div 
+          className="flex justify-center mt-4 gap-1.5"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          {videos.map((video, index) => (
+            <motion.button
+              key={video.id}
+              className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer touch-manipulation ${
+                index === currentIndex 
+                  ? 'bg-foreground' 
+                  : 'bg-foreground/30 hover:bg-foreground/60'
+              }`}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDotClick(index);
+              }}
+              whileHover={{ scale: 1.3 }}
+              whileTap={{ scale: 0.8 }}
+              aria-label={`Go to video ${index + 1}`}
+            />
+          ))}
+        </motion.div>
+      )}
     </div>
   );
 }
