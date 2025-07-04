@@ -6,7 +6,12 @@ import Waves from "./components/Waves";
 import SchemaMarkup from "./components/SchemaMarkup";
 import { motion } from "motion/react";
 import { useScrollAnimation } from "./hooks/useScrollAnimation";
-import { generateProjectVideos, projectFolders, brandDescriptions, getCloudinaryUrl } from "../lib/cloudinary";
+import {
+  generateProjectVideos,
+  projectFolders,
+  brandDescriptions,
+  getCloudinaryUrl,
+} from "../lib/cloudinary";
 
 interface Video {
   id: string;
@@ -35,7 +40,9 @@ export default function Home() {
       client: "Independent Artist",
       type: "hiphop",
       category: "music composition",
-      videos: generateProjectVideos('Always Generic pack - music composition - hiphop'),
+      videos: generateProjectVideos(
+        "Always Generic pack - music composition - hiphop"
+      ),
       description:
         "Hard-hitting hip-hop beats with soulful samples and modern trap influences. A versatile collection of production-ready tracks designed for emerging artists and creative collaborations.",
     },
@@ -45,7 +52,9 @@ export default function Home() {
       client: "Clorox",
       type: "commercial",
       category: "music composition",
-      videos: generateProjectVideos('Clorox - platinum campaign - "mhhmm..." - music composition - commercial'),
+      videos: generateProjectVideos(
+        'Clorox - platinum campaign - "mhhmm..." - music composition - commercial'
+      ),
       description:
         "Premium commercial soundtrack for Clorox's Platinum campaign. Leading global manufacturer of cleaning products, this composition captures the brand's commitment to health, wellness, and superior cleaning power with an uplifting, fresh sonic identity.",
     },
@@ -55,7 +64,7 @@ export default function Home() {
       client: "Evvoli",
       type: "commercial",
       category: "sound design",
-      videos: generateProjectVideos('Evvoli - sound design'),
+      videos: generateProjectVideos("Evvoli - sound design"),
       description:
         "Sophisticated sound design for Evvoli's premium home appliances. This Italian luxury brand blends human-centric technology with neo-modern designs, requiring audio that embodies innovation, elegance, and cutting-edge functionality.",
     },
@@ -65,7 +74,9 @@ export default function Home() {
       client: "KEY0N",
       type: "hiphop",
       category: "music composition",
-      videos: generateProjectVideos('Key0n Resume - Music Video - music composition - hiphop trap'),
+      videos: generateProjectVideos(
+        "Key0n Resume - Music Video - music composition - hiphop trap"
+      ),
       description:
         "Personal music video showcase featuring trap-influenced hip-hop production. A dynamic representation of KEY0N's versatility as a producer, combining modern trap elements with classic hip-hop foundations.",
     },
@@ -75,7 +86,7 @@ export default function Home() {
       client: "LG",
       type: "commercial",
       category: "sound design",
-      videos: generateProjectVideos('LG Dual Sense - Sound Design'),
+      videos: generateProjectVideos("LG Dual Sense - Sound Design"),
       description:
         "Innovative sound design for LG's advanced home appliance technology. Global technology leader LG required audio that represents their dual inverter innovations, smart AI features, and energy-efficient solutions.",
     },
@@ -85,7 +96,9 @@ export default function Home() {
       client: "Nolte Küchen",
       type: "commercial",
       category: "music composition + sound design",
-      videos: generateProjectVideos('Nolte Kuchen - Music composition + Sound design - commercial'),
+      videos: generateProjectVideos(
+        "Nolte Kuchen - Music composition + Sound design - commercial"
+      ),
       description:
         "Premium audio branding for Germany's favorite kitchen manufacturer. Nolte Küchen's 65+ years of German precision and luxury design required sophisticated music composition and sound design that reflects their award-winning quality and craftsmanship.",
     },
@@ -95,7 +108,9 @@ export default function Home() {
       client: "Oral-B",
       type: "commercial",
       category: "music composition",
-      videos: generateProjectVideos('Oral B - overnight toothpaste - music composition'),
+      videos: generateProjectVideos(
+        "Oral B - overnight toothpaste - music composition"
+      ),
       description:
         "Gentle, reassuring musical composition for Oral-B's overnight toothpaste campaign. The world's leading oral care brand trusted by dentists worldwide, featuring soothing melodies that convey nighttime care and morning freshness.",
     },
@@ -134,13 +149,13 @@ export default function Home() {
           yGap={36}
         /> */}
         <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 text-center relative z-10 py-32 sm:py-40">
-          <motion.h1 
+          <motion.h1
             className="text-hero mb-12 relative leading-[0.85] font-bold"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
           >
-            <motion.span 
+            <motion.span
               className="relative inline-block text-foreground/90 font-medium tracking-tight"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -149,7 +164,7 @@ export default function Home() {
               MUSIC THAT
             </motion.span>
             <br />
-            <motion.span 
+            <motion.span
               className="relative inline-block text-foreground/70 font-light tracking-wider"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -158,7 +173,7 @@ export default function Home() {
               TELLS
             </motion.span>
             <br />
-            <motion.span 
+            <motion.span
               className="relative inline-block bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent font-bold tracking-tight"
               initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -167,7 +182,7 @@ export default function Home() {
               YOUR STORY
             </motion.span>
           </motion.h1>
-          <motion.p 
+          <motion.p
             className="text-base md:text-lg text-muted/60 mb-16 max-w-xl mx-auto leading-relaxed font-light tracking-wide"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -203,7 +218,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          
+
           {/* Scroll indicator */}
           <motion.div
             className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
@@ -216,7 +231,9 @@ export default function Home() {
               animate={{ y: [0, 8, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
-              <span className="text-xs text-muted/60 uppercase tracking-wider">Scroll</span>
+              <span className="text-xs text-muted/60 uppercase tracking-wider">
+                Scroll
+              </span>
               <div className="w-[1px] h-8 bg-gradient-to-b from-muted/40 to-transparent" />
             </motion.div>
           </motion.div>
@@ -249,10 +266,7 @@ export default function Home() {
               >
                 {/* Video Side */}
                 <div className="w-full lg:w-3/5 max-w-full">
-                  <VideoCarousel
-                    videos={project.videos}
-                    autoSlide={true}
-                  />
+                  <VideoCarousel videos={project.videos} />
                 </div>
 
                 {/* Description Side */}

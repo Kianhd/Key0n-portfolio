@@ -15,6 +15,7 @@ interface VideoPlayerProps {
   autoPlay?: boolean;
   muted?: boolean;
   onUnmute?: () => void;
+  onTogglePlayPause?: (toggleFn: () => void) => void;
 }
 
 export default function VideoPlayer({
@@ -28,7 +29,8 @@ export default function VideoPlayer({
   showControls = true,
   autoPlay = false,
   muted = false,
-  onUnmute
+  onUnmute,
+  onTogglePlayPause
 }: VideoPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.7);
@@ -189,6 +191,13 @@ export default function VideoPlayer({
     }
   }, [muted, onUnmute, hasBeenUnmuted]);
 
+  // Expose toggle play/pause function to parent
+  useEffect(() => {
+    if (onTogglePlayPause) {
+      onTogglePlayPause(togglePlayPause);
+    }
+  }, [onTogglePlayPause]);
+
   const togglePlayPause = () => {
     const video = videoRef.current;
     if (!video) return;
@@ -297,8 +306,8 @@ export default function VideoPlayer({
         </div>
       )}
 
-      {/* Custom Controls */}
-      {showControls && !isLoading && (
+      {/* Custom Controls - only show after unmuting */}
+      {showControls && !isLoading && !muted && (
         <div className="absolute inset-0 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
           {/* Subtle Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent pointer-events-none" />
