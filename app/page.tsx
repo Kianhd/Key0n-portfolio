@@ -35,14 +35,14 @@ export default function Home() {
   useScrollAnimation();
 
   const brands = [
-    { name: "Always", logo: "/brands/Always Logo.png" },
-    { name: "Clorox", logo: "/brands/Clorox.png" },
-    { name: "Evvoli", logo: "/brands/Evvoli Logo.png", invertColor: true },
-    { name: "Hyundai", logo: "/brands/Hyundai Logo HD.png", invertColor: true },
-    { name: "LG", logo: "/brands/LG.svg" },
-    { name: "McDonald's", logo: "/brands/McDonalds Logo.png" },
-    { name: "Oral-B", logo: "/brands/Oral-B.png" },
-    { name: "Nolte Küchen", logo: "/brands/Nolte Kuchen Logo.png" },
+    { name: "Always", logo: "/Brands/Always Logo.png" },
+    { name: "Clorox", logo: "/Brands/Clorox.png" },
+    { name: "Evvoli", logo: "/Brands/Evvoli Logo.png", invertColor: true },
+    { name: "Hyundai", logo: "/Brands/Hyundai Logo HD.png", invertColor: true },
+    { name: "LG", logo: "/Brands/LG.svg" },
+    { name: "McDonald's", logo: "/Brands/McDonalds Logo.png" },
+    { name: "Oral-B", logo: "/Brands/Oral-B.png" },
+    { name: "Nolte Küchen", logo: "/Brands/Nolte Kuchen Logo.png" },
   ];
 
   const projects: Project[] = [
