@@ -20,6 +20,20 @@
   background-image: radial-gradient(circle, var(--tw-gradient-stops));
 }
 
+/* Marquee animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;

@@ -4,6 +4,7 @@ import Navigation from "./components/Navigation";
 import VideoCarousel from "./components/VideoCarousel";
 import Waves from "./components/Waves";
 import SchemaMarkup from "./components/SchemaMarkup";
+import BrandMarquee from "./components/BrandMarquee";
 import { motion } from "motion/react";
 import { useScrollAnimation } from "./hooks/useScrollAnimation";
 import {
@@ -32,6 +33,17 @@ interface Project {
 
 export default function Home() {
   useScrollAnimation();
+
+  const brands = [
+    { name: "Always", logo: "/brands/Always Logo.png" },
+    { name: "Clorox", logo: "/brands/Clorox.png" },
+    { name: "Evvoli", logo: "/brands/Evvoli Logo.png", invertColor: true },
+    { name: "Hyundai", logo: "/brands/Hyundai Logo HD.png", invertColor: true },
+    { name: "LG", logo: "/brands/LG.svg" },
+    { name: "McDonald's", logo: "/brands/McDonalds Logo.png" },
+    { name: "Oral-B", logo: "/brands/Oral-B.png" },
+    { name: "Nolte Küchen", logo: "/brands/Nolte Kuchen Logo.png" },
+  ];
 
   const projects: Project[] = [
     {
@@ -239,6 +251,9 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+
+      {/* Brand Showcase Section */}
+      <BrandMarquee brands={brands} />
 
       <section id="work" className="py-16 overflow-hidden">
         <div className="w-full px-4 sm:px-6 lg:px-8">
