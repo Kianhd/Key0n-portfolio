@@ -395,6 +395,70 @@ input[type="range"]:hover::-moz-range-thumb {
   opacity: 1;
 }
 
+/* Elegant mobile video progress bar */
+input[type="range"].mobile-progress-elegant {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  height: 44px; /* Touch target */
+  padding: 20px 0; /* Center the visual bar */
+}
+
+input[type="range"].mobile-progress-elegant::-webkit-slider-track {
+  background: rgba(255, 255, 255, 0.1);
+  height: 1px;
+  border-radius: 0.5px;
+  border: none;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+input[type="range"].mobile-progress-elegant::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--color-foreground);
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input[type="range"].mobile-progress-elegant:active::-webkit-slider-thumb,
+input[type="range"].mobile-progress-elegant:focus::-webkit-slider-thumb {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+input[type="range"].mobile-progress-elegant::-moz-range-track {
+  background: rgba(255, 255, 255, 0.1);
+  height: 1px;
+  border-radius: 0.5px;
+  border: none;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+input[type="range"].mobile-progress-elegant::-moz-range-thumb {
+  background: var(--color-foreground);
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input[type="range"].mobile-progress-elegant:active::-moz-range-thumb,
+input[type="range"].mobile-progress-elegant:focus::-moz-range-thumb {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
 /* Better mobile video container */
 @media (max-width: 768px) {
   .aspect-video {
