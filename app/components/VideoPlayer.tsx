@@ -16,6 +16,22 @@ interface VideoPlayerProps {
   muted?: boolean;
   onUnmute?: () => void;
   onTogglePlayPause?: (toggleFn: () => void) => void;
+  onMobileControlsChange?: (controlsData: {
+    showControls: boolean;
+    isPlaying: boolean;
+    currentTime: number;
+    duration: number;
+    volume: number;
+    isMuted: boolean;
+    isFullscreen: boolean;
+    hasBeenUnmuted: boolean;
+    isMobile: boolean;
+    togglePlayPause: () => void;
+    toggleMute: () => void;
+    toggleFullscreen: () => void;
+    handleSeek: (time: number) => void;
+    formatTime: (time: number) => string;
+  }) => void;
 }
 
 export default function VideoPlayer({
@@ -30,7 +46,8 @@ export default function VideoPlayer({
   autoPlay = false,
   muted = false,
   onUnmute,
-  onTogglePlayPause
+  onTogglePlayPause,
+  onMobileControlsChange
 }: VideoPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.7);
@@ -292,13 +309,36 @@ export default function VideoPlayer({
       }
     } else {
       // Single tap to show/hide controls
-      if (showMobileControls) {
-        setShowMobileControls(false);
-        if (mobileControlsTimeoutRef.current) {
-          clearTimeout(mobileControlsTimeoutRef.current);
+      // In fullscreen mode, only toggle controls if tapping on video area (not on control elements)
+      if (isFullscreen) {
+        const target = e.target as Element;
+        const isControlElement = target.closest('button') || 
+                                target.closest('.mobile-controls-container') || 
+                                target.closest('.mobile-control-bar') ||
+                                target.closest('[class*="control"]') || 
+                                target.closest('[class*="progress"]');
+        
+        // Only toggle controls if NOT clicking on control elements
+        if (!isControlElement) {
+          if (showMobileControls) {
+            setShowMobileControls(false);
+            if (mobileControlsTimeoutRef.current) {
+              clearTimeout(mobileControlsTimeoutRef.current);
+            }
+          } else {
+            showMobileControlsTemporary();
+          }
         }
       } else {
-        showMobileControlsTemporary();
+        // Non-fullscreen mode: normal behavior
+        if (showMobileControls) {
+          setShowMobileControls(false);
+          if (mobileControlsTimeoutRef.current) {
+            clearTimeout(mobileControlsTimeoutRef.current);
+          }
+        } else {
+          showMobileControlsTemporary();
+        }
       }
     }
     
@@ -306,40 +346,7 @@ export default function VideoPlayer({
     setLastTouchX(touchX);
   };
 
-  // Volume and brightness control via vertical swipe
-  const handleMobileTouchMove = (e: React.TouchEvent) => {
-    const touch = e.touches[0];
-    const deltaY = touchStartY - touch.clientY;
-    const containerWidth = containerRef.current?.clientWidth || 0;
-    const isRightSide = touch.clientX > containerWidth * 0.5;
-    
-    if (Math.abs(deltaY) > 20) { // Threshold to start control
-      if (isRightSide) {
-        // Right side: Volume control
-        const video = videoRef.current;
-        if (video) {
-          const volumeChange = deltaY / 200; // Scale factor
-          const newVolume = Math.max(0, Math.min(1, volume + volumeChange));
-          setVolume(newVolume);
-          video.volume = newVolume;
-          setIsMuted(newVolume === 0);
-          
-          // Show volume indicator
-          setShowVolumeIndicator(true);
-          setTimeout(() => setShowVolumeIndicator(false), 1500);
-        }
-      } else {
-        // Left side: Brightness control
-        const brightnessChange = deltaY / 300; // Scale factor
-        const newBrightness = Math.max(0.2, Math.min(1, brightness + brightnessChange));
-        setBrightness(newBrightness);
-        
-        // Show brightness indicator
-        setShowBrightnessIndicator(true);
-        setTimeout(() => setShowBrightnessIndicator(false), 1500);
-      }
-    }
-  };
+  // Removed volume and brightness control via vertical swipe for mobile
 
   const toggleFullscreen = async () => {
     const container = containerRef.current;
@@ -390,6 +397,28 @@ export default function VideoPlayer({
     setHasBeenUnmuted(false);
     setShowMobileControls(false);
   }, [src]);
+
+  // Notify parent about mobile controls state changes
+  useEffect(() => {
+    if (onMobileControlsChange && isMobile) {
+      onMobileControlsChange({
+        showControls: showMobileControls,
+        isPlaying,
+        currentTime,
+        duration,
+        volume,
+        isMuted,
+        isFullscreen,
+        hasBeenUnmuted,
+        isMobile,
+        togglePlayPause,
+        toggleMute,
+        toggleFullscreen,
+        handleSeek,
+        formatTime
+      });
+    }
+  }, [showMobileControls, isPlaying, currentTime, duration, volume, isMuted, isFullscreen, hasBeenUnmuted, isMobile, onMobileControlsChange]);
 
   // Expose toggle play/pause function to parent
   useEffect(() => {
@@ -458,7 +487,7 @@ export default function VideoPlayer({
       className={`relative group ${isVertical ? 'bg-background/40' : 'bg-card'} ${className} ${isFullscreen ? 'fixed inset-0 z-50 bg-black' : ''}`}
       onTouchStart={isMobile ? handleMobileTouchStart : undefined}
       onTouchEnd={isMobile ? handleMobileTouchEnd : undefined}
-      onTouchMove={isMobile ? handleMobileTouchMove : undefined}
+      onTouchMove={undefined}
       onClick={!isMobile ? undefined : (e) => e.preventDefault()}
       style={{
         filter: `brightness(${brightness})`
@@ -661,235 +690,145 @@ export default function VideoPlayer({
         </motion.div>
       )}
 
-      {/* Mobile Volume Indicator */}
-      {isMobile && showVolumeIndicator && (
-        <motion.div
-          className="absolute right-6 top-1/2 -translate-y-1/2 bg-background/80 backdrop-blur-sm rounded-lg px-4 py-6 flex flex-col items-center gap-3 pointer-events-none border border-border/30"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 20 }}
-          transition={{ duration: 0.2 }}
-        >
-          <svg className="w-6 h-6 text-foreground" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.764L4.394 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.394l3.989-3.764a1 1 0 011.626.076zM12 8a1 1 0 011 1v2a1 1 0 11-2 0V9a1 1 0 011-1zM14 7a1 1 0 011 1v4a1 1 0 11-2 0V8a1 1 0 011-1zM16 6a1 1 0 011 1v6a1 1 0 11-2 0V7a1 1 0 011-1z" clipRule="evenodd" />
-          </svg>
-          <div className="flex flex-col gap-1 h-24">
-            {Array.from({ length: 10 }, (_, i) => (
-              <div
-                key={i}
-                className={`w-1 h-2 rounded-full transition-colors duration-150 ${
-                  (9 - i) / 10 <= volume ? 'bg-foreground' : 'bg-border'
-                }`}
-              />
-            ))}
-          </div>
-          <span className="text-foreground text-sm font-medium">{Math.round(volume * 100)}%</span>
-        </motion.div>
-      )}
 
-      {/* Mobile Brightness Indicator */}
-      {isMobile && showBrightnessIndicator && (
-        <motion.div
-          className="absolute left-6 top-1/2 -translate-y-1/2 bg-background/80 backdrop-blur-sm rounded-lg px-4 py-6 flex flex-col items-center gap-3 pointer-events-none border border-border/30"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.2 }}
-        >
-          <svg className="w-6 h-6 text-foreground" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
-          </svg>
-          <div className="flex flex-col gap-1 h-24">
-            {Array.from({ length: 10 }, (_, i) => (
-              <div
-                key={i}
-                className={`w-1 h-2 rounded-full transition-colors duration-150 ${
-                  (9 - i) / 10 <= brightness ? 'bg-foreground' : 'bg-border'
-                }`}
-              />
-            ))}
-          </div>
-          <span className="text-foreground text-sm font-medium">{Math.round(brightness * 100)}%</span>
-        </motion.div>
-      )}
-
-      {/* Mobile Controls - Same Style as Desktop */}
+      {/* Mobile Center Play/Pause Button - Same as Desktop */}
       {showControls && !isLoading && hasBeenUnmuted && isMobile && (
-        <div 
-          className={`absolute inset-0 flex flex-col justify-end transition-opacity duration-500 ${showMobileControls ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-          onClick={(e) => e.stopPropagation()}
+        <motion.button
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-card/80 backdrop-blur-md border border-border/50 rounded-full flex items-center justify-center text-foreground/90 hover:bg-card hover:border-foreground/30 transition-all duration-300 z-20"
+          onClick={togglePlayPause}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: showMobileControls ? 1 : 0, scale: showMobileControls ? 1 : 0.8 }}
+          transition={{ duration: 0.3 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          aria-label={isPlaying ? "Pause video" : "Play video"}
         >
-          {/* Subtle Gradient Overlay - Same as Desktop */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent pointer-events-none" />
-
-          {/* Center Play/Pause Button - Same Style as Desktop */}
-          {!isFullscreen && (
-            <motion.button
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-card/80 backdrop-blur-md border border-border/50 rounded-full flex items-center justify-center text-foreground/90 hover:bg-card hover:border-foreground/30 transition-all duration-300"
-              onClick={(e) => {
-                if (!showMobileControls) return;
-                e.stopPropagation();
-                togglePlayPause();
-              }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              style={{ minHeight: '44px', minWidth: '44px' }} // Mobile touch target
-            >
-              {isPlaying ? (
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M5.5 3.5A1.5 1.5 0 017 2h.5a1.5 1.5 0 011.5 1.5v13A1.5 1.5 0 017.5 18H7a1.5 1.5 0 01-1.5-1.5v-13zM11.5 3.5A1.5 1.5 0 0113 2h.5a1.5 1.5 0 011.5 1.5v13a1.5 1.5 0 01-1.5 1.5H13a1.5 1.5 0 01-1.5-1.5v-13z" />
-                </svg>
-              ) : (
-                <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                </svg>
-              )}
-            </motion.button>
+          {isPlaying ? (
+            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M5.5 3.5A1.5 1.5 0 017 2h.5a1.5 1.5 0 011.5 1.5v13A1.5 1.5 0 017.5 18H7a1.5 1.5 0 01-1.5-1.5v-13zM11.5 3.5A1.5 1.5 0 0113 2h.5a1.5 1.5 0 011.5 1.5v13a1.5 1.5 0 01-1.5 1.5H13a1.5 1.5 0 01-1.5-1.5v-13z" />
+            </svg>
+          ) : (
+            <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+            </svg>
           )}
+        </motion.button>
+      )}
 
-          {/* Fullscreen Center Button - Larger for fullscreen */}
-          {isFullscreen && (
-            <motion.button
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-card/80 backdrop-blur-md border border-border/50 rounded-full flex items-center justify-center text-foreground/90 hover:bg-card hover:border-foreground/30 transition-all duration-300"
-              onClick={(e) => {
-                if (!showMobileControls) return;
-                e.stopPropagation();
-                togglePlayPause();
-              }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              style={{ minHeight: '44px', minWidth: '44px' }}
-            >
-              {isPlaying ? (
-                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M5.5 3.5A1.5 1.5 0 017 2h.5a1.5 1.5 0 011.5 1.5v13A1.5 1.5 0 017.5 18H7a1.5 1.5 0 01-1.5-1.5v-13zM11.5 3.5A1.5 1.5 0 0113 2h.5a1.5 1.5 0 011.5 1.5v13a1.5 1.5 0 01-1.5 1.5H13a1.5 1.5 0 01-1.5-1.5v-13z" />
-                </svg>
-              ) : (
-                <svg className="w-8 h-8 ml-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                </svg>
-              )}
-            </motion.button>
-          )}
+      {/* Fullscreen Exit Button - Top Left Corner - MOBILE ONLY */}
+      {showControls && !isLoading && hasBeenUnmuted && isMobile && isFullscreen && (
+        <motion.button
+          className="absolute top-6 left-6 w-10 h-10 bg-black/60 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white/90 hover:bg-black/80 hover:border-white/40 transition-all duration-200 z-30 touch-manipulation"
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleFullscreen();
+          }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: showMobileControls ? 1 : 0, scale: showMobileControls ? 1 : 0.8 }}
+          transition={{ duration: 0.3 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          aria-label="Exit fullscreen"
+          style={{ minWidth: '46px', minHeight: '46px' }}
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </motion.button>
+      )}
 
-          {/* Bottom Controls - Same Style as Desktop */}
-          <div className="relative z-10 p-4 bg-background/40 backdrop-blur-sm border-t border-border/30">
-            {/* Progress Bar - Same as Desktop */}
-            <div className="mb-3">
-              <input
-                type="range"
-                min="0"
-                max={duration || 0}
-                value={currentTime}
-                onChange={(e) => {
-                  if (!showMobileControls) return;
-                  handleSeek(parseFloat(e.target.value));
-                }}
-                className="w-full h-px bg-border rounded-full appearance-none cursor-pointer transition-all duration-200 hover:h-0.5 mobile-progress-elegant"
-                style={{
-                  background: `linear-gradient(to right, var(--color-foreground) 0%, var(--color-foreground) ${duration ? (currentTime / duration) * 100 : 0}%, var(--color-border) ${duration ? (currentTime / duration) * 100 : 0}%, var(--color-border) 100%)`,
-                  minHeight: '44px', // Mobile touch target
-                  padding: '20px 0' // Center the visual bar
-                }}
-              />
+      {/* Premium Mobile Controls - Netflix/YouTube Premium Style - ONLY IN FULLSCREEN */}
+      {showControls && !isLoading && hasBeenUnmuted && isMobile && isFullscreen && (
+        <div className={`absolute inset-0 flex flex-col justify-end transition-opacity duration-300 ${showMobileControls ? 'opacity-100' : 'opacity-0'}`}>
+          {/* Subtle Gradient Overlay for Premium Feel */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+
+          {/* Premium Mobile Controls Container */}
+          <div className="relative z-10 p-4 pb-6 mobile-controls-container">
+            {/* Ultra-Thin Progress Line - Modern Separation */}
+            <div className="mb-4">
+              <div className="relative h-1 bg-white/30 backdrop-blur-sm rounded-full overflow-hidden">
+                {/* Progress Fill with Premium Gradient */}
+                <div 
+                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-white via-white/95 to-white/90 transition-all duration-200 ease-out rounded-full"
+                  style={{
+                    width: `${duration ? (currentTime / duration) * 100 : 0}%`,
+                    boxShadow: '0 0 16px rgba(255, 255, 255, 0.6)'
+                  }}
+                />
+                
+                {/* Interactive Touch Zone */}
+                <div 
+                  className="absolute inset-0 cursor-pointer touch-manipulation"
+                  style={{ minHeight: '46px', marginTop: '-22px', marginBottom: '-22px' }}
+                  onTouchStart={(e) => {
+                    if (!showMobileControls) return;
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const touch = e.touches[0];
+                    const percentage = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
+                    const newTime = percentage * duration;
+                    handleSeek(newTime);
+                  }}
+                />
+              </div>
             </div>
 
-            {/* Control Bar - Same as Desktop */}
-            <div className="flex items-center justify-between text-foreground/90">
-              <div className="flex items-center gap-4">
-                {/* Play/Pause - Same Style as Desktop */}
+            {/* Glassmorphism Control Bar - Premium Design */}
+            <div 
+              className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-3 shadow-2xl mobile-control-bar"
+              style={{
+                background: 'linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 100%)',
+                backdropFilter: 'blur(20px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)'
+              }}
+            >
+              <div className="flex items-center justify-between">
+                
+                {/* Primary Control - Play/Pause */}
                 <button
                   onClick={(e) => {
                     if (!showMobileControls) return;
                     e.stopPropagation();
                     togglePlayPause();
                   }}
-                  className="w-7 h-7 flex items-center justify-center hover:text-foreground transition-colors duration-200"
-                  style={{ minHeight: '44px', minWidth: '44px' }}
+                  className="w-12 h-12 flex items-center justify-center rounded-full bg-white/15 hover:bg-white/25 active:bg-white/35 transition-all duration-200 touch-manipulation"
+                  style={{ minWidth: '46px', minHeight: '46px' }}
+                  aria-label={isPlaying ? "Pause video" : "Play video"}
                 >
                   {isPlaying ? (
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M5.5 3.5A1.5 1.5 0 017 2h.5a1.5 1.5 0 011.5 1.5v13A1.5 1.5 0 017.5 18H7a1.5 1.5 0 01-1.5-1.5v-13zM11.5 3.5A1.5 1.5 0 0113 2h.5a1.5 1.5 0 011.5 1.5v13a1.5 1.5 0 01-1.5 1.5H13a1.5 1.5 0 01-1.5-1.5v-13z" />
                     </svg>
                   ) : (
-                    <svg className="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
                     </svg>
                   )}
                 </button>
 
-                {/* Volume Control - Same Style as Desktop */}
-                <button
-                  onClick={(e) => {
-                    if (!showMobileControls) return;
-                    e.stopPropagation();
-                    toggleMute();
-                  }}
-                  className="w-6 h-6 flex items-center justify-center hover:text-foreground transition-colors duration-200"
-                  style={{ minHeight: '44px', minWidth: '44px' }}
-                >
-                  {isMuted || volume === 0 ? (
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.764L4.394 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.394l3.989-3.764a1 1 0 011.626.076zM12.22 6.22a.75.75 0 011.06 0L15 7.94l1.72-1.72a.75.75 0 111.06 1.06L16.06 9l1.72 1.72a.75.75 0 11-1.06 1.06L15 10.06l-1.72 1.72a.75.75 0 11-1.06-1.06L13.94 9l-1.72-1.72a.75.75 0 010-1.06z" clipRule="evenodd" />
-                    </svg>
-                  ) : (
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.764L4.394 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.394l3.989-3.764a1 1 0 011.626.076zM12 8a1 1 0 011 1v2a1 1 0 11-2 0V9a1 1 0 011-1zM14 7a1 1 0 011 1v4a1 1 0 11-2 0V8a1 1 0 011-1zM16 6a1 1 0 011 1v6a1 1 0 11-2 0V7a1 1 0 011-1z" clipRule="evenodd" />
-                    </svg>
-                  )}
-                </button>
-
-                {/* Time Display - Same Style as Desktop */}
-                <div className="text-xs text-muted/80 font-mono tracking-wider">
+                {/* Time Display - Netflix Style */}
+                <div className="text-sm text-white/90 font-mono tracking-wide px-3 py-1 rounded-lg bg-black/30">
                   {formatTime(currentTime)} / {formatTime(duration)}
                 </div>
-              </div>
 
-              <div className="flex items-center gap-4">
-                {/* Picture-in-Picture button */}
-                {'pictureInPictureEnabled' in document && (
-                  <button
-                    onClick={async (e) => {
-                      if (!showMobileControls) return;
-                      e.stopPropagation();
-                      const video = videoRef.current;
-                      if (!video) return;
-                      
-                      try {
-                        if (document.pictureInPictureElement) {
-                          await document.exitPictureInPicture();
-                        } else {
-                          await video.requestPictureInPicture();
-                        }
-                      } catch (error) {
-                        console.log('PiP not supported or failed:', error);
-                      }
-                    }}
-                    className="w-6 h-6 flex items-center justify-center hover:text-foreground transition-colors duration-200"
-                    style={{ minHeight: '44px', minWidth: '44px' }}
-                  >
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v6a1 1 0 01-1 1h-4.586l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 1.414L11.414 9H16V5H4v10h4a1 1 0 110 2H4a1 1 0 01-1-1V4z" clipRule="evenodd" />
-                    </svg>
-                  </button>
-                )}
-
-                {/* Fullscreen button */}
+                {/* Fullscreen Control */}
                 <button
                   onClick={(e) => {
                     if (!showMobileControls) return;
                     e.stopPropagation();
                     toggleFullscreen();
                   }}
-                  className="w-6 h-6 flex items-center justify-center hover:text-foreground transition-colors duration-200"
-                  style={{ minHeight: '44px', minWidth: '44px' }}
+                  className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-white/15 active:bg-white/25 transition-all duration-200 touch-manipulation"
+                  style={{ minWidth: '46px', minHeight: '46px' }}
+                  aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
                 >
                   {isFullscreen ? (
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-5 h-5 text-white/90" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 11-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 010-2h4a1 1 0 011 1v4a1 1 0 11-2 0V6.414l-2.293 2.293a1 1 0 11-1.414-1.414L13.586 5H12zm-9 7a1 1 0 112 0v1.586l2.293-2.293a1 1 0 111.414 1.414L6.414 15H8a1 1 0 110 2H4a1 1 0 01-1-1v-4zm13-1a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 110-2h1.586l-2.293-2.293a1 1 0 111.414-1.414L15 13.586V12a1 1 0 011-1z" clipRule="evenodd" />
                     </svg>
                   ) : (
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-5 h-5 text-white/90" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 11-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 010-2h4a1 1 0 011 1v4a1 1 0 11-2 0V6.414l-2.293 2.293a1 1 0 11-1.414-1.414L13.586 5H12zm-9 7a1 1 0 112 0v1.586l2.293-2.293a1 1 0 111.414 1.414L6.414 15H8a1 1 0 110 2H4a1 1 0 01-1-1v-4zm13-1a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 110-2h1.586l-2.293-2.293a1 1 0 111.414-1.414L15 13.586V12a1 1 0 011-1z" clipRule="evenodd" />
                     </svg>
                   )}
@@ -899,6 +838,7 @@ export default function VideoPlayer({
           </div>
         </div>
       )}
+
     </div>
   );
 }

@@ -32,6 +32,7 @@ export default function VideoCarousel({
   const [togglePlayPause, setTogglePlayPause] = useState<(() => void) | null>(
     null
   );
+  const [mobileControlsData, setMobileControlsData] = useState<any>(null);
 
 
   // Cleanup timeouts
@@ -125,7 +126,7 @@ export default function VideoCarousel({
 
       {/* Main video container */}
       <div
-        className="relative aspect-video rounded-lg overflow-hidden bg-card border border-border group z-10 focus-within:ring-2 focus-within:ring-foreground/20 transition-all duration-300"
+        className="relative aspect-video rounded-lg bg-card border border-border group z-10 focus-within:ring-2 focus-within:ring-foreground/20 transition-all duration-300"
         onMouseEnter={() => {
           if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
           setIsHovered(true);
@@ -140,7 +141,7 @@ export default function VideoCarousel({
         aria-label={`Video carousel, ${currentIndex + 1} of ${videos.length}`}
       >
         {/* Main Video Display */}
-        <div className="relative w-full h-full overflow-hidden bg-card">
+        <div className="relative w-full h-full bg-card rounded-lg">
           <div className="absolute inset-0 w-full h-full">
             {currentVideo.videoFile && (
               <VideoPlayer
@@ -159,6 +160,9 @@ export default function VideoCarousel({
                 onTogglePlayPause={(toggleFn) =>
                   setTogglePlayPause(() => toggleFn)
                 }
+                onMobileControlsChange={(controlsData) => {
+                  setMobileControlsData(controlsData);
+                }}
                 onEnded={() => {
                   setIsPlaying(false);
                 }}
@@ -362,6 +366,109 @@ export default function VideoCarousel({
             />
           ))}
         </motion.div>
+      )}
+
+      {/* Premium Mobile Video Player - Netflix/YouTube Premium Inspired - Only when NOT in fullscreen */}
+      {mobileControlsData && mobileControlsData.isMobile && mobileControlsData.hasBeenUnmuted && !mobileControlsData.isFullscreen && (
+        <div className="relative">
+          {/* Ultra-Thin Progress Line - Modern Separation */}
+          <div 
+            className={`mb-3 transition-all duration-300 ease-out ${mobileControlsData.showControls ? 'opacity-100' : 'opacity-0'}`}
+            style={{
+              transform: mobileControlsData.showControls ? 'translateY(0)' : 'translateY(8px)'
+            }}
+          >
+            <div className="relative h-1 bg-white/30 backdrop-blur-sm rounded-full overflow-hidden">
+              {/* Progress Fill with Premium Gradient */}
+              <div 
+                className="absolute top-0 left-0 h-full bg-gradient-to-r from-foreground via-foreground/95 to-foreground/90 transition-all duration-200 ease-out rounded-full"
+                style={{
+                  width: `${mobileControlsData.duration ? (mobileControlsData.currentTime / mobileControlsData.duration) * 100 : 0}%`,
+                  boxShadow: '0 0 16px rgba(250, 250, 250, 0.5)'
+                }}
+              />
+              
+              {/* Interactive Touch Zone */}
+              <div 
+                className="absolute inset-0 cursor-pointer touch-manipulation"
+                style={{ minHeight: '46px', marginTop: '-22px', marginBottom: '-22px' }}
+                onTouchStart={(e) => {
+                  if (!mobileControlsData.showControls) return;
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const touch = e.touches[0];
+                  const percentage = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
+                  const newTime = percentage * (mobileControlsData.duration || 0);
+                  mobileControlsData.handleSeek(newTime);
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Glassmorphism Control Bar - Premium Design */}
+          <div 
+            className={`bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-3 mx-2 shadow-2xl transition-all duration-300 ease-out ${
+              mobileControlsData.showControls ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+            }`}
+            style={{
+              background: 'linear-gradient(135deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 100%)',
+              backdropFilter: 'blur(20px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)'
+            }}
+          >
+            <div className="flex items-center justify-between">
+              
+              {/* Primary Control - Play/Pause */}
+              <button
+                onClick={(e) => {
+                  if (!mobileControlsData.showControls) return;
+                  e.stopPropagation();
+                  mobileControlsData.togglePlayPause();
+                }}
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 transition-all duration-200 touch-manipulation"
+                style={{ minWidth: '46px', minHeight: '46px' }}
+                aria-label={mobileControlsData.isPlaying ? "Pause video" : "Play video"}
+              >
+                {mobileControlsData.isPlaying ? (
+                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M5.5 3.5A1.5 1.5 0 017 2h.5a1.5 1.5 0 011.5 1.5v13A1.5 1.5 0 017.5 18H7a1.5 1.5 0 01-1.5-1.5v-13zM11.5 3.5A1.5 1.5 0 0113 2h.5a1.5 1.5 0 011.5 1.5v13a1.5 1.5 0 01-1.5 1.5H13a1.5 1.5 0 01-1.5-1.5v-13z" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                  </svg>
+                )}
+              </button>
+
+              {/* Time Display - Netflix Style */}
+              <div className="text-sm text-white/90 font-mono tracking-wide px-3 py-1 rounded-lg bg-black/20">
+                {mobileControlsData.formatTime(mobileControlsData.currentTime)} / {mobileControlsData.formatTime(mobileControlsData.duration)}
+              </div>
+
+              {/* Fullscreen Control */}
+              <button
+                onClick={(e) => {
+                  if (!mobileControlsData.showControls) return;
+                  e.stopPropagation();
+                  mobileControlsData.toggleFullscreen();
+                }}
+                className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-white/10 active:bg-white/20 transition-all duration-200 touch-manipulation"
+                style={{ minWidth: '46px', minHeight: '46px' }}
+                aria-label={mobileControlsData.isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+              >
+                {mobileControlsData.isFullscreen ? (
+                  <svg className="w-5 h-5 text-white/80" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 11-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 010-2h4a1 1 0 011 1v4a1 1 0 11-2 0V6.414l-2.293 2.293a1 1 0 11-1.414-1.414L13.586 5H12zm-9 7a1 1 0 112 0v1.586l2.293-2.293a1 1 0 111.414 1.414L6.414 15H8a1 1 0 110 2H4a1 1 0 01-1-1v-4zm13-1a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 110-2h1.586l-2.293-2.293a1 1 0 111.414-1.414L15 13.586V12a1 1 0 011-1z" clipRule="evenodd" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5 text-white/80" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 11-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 010-2h4a1 1 0 011 1v4a1 1 0 11-2 0V6.414l-2.293 2.293a1 1 0 11-1.414-1.414L13.586 5H12zm-9 7a1 1 0 112 0v1.586l2.293-2.293a1 1 0 111.414 1.414L6.414 15H8a1 1 0 110 2H4a1 1 0 01-1-1v-4zm13-1a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 110-2h1.586l-2.293-2.293a1 1 0 111.414-1.414L15 13.586V12a1 1 0 011-1z" clipRule="evenodd" />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
