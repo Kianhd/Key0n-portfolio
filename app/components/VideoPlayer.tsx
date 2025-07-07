@@ -76,14 +76,28 @@ export default function VideoPlayer({
   const loadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const mobileControlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Helper function to detect mobile devices properly
+  const isMobileDevice = () => {
+    if (typeof window === "undefined") return false;
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isSmallScreen = window.innerWidth <= 768 || window.innerHeight <= 768;
+    return isTouchDevice && isSmallScreen;
+  };
+
   // Mobile detection and fullscreen handling
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(isMobileDevice());
+    };
+    
+    const checkMobileWithDelay = () => {
+      // Add small delay for orientation changes to ensure proper dimensions
+      setTimeout(checkMobile, 100);
     };
     
     checkMobile();
     window.addEventListener('resize', checkMobile);
+    window.addEventListener('orientationchange', checkMobileWithDelay);
     
     // Fullscreen change listener
     const handleFullscreenChange = () => {
@@ -95,6 +109,7 @@ export default function VideoPlayer({
     
     return () => {
       window.removeEventListener('resize', checkMobile);
+      window.removeEventListener('orientationchange', checkMobileWithDelay);
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
       document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
     };
@@ -507,6 +522,7 @@ export default function VideoPlayer({
         autoPlay={autoPlay}
         muted={muted}
         onError={onError}
+        controls={isMobile && hasBeenUnmuted}
       />
 
       {/* Loading Spinner with Progress */}
@@ -691,8 +707,8 @@ export default function VideoPlayer({
       )}
 
 
-      {/* Mobile Center Play/Pause Button - Same as Desktop */}
-      {showControls && !isLoading && hasBeenUnmuted && isMobile && (
+      {/* Mobile Center Play/Pause Button - Hidden when using native controls */}
+      {showControls && !isLoading && hasBeenUnmuted && isMobile && false && (
         <motion.button
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-card/80 backdrop-blur-md border border-border/50 rounded-full flex items-center justify-center text-foreground/90 hover:bg-card hover:border-foreground/30 transition-all duration-300 z-20"
           onClick={togglePlayPause}
@@ -715,8 +731,8 @@ export default function VideoPlayer({
         </motion.button>
       )}
 
-      {/* Fullscreen Exit Button - Top Left Corner - MOBILE ONLY */}
-      {showControls && !isLoading && hasBeenUnmuted && isMobile && isFullscreen && (
+      {/* Fullscreen Exit Button - Top Left Corner - MOBILE ONLY - Hidden when using native controls */}
+      {showControls && !isLoading && hasBeenUnmuted && isMobile && isFullscreen && false && (
         <motion.button
           className="absolute top-6 left-6 w-10 h-10 bg-black/60 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white/90 hover:bg-black/80 hover:border-white/40 transition-all duration-200 z-30 touch-manipulation"
           onClick={(e) => {
@@ -737,8 +753,8 @@ export default function VideoPlayer({
         </motion.button>
       )}
 
-      {/* Premium Mobile Controls - Netflix/YouTube Premium Style - ONLY IN FULLSCREEN */}
-      {showControls && !isLoading && hasBeenUnmuted && isMobile && isFullscreen && (
+      {/* Premium Mobile Controls - Netflix/YouTube Premium Style - ONLY IN FULLSCREEN - Hidden when using native controls */}
+      {showControls && !isLoading && hasBeenUnmuted && isMobile && isFullscreen && false && (
         <div className={`absolute inset-0 flex flex-col justify-end transition-opacity duration-300 ${showMobileControls ? 'opacity-100' : 'opacity-0'}`}>
           {/* Subtle Gradient Overlay for Premium Feel */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />

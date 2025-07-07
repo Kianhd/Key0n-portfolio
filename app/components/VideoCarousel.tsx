@@ -94,7 +94,7 @@ export default function VideoCarousel({
   // Swipe handling with better mobile sensitivity
   const handleDragEnd = (event: any, info: PanInfo) => {
     const threshold =
-      typeof window !== "undefined" && window.innerWidth < 768 ? 30 : 50; // Lower threshold for mobile
+      typeof window !== "undefined" && (('ontouchstart' in window || navigator.maxTouchPoints > 0) && (window.innerWidth <= 768 || window.innerHeight <= 768)) ? 30 : 50; // Lower threshold for mobile
     const velocity = Math.abs(info.velocity.x);
 
     // Consider both distance and velocity for better mobile experience
@@ -206,8 +206,8 @@ export default function VideoCarousel({
             </motion.button>
           )}
 
-          {/* Center Play/Pause Button (shown after unmuting) */}
-          {isUnmuted && (
+          {/* Center Play/Pause Button (shown after unmuting) - Hidden on mobile */}
+          {isUnmuted && !(typeof window !== "undefined" && (('ontouchstart' in window || navigator.maxTouchPoints > 0) && (window.innerWidth <= 768 || window.innerHeight <= 768))) && (
             <motion.button
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-black/60 backdrop-blur-sm rounded-full flex items-center justify-center text-white border border-white/20 transition-all duration-300 z-20 cursor-pointer opacity-0 group-hover:opacity-100"
               onClick={() => {
@@ -256,12 +256,12 @@ export default function VideoCarousel({
                 animate={{
                   opacity:
                     isHovered ||
-                    (typeof window !== "undefined" && window.innerWidth < 768)
+                    (typeof window !== "undefined" && (('ontouchstart' in window || navigator.maxTouchPoints > 0) && (window.innerWidth <= 768 || window.innerHeight <= 768)))
                       ? 1
                       : 0,
                   x:
                     isHovered ||
-                    (typeof window !== "undefined" && window.innerWidth < 768)
+                    (typeof window !== "undefined" && (('ontouchstart' in window || navigator.maxTouchPoints > 0) && (window.innerWidth <= 768 || window.innerHeight <= 768)))
                       ? 0
                       : -20,
                 }}
@@ -296,12 +296,12 @@ export default function VideoCarousel({
                 animate={{
                   opacity:
                     isHovered ||
-                    (typeof window !== "undefined" && window.innerWidth < 768)
+                    (typeof window !== "undefined" && (('ontouchstart' in window || navigator.maxTouchPoints > 0) && (window.innerWidth <= 768 || window.innerHeight <= 768)))
                       ? 1
                       : 0,
                   x:
                     isHovered ||
-                    (typeof window !== "undefined" && window.innerWidth < 768)
+                    (typeof window !== "undefined" && (('ontouchstart' in window || navigator.maxTouchPoints > 0) && (window.innerWidth <= 768 || window.innerHeight <= 768)))
                       ? 0
                       : 20,
                 }}
@@ -368,8 +368,8 @@ export default function VideoCarousel({
         </motion.div>
       )}
 
-      {/* Premium Mobile Video Player - Netflix/YouTube Premium Inspired - Only when NOT in fullscreen */}
-      {mobileControlsData && mobileControlsData.isMobile && mobileControlsData.hasBeenUnmuted && !mobileControlsData.isFullscreen && (
+      {/* Premium Mobile Video Player - Netflix/YouTube Premium Inspired - Hidden when using native controls */}
+      {mobileControlsData && mobileControlsData.isMobile && mobileControlsData.hasBeenUnmuted && !mobileControlsData.isFullscreen && false && (
         <div className="relative">
           {/* Ultra-Thin Progress Line - Modern Separation */}
           <div 
