@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, PanInfo } from "motion/react";
 import VideoPlayer from "./VideoPlayer";
+import { getBrowserOptimizations } from "@/lib/browser-detect";
 
 
 interface Video {
@@ -33,6 +34,7 @@ export default function VideoCarousel({
     null
   );
   const [mobileControlsData, setMobileControlsData] = useState<any>(null);
+  const browserOpts = getBrowserOptimizations();
 
 
   // Cleanup timeouts
@@ -186,7 +188,8 @@ export default function VideoCarousel({
           {/* Center Unmute Button */}
           {!isUnmuted && (
             <motion.button
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-black/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white border border-white/20 transition-all duration-300 z-20 cursor-pointer"
+              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 ${browserOpts.disableSafariBackdrop ? 'bg-black/95' : 'bg-black/80'} ${browserOpts.disableBackdropFilter || browserOpts.disableSafariBackdrop ? '' : 'backdrop-blur-sm'} rounded-full flex items-center justify-center text-white border border-white/20 transition-all duration-300 z-20 cursor-pointer`}
+              style={{ transform: 'translateZ(0)' }}
               onClick={() => {
                 setIsUnmuted(true);
               }}
@@ -209,7 +212,8 @@ export default function VideoCarousel({
           {/* Center Play/Pause Button (shown after unmuting) - Hidden on mobile */}
           {isUnmuted && !(typeof window !== "undefined" && (('ontouchstart' in window || navigator.maxTouchPoints > 0) && (window.innerWidth <= 768 || window.innerHeight <= 768))) && (
             <motion.button
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-black/60 backdrop-blur-sm rounded-full flex items-center justify-center text-white border border-white/20 transition-all duration-300 z-20 cursor-pointer opacity-0 group-hover:opacity-100"
+              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 ${browserOpts.disableSafariBackdrop ? 'bg-black/90' : 'bg-black/60'} ${browserOpts.disableBackdropFilter || browserOpts.disableSafariBackdrop ? '' : 'backdrop-blur-sm'} rounded-full flex items-center justify-center text-white border border-white/20 transition-all duration-300 z-20 cursor-pointer opacity-0 group-hover:opacity-100`}
+              style={{ transform: 'translateZ(0)' }}
               onClick={() => {
                 if (togglePlayPause) {
                   togglePlayPause();
@@ -245,7 +249,8 @@ export default function VideoCarousel({
           {videos.length > 1 && (
             <>
               <motion.button
-                className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 bg-black/60 backdrop-blur-sm rounded-full flex items-center justify-center text-foreground border border-foreground/20 transition-all duration-300 z-10 cursor-pointer touch-manipulation"
+                className={`absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 ${browserOpts.disableSafariBackdrop ? 'bg-black/90' : 'bg-black/60'} ${browserOpts.disableBackdropFilter || browserOpts.disableSafariBackdrop ? '' : 'backdrop-blur-sm'} rounded-full flex items-center justify-center text-foreground border border-foreground/20 transition-all duration-300 z-10 cursor-pointer touch-manipulation`}
+                style={{ transform: 'translateZ(0)' }}
                 onClick={(e) => {
                   e.stopPropagation();
                   handlePrev();
@@ -285,7 +290,8 @@ export default function VideoCarousel({
               </motion.button>
 
               <motion.button
-                className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 bg-black/60 backdrop-blur-sm rounded-full flex items-center justify-center text-foreground border border-foreground/20 transition-all duration-300 z-10 cursor-pointer touch-manipulation"
+                className={`absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 ${browserOpts.disableSafariBackdrop ? 'bg-black/90' : 'bg-black/60'} ${browserOpts.disableBackdropFilter || browserOpts.disableSafariBackdrop ? '' : 'backdrop-blur-sm'} rounded-full flex items-center justify-center text-foreground border border-foreground/20 transition-all duration-300 z-10 cursor-pointer touch-manipulation`}
+                style={{ transform: 'translateZ(0)' }}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleNext();
@@ -378,7 +384,7 @@ export default function VideoCarousel({
               transform: mobileControlsData.showControls ? 'translateY(0)' : 'translateY(8px)'
             }}
           >
-            <div className="relative h-1 bg-white/30 backdrop-blur-sm rounded-full overflow-hidden">
+            <div className={`relative h-1 ${browserOpts.disableSafariBackdrop ? 'bg-white/50' : 'bg-white/30'} ${browserOpts.disableBackdropFilter || browserOpts.disableSafariBackdrop ? '' : 'backdrop-blur-sm'} rounded-full overflow-hidden`}>
               {/* Progress Fill with Premium Gradient */}
               <div 
                 className="absolute top-0 left-0 h-full bg-gradient-to-r from-foreground via-foreground/95 to-foreground/90 transition-all duration-200 ease-out rounded-full"
@@ -406,7 +412,7 @@ export default function VideoCarousel({
 
           {/* Glassmorphism Control Bar - Premium Design */}
           <div 
-            className={`bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-3 mx-2 shadow-2xl transition-all duration-300 ease-out ${
+            className={`${browserOpts.disableSafariBackdrop ? 'bg-black/85' : 'bg-black/40'} ${browserOpts.disableBackdropFilter || browserOpts.disableSafariBackdrop ? '' : 'backdrop-blur-xl'} border border-white/10 rounded-2xl px-4 py-3 mx-2 shadow-2xl transition-all duration-300 ease-out ${
               mobileControlsData.showControls ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             }`}
             style={{

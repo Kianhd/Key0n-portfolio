@@ -1,7 +1,9 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { getBrowserOptimizations } from "@/lib/browser-detect";
+import { throttle } from "@/lib/throttle";
 
 interface Particle {
   id: number;
@@ -20,11 +22,15 @@ interface FloatingParticlesProps {
 export default function FloatingParticles({ count = 20, className = "" }: FloatingParticlesProps) {
   const [particles, setParticles] = useState<Particle[]>([]);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const browserOpts = getBrowserOptimizations();
+  
+  // Reduce particle count for Firefox
+  const adjustedCount = browserOpts.reduceParticles ? Math.max(5, Math.floor(count / 3)) : count;
 
   useEffect(() => {
     const generateParticles = () => {
       const newParticles: Particle[] = [];
-      for (let i = 0; i < count; i++) {
+      for (let i = 0; i < adjustedCount; i++) {
         newParticles.push({
           id: i,
           x: Math.random() * 100,
@@ -38,15 +44,19 @@ export default function FloatingParticles({ count = 20, className = "" }: Floati
     };
 
     generateParticles();
-  }, [count]);
+  }, [adjustedCount]);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMoveRaw = (e: MouseEvent) => {
       setMousePosition({
         x: (e.clientX / window.innerWidth) * 100,
         y: (e.clientY / window.innerHeight) * 100,
       });
     };
+    
+    const handleMouseMove = browserOpts.throttleMouseEvents
+      ? throttle(handleMouseMoveRaw, 32)
+      : handleMouseMoveRaw;
 
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);

@@ -1,6 +1,8 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
+import { getBrowserOptimizations } from "@/lib/browser-detect";
+import { throttle } from "@/lib/throttle";
 
 interface WavesProps {
   lineColor?: string;
@@ -32,6 +34,7 @@ export default function Waves({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number | undefined>(undefined);
   const mouseRef = useRef({ x: 0, y: 0 });
+  const browserOpts = getBrowserOptimizations();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -92,13 +95,17 @@ export default function Waves({
     initPoints();
 
     // Mouse tracking
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMoveRaw = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       mouseRef.current = {
         x: e.clientX - rect.left,
         y: e.clientY - rect.top,
       };
     };
+    
+    const handleMouseMove = browserOpts.throttleMouseEvents
+      ? throttle(handleMouseMoveRaw, 16)
+      : handleMouseMoveRaw;
 
     const handleMouseLeave = () => {
       mouseRef.current = { x: -1000, y: -1000 }; // Move mouse far away

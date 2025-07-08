@@ -32,6 +32,13 @@
 
 .animate-marquee {
   animation: marquee 40s linear infinite;
+  will-change: transform;
+  /* Safari optimization: Force hardware acceleration */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  /* Improve animation performance */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 html {
@@ -138,6 +145,11 @@ body > * {
 .uppercase {
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+/* Performance optimizations for animations */
+[class*="animate-"] {
+  will-change: auto;
 }
 
 /* Animations */

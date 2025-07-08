@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { getBrowserOptimizations } from "@/lib/browser-detect";
 
 interface Beat {
   id: string;
@@ -26,6 +27,7 @@ export default function BeatCard({ beat, onCustomize }: BeatCardProps) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const browserOpts = getBrowserOptimizations();
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -89,9 +91,13 @@ export default function BeatCard({ beat, onCustomize }: BeatCardProps) {
         style={{
           // background: 'rgba(255, 255, 255, 0.05)',
           // backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: "blur(20px)",
+          ...(browserOpts.disableSafariBackdrop 
+            ? { backgroundColor: "rgba(255, 255, 255, 0.08)" }
+            : { WebkitBackdropFilter: "blur(20px)" }
+          ),
           border: "1px solid rgba(255, 255, 255, 0.1)",
           boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+          transform: "translateZ(0)"
         }}
         whileHover={{ y: -2 }}
         transition={{ duration: 0.2 }}
@@ -107,9 +113,10 @@ export default function BeatCard({ beat, onCustomize }: BeatCardProps) {
                 onClick={togglePlay}
                 className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center relative z-10"
                 style={{
-                  backgroundColor: "rgba(255, 198, 11, 0.2)",
-                  backdropFilter: "blur(10px)",
+                  backgroundColor: browserOpts.disableSafariBackdrop ? "rgba(255, 198, 11, 0.3)" : "rgba(255, 198, 11, 0.2)",
+                  ...(browserOpts.disableSafariBackdrop ? {} : { backdropFilter: "blur(10px)" }),
                   border: "2px solid rgba(255, 198, 11, 0.3)",
+                  transform: "translateZ(0)"
                 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -158,8 +165,15 @@ export default function BeatCard({ beat, onCustomize }: BeatCardProps) {
               </motion.button>
               <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div className="absolute inset-0 border-2 border-[#FFC60B] rounded-full" />
-                <div className="absolute inset-0 border-2 border-[#FFC60B] rounded-full blur-sm" />
-                <div className="absolute inset-0 border-2 border-[#FFC60B] rounded-full blur-md opacity-50" />
+                {!browserOpts.limitGlowLayers ? (
+                  <>
+                    <div className="absolute inset-0 border-2 border-[#FFC60B] rounded-full blur-sm" style={{ transform: 'translateZ(0)' }} />
+                    <div className="absolute inset-0 border-2 border-[#FFC60B] rounded-full blur-md opacity-50" style={{ transform: 'translateZ(0)' }} />
+                  </>
+                ) : (
+                  // Safari: Single glow layer
+                  <div className="absolute inset-0 border-2 border-[#FFC60B] rounded-full opacity-30" style={{ filter: 'blur(1px)', transform: 'translateZ(0)' }} />
+                )}
               </div>
             </div>
 
@@ -277,8 +291,15 @@ export default function BeatCard({ beat, onCustomize }: BeatCardProps) {
                   </a>
                   <div className="absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="absolute inset-0 border-2 border-[#FFC60B] rounded-sm" />
-                    <div className="absolute inset-0 border-2 border-[#FFC60B] rounded-sm blur-sm" />
-                    <div className="absolute inset-0 border-2 border-[#FFC60B] rounded-sm blur-md opacity-50" />
+                    {!browserOpts.limitGlowLayers ? (
+                      <>
+                        <div className="absolute inset-0 border-2 border-[#FFC60B] rounded-sm blur-sm" style={{ transform: 'translateZ(0)' }} />
+                        <div className="absolute inset-0 border-2 border-[#FFC60B] rounded-sm blur-md opacity-50" style={{ transform: 'translateZ(0)' }} />
+                      </>
+                    ) : (
+                      // Safari: Single glow layer
+                      <div className="absolute inset-0 border-2 border-[#FFC60B] rounded-sm opacity-30" style={{ filter: 'blur(1px)', transform: 'translateZ(0)' }} />
+                    )}
                   </div>
                 </motion.div>
 

@@ -1,6 +1,8 @@
 "use client";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import { motion } from "motion/react";
+import { getBrowserOptimizations } from "@/lib/browser-detect";
+import { throttle } from "@/lib/throttle";
 
 export const TextHoverEffect = ({
   text,
@@ -14,6 +16,7 @@ export const TextHoverEffect = ({
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);
   const [maskPosition, setMaskPosition] = useState({ cx: "50%", cy: "50%" });
+  const browserOpts = getBrowserOptimizations();
 
   useEffect(() => {
     if (svgRef.current && cursor.x !== null && cursor.y !== null) {
@@ -27,6 +30,21 @@ export const TextHoverEffect = ({
     }
   }, [cursor]);
 
+  const handleMouseMove = useCallback(
+    browserOpts.throttleMouseEvents 
+      ? throttle((e: React.MouseEvent) => setCursor({ x: e.clientX, y: e.clientY }), 16)
+      : (e: React.MouseEvent) => setCursor({ x: e.clientX, y: e.clientY }),
+    [browserOpts.throttleMouseEvents]
+  );
+
+  if (browserOpts.reduceSVGEffects) {
+    return (
+      <div className="text-7xl font-bold text-neutral-200 dark:text-neutral-800 font-[helvetica]">
+        {text}
+      </div>
+    );
+  }
+
   return (
     <svg
       ref={svgRef}
@@ -36,7 +54,7 @@ export const TextHoverEffect = ({
       xmlns="http://www.w3.org/2000/svg"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onMouseMove={(e) => setCursor({ x: e.clientX, y: e.clientY })}
+      onMouseMove={handleMouseMove}
       className="select-none"
     >
       <defs>

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { getBrowserOptimizations } from '@/lib/browser-detect';
 
 interface VideoPlayerProps {
   src: string;
@@ -56,6 +57,7 @@ export default function VideoPlayer({
   const [duration, setDuration] = useState(0);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const browserOpts = getBrowserOptimizations();
   const [loadError, setLoadError] = useState(false);
   const [isVertical, setIsVertical] = useState(false);
   const [loadProgress, setLoadProgress] = useState(0);
@@ -527,7 +529,7 @@ export default function VideoPlayer({
 
       {/* Loading Spinner with Progress */}
       {isLoading && !loadError && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/90 backdrop-blur-sm">
+        <div className={`absolute inset-0 flex flex-col items-center justify-center ${browserOpts.disableSafariBackdrop ? 'bg-background/95' : 'bg-background/90 backdrop-blur-sm'}`}>
           <div className="w-8 h-8 border-2 border-border border-t-foreground/40 rounded-full animate-spin mb-3" />
           {loadProgress > 0 && (
             <div className="w-32 h-1 bg-border/30 rounded-full overflow-hidden">
@@ -543,7 +545,7 @@ export default function VideoPlayer({
       
       {/* Error State */}
       {loadError && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/95 backdrop-blur-sm text-foreground">
+        <div className={`absolute inset-0 flex flex-col items-center justify-center ${browserOpts.disableSafariBackdrop ? 'bg-background/98' : 'bg-background/95 backdrop-blur-sm'} text-foreground`}>
           <svg className="w-12 h-12 mb-3 text-muted/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -569,7 +571,8 @@ export default function VideoPlayer({
 
           {/* Center Play/Pause Button */}
           <motion.button
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-card/80 backdrop-blur-md border border-border/50 rounded-full flex items-center justify-center text-foreground/90 hover:bg-card hover:border-foreground/30 transition-all duration-300"
+            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 ${browserOpts.disableSafariBackdrop ? 'bg-card/95' : 'bg-card/80 backdrop-blur-md'} border border-border/50 rounded-full flex items-center justify-center text-foreground/90 hover:bg-card hover:border-foreground/30 transition-all duration-300`}
+            style={{ transform: 'translateZ(0)' }}
             onClick={togglePlayPause}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -586,7 +589,7 @@ export default function VideoPlayer({
           </motion.button>
 
           {/* Bottom Controls */}
-          <div className="relative z-10 p-4 bg-background/40 backdrop-blur-sm border-t border-border/30">
+          <div className={`relative z-10 p-4 ${browserOpts.disableSafariBackdrop ? 'bg-background/70' : 'bg-background/40 backdrop-blur-sm'} border-t border-border/30`}>
             {/* Progress Bar */}
             <div className="mb-3">
               <input
@@ -689,7 +692,7 @@ export default function VideoPlayer({
           exit={{ opacity: 0, scale: 0.8 }}
           transition={{ duration: 0.2 }}
         >
-          <div className="bg-background/80 backdrop-blur-sm rounded-lg px-6 py-4 flex items-center gap-3 border border-border/30">
+          <div className={`${browserOpts.disableSafariBackdrop ? 'bg-background/90' : 'bg-background/80 backdrop-blur-sm'} rounded-lg px-6 py-4 flex items-center gap-3 border border-border/30`}>
             {showSeekFeedback.direction === 'backward' ? (
               <svg className="w-8 h-8 text-foreground" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -763,7 +766,7 @@ export default function VideoPlayer({
           <div className="relative z-10 p-4 pb-6 mobile-controls-container">
             {/* Ultra-Thin Progress Line - Modern Separation */}
             <div className="mb-4">
-              <div className="relative h-1 bg-white/30 backdrop-blur-sm rounded-full overflow-hidden">
+              <div className={`relative h-1 ${browserOpts.disableSafariBackdrop ? 'bg-white/50' : 'bg-white/30 backdrop-blur-sm'} rounded-full overflow-hidden`}>
                 {/* Progress Fill with Premium Gradient */}
                 <div 
                   className="absolute top-0 left-0 h-full bg-gradient-to-r from-white via-white/95 to-white/90 transition-all duration-200 ease-out rounded-full"
@@ -791,7 +794,7 @@ export default function VideoPlayer({
 
             {/* Glassmorphism Control Bar - Premium Design */}
             <div 
-              className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-3 shadow-2xl mobile-control-bar"
+              className={`${browserOpts.disableSafariBackdrop ? 'bg-black/80' : 'bg-black/40 backdrop-blur-xl'} border border-white/10 rounded-2xl px-4 py-3 shadow-2xl mobile-control-bar`}
               style={{
                 background: 'linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 100%)',
                 backdropFilter: 'blur(20px) saturate(180%)',

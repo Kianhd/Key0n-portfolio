@@ -6,11 +6,13 @@ import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { useActiveSection } from "../hooks/useActiveSection";
 import { motion } from "motion/react";
+import { getBrowserOptimizations } from "@/lib/browser-detect";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const activeSection = useActiveSection();
   const pathname = usePathname();
+  const browserOpts = getBrowserOptimizations();
 
   const menuItems = [
     { label: "Home", href: "/", section: "home" },
@@ -108,7 +110,7 @@ const Navigation = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-md border-b border-border z-50" style={{ transform: 'translateZ(0)' }}>
+    <nav className={`fixed top-0 left-0 right-0 bg-background/95 ${browserOpts.disableBackdropFilter || browserOpts.disableSafariBackdrop ? '' : 'backdrop-blur-md'} border-b border-border z-50`} style={{ transform: 'translateZ(0)', backgroundColor: browserOpts.disableBackdropFilter || browserOpts.disableSafariBackdrop ? 'rgba(0, 0, 0, 0.98)' : undefined }}>
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center space-x-3">
@@ -155,8 +157,15 @@ const Navigation = () => {
                     }}
                   >
                     <div className="w-full h-full bg-foreground rounded-full" />
-                    <div className="absolute inset-0 bg-foreground rounded-full blur-sm" />
-                    <div className="absolute inset-0 bg-foreground rounded-full blur-md opacity-50" />
+                    {!browserOpts.limitGlowLayers ? (
+                      <>
+                        <div className="absolute inset-0 bg-foreground rounded-full blur-sm" style={{ transform: 'translateZ(0)' }} />
+                        <div className="absolute inset-0 bg-foreground rounded-full blur-md opacity-50" style={{ transform: 'translateZ(0)' }} />
+                      </>
+                    ) : (
+                      // Safari: Single reduced glow layer
+                      <div className="absolute inset-0 bg-foreground rounded-full opacity-30" style={{ filter: 'blur(1px)', transform: 'translateZ(0)' }} />
+                    )}
                   </motion.div>
                 )}
               </div>
@@ -231,7 +240,9 @@ const Navigation = () => {
                   {activeSection === item.section && (
                     <div className="absolute bottom-0 left-0 right-0 h-[2px]">
                       <div className="w-full h-full bg-foreground rounded-full" />
-                      <div className="absolute inset-0 bg-foreground rounded-full blur-sm" />
+                      {!browserOpts.limitGlowLayers && (
+                        <div className="absolute inset-0 bg-foreground rounded-full blur-sm" style={{ transform: 'translateZ(0)' }} />
+                      )}
                     </div>
                   )}
                 </div>
@@ -259,7 +270,9 @@ const Navigation = () => {
                 </a>
                 <div className="absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                   <div className="absolute inset-0 border-2 border-foreground rounded-sm" />
-                  <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-sm opacity-70" />
+                  {!browserOpts.limitGlowLayers && (
+                    <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-sm opacity-70" style={{ transform: 'translateZ(0)' }} />
+                  )}
                 </div>
               </div>
             </div>

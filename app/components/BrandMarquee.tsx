@@ -1,5 +1,7 @@
 "use client";
 
+import { getBrowserOptimizations } from "@/lib/browser-detect";
+
 interface Brand {
   name: string;
   logo: string; // URL or path to logo
@@ -13,6 +15,7 @@ interface BrandMarqueeProps {
 export default function BrandMarquee({ brands }: BrandMarqueeProps) {
   // Duplicate arrays for seamless loop
   const duplicatedBrands = [...brands, ...brands];
+  const browserOpts = getBrowserOptimizations();
 
   return (
     <div className="w-full overflow-hidden py-20 bg-background">
@@ -30,7 +33,14 @@ export default function BrandMarquee({ brands }: BrandMarqueeProps) {
         <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
 
         {/* Marquee wrapper */}
-        <div className="flex animate-marquee">
+        <div 
+          className="flex animate-marquee"
+          style={{
+            // Hardware acceleration for smooth animation
+            transform: 'translateZ(0)',
+            willChange: 'transform'
+          }}
+        >
           {/* First set */}
           <div className="flex shrink-0">
             {brands.map((brand, index) => (
@@ -42,9 +52,17 @@ export default function BrandMarquee({ brands }: BrandMarqueeProps) {
                   <img
                     src={brand.logo}
                     alt={`${brand.name} logo`}
-                    className={`h-9 md:h-12 lg:h-15 w-auto opacity-80 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)] ${
-                      brand.invertColor ? 'filter brightness-0 invert' : ''
+                    className={`h-9 md:h-12 lg:h-15 w-auto opacity-80 hover:opacity-100 transition-opacity duration-300 ${
+                      // Safari: Avoid filter stacking to prevent glitch
+                      browserOpts.disableFilterStacking
+                        ? (brand.invertColor ? 'filter brightness-0 invert' : 'drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)]')
+                        : `drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)] ${brand.invertColor ? 'filter brightness-0 invert' : ''}`
                     }`}
+                    style={{
+                      // Hardware acceleration for Safari
+                      transform: 'translateZ(0)',
+                      willChange: browserOpts.avoidFilterAnimations ? 'opacity' : 'auto'
+                    }}
                     loading="lazy"
                   />
                 </div>
@@ -63,9 +81,17 @@ export default function BrandMarquee({ brands }: BrandMarqueeProps) {
                   <img
                     src={brand.logo}
                     alt={`${brand.name} logo`}
-                    className={`h-9 md:h-12 lg:h-15 w-auto opacity-80 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)] ${
-                      brand.invertColor ? 'filter brightness-0 invert' : ''
+                    className={`h-9 md:h-12 lg:h-15 w-auto opacity-80 hover:opacity-100 transition-opacity duration-300 ${
+                      // Safari: Avoid filter stacking to prevent glitch
+                      browserOpts.disableFilterStacking
+                        ? (brand.invertColor ? 'filter brightness-0 invert' : 'drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)]')
+                        : `drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)] ${brand.invertColor ? 'filter brightness-0 invert' : ''}`
                     }`}
+                    style={{
+                      // Hardware acceleration for Safari
+                      transform: 'translateZ(0)',
+                      willChange: browserOpts.avoidFilterAnimations ? 'opacity' : 'auto'
+                    }}
                     loading="lazy"
                   />
                 </div>
