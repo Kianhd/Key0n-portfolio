@@ -3,6 +3,7 @@ import React, { useRef, useEffect, useState, useCallback } from "react";
 import { motion } from "motion/react";
 import { getBrowserOptimizations } from "@/lib/browser-detect";
 import { throttle } from "@/lib/throttle";
+import { useThrottledMouseTracking } from "@/app/hooks/useThrottledAnimation";
 
 export const TextHoverEffect = ({
   text,
@@ -30,12 +31,17 @@ export const TextHoverEffect = ({
     }
   }, [cursor]);
 
-  const handleMouseMove = useCallback(
-    browserOpts.throttleMouseEvents 
-      ? throttle((e: React.MouseEvent) => setCursor({ x: e.clientX, y: e.clientY }), 16)
-      : (e: React.MouseEvent) => setCursor({ x: e.clientX, y: e.clientY }),
-    [browserOpts.throttleMouseEvents]
-  );
+  // Use throttled mouse tracking hook instead of manual throttling
+  useThrottledMouseTracking((x: number, y: number) => {
+    setCursor({ x, y });
+  });
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    // This will be automatically throttled by the hook for Firefox
+    if (!browserOpts.throttleMouseEvents) {
+      setCursor({ x: e.clientX, y: e.clientY });
+    }
+  }, [browserOpts.throttleMouseEvents]);
 
   if (browserOpts.reduceSVGEffects) {
     return (

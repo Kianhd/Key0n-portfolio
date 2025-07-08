@@ -249,7 +249,13 @@ export default function VideoCarousel({
           {videos.length > 1 && (
             <>
               <motion.button
-                className={`absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 ${browserOpts.disableSafariBackdrop ? 'bg-black/90' : 'bg-black/60'} ${browserOpts.disableBackdropFilter || browserOpts.disableSafariBackdrop ? '' : 'backdrop-blur-sm'} rounded-full flex items-center justify-center text-foreground border border-foreground/20 transition-all duration-300 z-10 cursor-pointer touch-manipulation`}
+                className={`absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 ${
+                  browserOpts.disableSafariBackdrop ? 'bg-black/90' : 
+                  browserOpts.disableBackdropFilter ? 'bg-black/80' : 
+                  'bg-black/60'
+                } ${
+                  browserOpts.disableBackdropFilter || browserOpts.disableSafariBackdrop ? '' : 'backdrop-blur-sm'
+                } rounded-full flex items-center justify-center text-foreground border border-foreground/20 transition-all duration-300 z-10 cursor-pointer touch-manipulation`}
                 style={{ transform: 'translateZ(0)' }}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -270,9 +276,15 @@ export default function VideoCarousel({
                       ? 0
                       : -20,
                 }}
-                transition={{ duration: 0.3 }}
-                whileHover={{ scale: 1.1, backgroundColor: "rgba(0,0,0,0.8)" }}
-                whileTap={{ scale: 0.95 }}
+                transition={{ 
+                  duration: browserOpts.simplifyFramerMotion ? 0.2 : 0.3,
+                  ease: browserOpts.useSimpleEasing ? "easeOut" : "easeInOut"
+                }}
+                whileHover={browserOpts.simplifyFramerMotion ? 
+                  { backgroundColor: "rgba(0,0,0,0.8)" } : 
+                  { scale: 1.1, backgroundColor: "rgba(0,0,0,0.8)" }
+                }
+                whileTap={browserOpts.simplifyFramerMotion ? {} : { scale: 0.95 }}
               >
                 <svg
                   className="w-6 h-6"
@@ -290,7 +302,13 @@ export default function VideoCarousel({
               </motion.button>
 
               <motion.button
-                className={`absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 ${browserOpts.disableSafariBackdrop ? 'bg-black/90' : 'bg-black/60'} ${browserOpts.disableBackdropFilter || browserOpts.disableSafariBackdrop ? '' : 'backdrop-blur-sm'} rounded-full flex items-center justify-center text-foreground border border-foreground/20 transition-all duration-300 z-10 cursor-pointer touch-manipulation`}
+                className={`absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 ${
+                  browserOpts.disableSafariBackdrop ? 'bg-black/90' : 
+                  browserOpts.disableBackdropFilter ? 'bg-black/80' : 
+                  'bg-black/60'
+                } ${
+                  browserOpts.disableBackdropFilter || browserOpts.disableSafariBackdrop ? '' : 'backdrop-blur-sm'
+                } rounded-full flex items-center justify-center text-foreground border border-foreground/20 transition-all duration-300 z-10 cursor-pointer touch-manipulation`}
                 style={{ transform: 'translateZ(0)' }}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -311,9 +329,15 @@ export default function VideoCarousel({
                       ? 0
                       : 20,
                 }}
-                transition={{ duration: 0.3 }}
-                whileHover={{ scale: 1.1, backgroundColor: "rgba(0,0,0,0.8)" }}
-                whileTap={{ scale: 0.95 }}
+                transition={{ 
+                  duration: browserOpts.simplifyFramerMotion ? 0.2 : 0.3,
+                  ease: browserOpts.useSimpleEasing ? "easeOut" : "easeInOut"
+                }}
+                whileHover={browserOpts.simplifyFramerMotion ? 
+                  { backgroundColor: "rgba(0,0,0,0.8)" } : 
+                  { scale: 1.1, backgroundColor: "rgba(0,0,0,0.8)" }
+                }
+                whileTap={browserOpts.simplifyFramerMotion ? {} : { scale: 0.95 }}
               >
                 <svg
                   className="w-6 h-6"
@@ -339,7 +363,11 @@ export default function VideoCarousel({
             className="absolute top-4 right-4 glass-dark rounded-full px-3 py-1 text-sm font-usb-club"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3 }}
+            transition={{ 
+              delay: browserOpts.simplifyFramerMotion ? 0.1 : 0.3,
+              duration: browserOpts.simplifyFramerMotion ? 0.2 : 0.3,
+              ease: browserOpts.useSimpleEasing ? "easeOut" : "easeInOut"
+            }}
           >
             {currentIndex + 1}/{videos.length}
           </motion.div>

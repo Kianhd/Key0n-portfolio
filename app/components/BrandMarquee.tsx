@@ -46,7 +46,7 @@ export default function BrandMarquee({ brands }: BrandMarqueeProps) {
             {brands.map((brand, index) => (
               <div
                 key={`${brand.name}-${index}`}
-                className="flex-shrink-0 flex items-center justify-center px-10 md:px-14 lg:px-18"
+                className="flex-shrink-0 flex items-center justify-center px-6 md:px-10 lg:px-12"
               >
                 <div className="relative group">
                   <img
@@ -75,7 +75,7 @@ export default function BrandMarquee({ brands }: BrandMarqueeProps) {
             {brands.map((brand, index) => (
               <div
                 key={`${brand.name}-${index}-duplicate`}
-                className="flex-shrink-0 flex items-center justify-center px-10 md:px-14 lg:px-18"
+                className="flex-shrink-0 flex items-center justify-center px-6 md:px-10 lg:px-12"
               >
                 <div className="relative group">
                   <img

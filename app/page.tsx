@@ -2,11 +2,12 @@
 
 import Navigation from "./components/Navigation";
 import VideoCarousel from "./components/VideoCarousel";
-import Waves from "./components/Waves";
 import SchemaMarkup from "./components/SchemaMarkup";
 import BrandMarquee from "./components/BrandMarquee";
 import { motion } from "motion/react";
 import { useScrollAnimation } from "./hooks/useScrollAnimation";
+import { getBrowserOptimizations } from "@/lib/browser-detect";
+import { usePerformanceMonitor, usePerformanceWarnings } from "./hooks/usePerformanceMonitor";
 import {
   generateProjectVideos,
   projectFolders,
@@ -33,6 +34,11 @@ interface Project {
 
 export default function Home() {
   useScrollAnimation();
+  const browserOpts = getBrowserOptimizations();
+  
+  // Performance monitoring for Firefox debugging (development only)
+  usePerformanceMonitor();
+  usePerformanceWarnings();
 
   const brands = [
     { name: "Always", logo: "/Brands/Always Logo.png" },
@@ -147,86 +153,128 @@ export default function Home() {
       <Navigation />
 
       <section className="min-h-screen flex items-center justify-center relative overflow-hidden pt-16 gradient-fade-bottom">
-        {/* <Waves
-          lineColor="#690707"
-          backgroundColor="transparent"
-          waveSpeedX={0.02}
-          waveSpeedY={0.01}
-          waveAmpX={40}
-          waveAmpY={20}
-          friction={0.9}
-          tension={0.01}
-          maxCursorMove={120}
-          xGap={12}
-          yGap={36}
-        /> */}
         <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 text-center relative z-10 py-32 sm:py-40">
           <motion.h1
-            className="text-hero mb-12 relative leading-[0.85] font-bold"
+            className="text-hero mb-12 relative leading-[0.85]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
+            transition={{ 
+              duration: browserOpts.simplifyFramerMotion ? 0.3 : 1, 
+              delay: browserOpts.simplifyFramerMotion ? 0 : 0.2,
+              ease: browserOpts.useSimpleEasing ? "easeOut" : [0.4, 0, 0.2, 1]
+            }}
+            style={{ willChange: browserOpts.forceHardwareAcceleration ? 'transform, opacity' : 'auto' }}
           >
             <motion.span
-              className="relative inline-block text-foreground/90 font-medium tracking-tight"
-              initial={{ opacity: 0, y: 20 }}
+              className="relative inline-block text-foreground/90 font-normal tracking-tight"
+              initial={{ opacity: 0, y: browserOpts.simplifyFramerMotion ? 10 : 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+              transition={{ 
+                duration: browserOpts.simplifyFramerMotion ? 0.3 : 0.8, 
+                delay: browserOpts.simplifyFramerMotion ? 0.05 : 0.3, 
+                ease: browserOpts.useSimpleEasing ? "easeOut" : "easeOut" 
+              }}
+              style={{ willChange: browserOpts.forceHardwareAcceleration ? 'transform, opacity' : 'auto' }}
             >
               MUSIC THAT
             </motion.span>
             <br />
             <motion.span
               className="relative inline-block text-foreground/70 font-light tracking-wider"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: browserOpts.simplifyFramerMotion ? 10 : 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+              transition={{ 
+                duration: browserOpts.simplifyFramerMotion ? 0.3 : 0.8, 
+                delay: browserOpts.simplifyFramerMotion ? 0.1 : 0.5, 
+                ease: browserOpts.useSimpleEasing ? "easeOut" : "easeOut" 
+              }}
+              style={{ willChange: browserOpts.forceHardwareAcceleration ? 'transform, opacity' : 'auto' }}
             >
               TELLS
             </motion.span>
             <br />
             <motion.span
-              className="relative inline-block bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent font-bold tracking-tight"
-              initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
+              className="relative inline-block bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent font-semibold tracking-tight"
+              initial={{ 
+                opacity: 0, 
+                y: browserOpts.simplifyFramerMotion ? 10 : 20,
+                ...(browserOpts.disableBlurTransitions ? {} : { filter: "blur(4px)" })
+              }}
+              animate={{ 
+                opacity: 1, 
+                y: 0,
+                ...(browserOpts.disableBlurTransitions ? {} : { filter: "blur(0px)" })
+              }}
+              transition={{ 
+                duration: browserOpts.simplifyFramerMotion ? 0.3 : 1.2, 
+                delay: browserOpts.simplifyFramerMotion ? 0.15 : 0.6, 
+                ease: browserOpts.useSimpleEasing ? "easeOut" : "easeOut" 
+              }}
+              style={{ willChange: browserOpts.forceHardwareAcceleration ? 'transform, opacity' : 'auto' }}
             >
               YOUR STORY
             </motion.span>
           </motion.h1>
           <motion.p
-            className="text-base md:text-lg text-muted/60 mb-16 max-w-xl mx-auto leading-relaxed font-light tracking-wide"
+            className="text-body-large text-muted/60 mb-16 max-w-xl mx-auto leading-relaxed font-normal tracking-wide"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1.2 }}
+            transition={{ 
+              duration: browserOpts.simplifyFramerMotion ? 0.3 : 1, 
+              delay: browserOpts.simplifyFramerMotion ? 0.2 : 1.2,
+              ease: browserOpts.useSimpleEasing ? "easeOut" : [0.4, 0, 0.2, 1]
+            }}
+            style={{ willChange: browserOpts.forceHardwareAcceleration ? 'opacity' : 'auto' }}
           >
-            Crafting sonic experiences that resonate
+            Helping brands express their unique identity through unforgettable, custom-made music.
           </motion.p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center max-w-md mx-auto sm:max-w-none">
             <div className="relative group">
               <a
                 href="#work"
-                className="border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background backdrop-blur-[20px] px-12 py-5 text-small uppercase font-semibold transition-all duration-300 inline-block rounded-sm relative z-10"
+                className={`border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background px-12 py-5 text-small uppercase font-medium transition-all duration-300 inline-block rounded-sm relative z-10 ${
+                  browserOpts.disableBackdropFilter ? 'bg-background/80' : 'backdrop-blur-[20px]'
+                }`}
               >
                 View Our Work
               </a>
               <div className="absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="absolute inset-0 border-2 border-foreground rounded-sm" />
-                <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-sm" />
-                <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-md opacity-50" />
+                {browserOpts.reduceBlur ? (
+                  /* Firefox optimized - single border with box-shadow */
+                  <div className="absolute inset-0 border-2 border-foreground rounded-sm" style={{
+                    boxShadow: '0 0 8px rgba(250, 250, 250, 0.5)'
+                  }} />
+                ) : (
+                  /* Full effect for other browsers */
+                  <>
+                    <div className="absolute inset-0 border-2 border-foreground rounded-sm" />
+                    <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-sm" />
+                    <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-md opacity-50" />
+                  </>
+                )}
               </div>
             </div>
             <div className="relative group">
               <a
                 href="#contact"
-                className="border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background px-12 py-5 text-small uppercase font-semibold transition-all duration-300 inline-block rounded-sm relative z-10"
+                className="border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background px-12 py-5 text-small uppercase font-medium transition-all duration-300 inline-block rounded-sm relative z-10"
               >
                 Get In Touch
               </a>
               <div className="absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="absolute inset-0 border-2 border-foreground rounded-sm" />
-                <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-sm" />
-                <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-md opacity-50" />
+                {browserOpts.reduceBlur ? (
+                  /* Firefox optimized - single border with box-shadow */
+                  <div className="absolute inset-0 border-2 border-foreground rounded-sm" style={{
+                    boxShadow: '0 0 8px rgba(250, 250, 250, 0.5)'
+                  }} />
+                ) : (
+                  /* Full effect for other browsers */
+                  <>
+                    <div className="absolute inset-0 border-2 border-foreground rounded-sm" />
+                    <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-sm" />
+                    <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-md opacity-50" />
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -234,14 +282,25 @@ export default function Home() {
           {/* Scroll indicator */}
           <motion.div
             className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: browserOpts.simplifyFramerMotion ? -10 : -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.4 }}
+            transition={{ 
+              duration: browserOpts.simplifyFramerMotion ? 0.2 : 0.6, 
+              delay: browserOpts.simplifyFramerMotion ? 0.25 : 1.4,
+              ease: browserOpts.useSimpleEasing ? "easeOut" : [0.4, 0, 0.2, 1]
+            }}
+            style={{ willChange: browserOpts.forceHardwareAcceleration ? 'transform, opacity' : 'auto' }}
           >
             <motion.div
               className="flex flex-col items-center gap-2"
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              animate={browserOpts.reduceMotionComplexity ? { y: [0, 3, 0] } : { y: [0, 8, 0] }}
+              transition={{ 
+                duration: browserOpts.reduceMotionComplexity ? 2.5 : 2, 
+                repeat: Infinity, 
+                ease: browserOpts.useSimpleEasing ? "linear" : "easeInOut",
+                repeatType: "reverse"
+              }}
+              style={{ willChange: browserOpts.forceHardwareAcceleration ? 'transform' : 'auto' }}
             >
               <span className="text-xs text-muted/60 uppercase tracking-wider">
                 Scroll
@@ -255,13 +314,201 @@ export default function Home() {
       {/* Brand Showcase Section */}
       <BrandMarquee brands={brands} />
 
+      <section
+        id="about"
+        className="py-32 px-6 sm:px-8 lg:px-12 relative overflow-hidden"
+      >
+        {/* Background ambience */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 left-0 w-96 h-96 bg-foreground/3 rounded-full blur-[120px] -translate-x-1/2" />
+          <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-foreground/3 rounded-full blur-[120px] translate-x-1/2" />
+        </div>
+
+        <div className="max-w-7xl mx-auto relative">
+          {/* Floating sound wave visualization */}
+          <motion.div 
+            className="absolute -top-10 left-1/2 -translate-x-1/2 w-full max-w-4xl opacity-10"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 0.1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2 }}
+          >
+            <svg viewBox="0 0 1200 100" className="w-full h-20">
+              <motion.path
+                d="M0,50 Q300,20 600,50 T1200,50"
+                stroke="currentColor"
+                strokeWidth="0.5"
+                fill="none"
+                initial={{ pathLength: 0 }}
+                whileInView={{ pathLength: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 2, ease: "easeOut" }}
+              />
+            </svg>
+          </motion.div>
+
+          <div className="grid lg:grid-cols-12 gap-16 items-center">
+            {/* Left side - Main content */}
+            <motion.div 
+              className="lg:col-span-7 space-y-8"
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8 }}
+            >
+              <div>
+                <motion.span 
+                  className="text-small uppercase tracking-[0.2em] text-muted/60 font-light"
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                >
+                  Since Age 13
+                </motion.span>
+                <motion.h2 
+                  className="text-5xl lg:text-6xl font-bold mt-4 leading-[1.1]"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                >
+                  <span className="text-foreground/90">I'm </span>
+                  <span className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">Key0n</span>
+                </motion.h2>
+              </div>
+
+              <div className="space-y-6">
+                <motion.p 
+                  className="text-xl lg:text-2xl leading-relaxed text-foreground/80 font-light"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
+                  I don't just make beats.<br />
+                  I craft <span className="text-foreground font-medium">emotional experiences</span> that move people and make brands <span className="text-foreground font-medium">unforgettable</span>.
+                </motion.p>
+
+                <motion.p 
+                  className="text-lg text-muted/80 leading-relaxed"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                >
+                  My passion? Helping brands discover their <span className="italic">true voice</span> through custom-made, cinematic sound identities that resonate.
+                </motion.p>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                >
+                  <div className="inline-flex items-center gap-4 pt-4">
+                    <div className="h-px w-12 bg-foreground/30" />
+                    <p className="text-lg font-medium italic text-foreground/90">
+                      Your brand deserves to be heard,<br />not just seen.
+                    </p>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+
+            {/* Right side - Visual element */}
+            <motion.div 
+              className="lg:col-span-5 relative"
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, delay: 0.3 }}
+            >
+              <div className="relative">
+                {/* Audio waveform visualization */}
+                <div className="aspect-[4/3] relative rounded-2xl overflow-hidden bg-gradient-to-br from-foreground/5 to-transparent">
+                  <div className="absolute inset-0 flex items-center justify-center p-8">
+                    <div className="w-full h-full flex items-center justify-center gap-1">
+                      {[...Array(24)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="flex-1 bg-foreground/20 rounded-full"
+                          initial={{ height: "20%" }}
+                          animate={{ 
+                            height: ["20%", `${30 + Math.random() * 40}%`, "20%"]
+                          }}
+                          transition={{
+                            duration: 2 + Math.random() * 2,
+                            repeat: Infinity,
+                            delay: i * 0.1,
+                            ease: "easeInOut"
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Floating particles */}
+                  <div className="absolute inset-0">
+                    {[...Array(6)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute w-1 h-1 bg-foreground/30 rounded-full"
+                        style={{
+                          left: `${20 + i * 15}%`,
+                          top: `${30 + i * 10}%`
+                        }}
+                        animate={{
+                          y: [0, -30, 0],
+                          opacity: [0.3, 0.6, 0.3]
+                        }}
+                        transition={{
+                          duration: 3 + i,
+                          repeat: Infinity,
+                          delay: i * 0.5
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Quote marks */}
+                <div className="absolute -top-4 -left-4 text-6xl text-foreground/10 font-serif">
+                  "
+                </div>
+                <div className="absolute -bottom-4 -right-4 text-6xl text-foreground/10 font-serif rotate-180">
+                  "
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Bottom section - Team mention */}
+          <motion.div 
+            className="mt-20 text-center"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
+            <p className="text-lg text-muted/70 max-w-3xl mx-auto leading-relaxed">
+              Together with my team, we create distinctive sonic signatures for 
+              <span className="text-foreground/80"> artists</span>, 
+              <span className="text-foreground/80"> brands</span>, 
+              <span className="text-foreground/80"> films</span>, and 
+              <span className="text-foreground/80"> experiences</span> that connect on a deeper level.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
       <section id="work" className="py-16 overflow-hidden">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-40 md:mb-52 lg:mb-64">
-            <h2 className="text-title font-bold mb-8 uppercase scroll-fade-in">
+            <h2 className="text-title font-semibold mb-8 uppercase scroll-fade-in">
               Featured Work
             </h2>
-            <p className="text-muted text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+            <p className="text-body-large text-muted max-w-2xl mx-auto leading-relaxed font-normal">
               Collaborations with leading brands and artists across multiple
               genres
             </p>
@@ -274,10 +521,14 @@ export default function Home() {
                 className={`flex flex-col ${
                   index % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"
                 } gap-8 lg:gap-12 items-start lg:items-center`}
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: browserOpts.simplifyFramerMotion ? 20 : 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6 }}
+                viewport={{ once: true, margin: browserOpts.simplifyFramerMotion ? "-50px" : "-100px" }}
+                transition={{ 
+                  duration: browserOpts.simplifyFramerMotion ? 0.2 : 0.6,
+                  ease: browserOpts.useSimpleEasing ? "easeOut" : [0.4, 0, 0.2, 1]
+                }}
+                style={{ willChange: browserOpts.forceHardwareAcceleration ? 'transform, opacity' : 'auto' }}
               >
                 {/* Video Side */}
                 <div className="w-full lg:w-3/5 max-w-full">
@@ -295,12 +546,12 @@ export default function Home() {
                     </div>
 
                     {/* Project Title */}
-                    <h3 className="text-subtitle font-bold text-foreground uppercase leading-tight">
+                    <h3 className="text-subtitle font-medium text-foreground uppercase leading-tight">
                       {project.title}
                     </h3>
 
                     {/* Client Info */}
-                    <div className="flex items-center gap-2 text-small text-muted uppercase">
+                    <div className="flex items-center gap-2 text-small text-muted uppercase font-normal">
                       <span className="w-2 h-2 bg-foreground/60 rounded-full"></span>
                       <span>{project.client}</span>
                     </div>
@@ -317,7 +568,7 @@ export default function Home() {
 
                   {/* Video Navigation Hint */}
                   {project.videos.length > 1 && (
-                    <div className="text-xs text-muted/60 uppercase tracking-wide">
+                    <div className="text-caption text-muted/60 uppercase tracking-wide font-normal">
                       Use arrow keys or click to navigate videos
                     </div>
                   )}
@@ -328,50 +579,235 @@ export default function Home() {
         </div>
       </section>
 
-      <section
-        id="about"
-        className="py-24 px-6 sm:px-8 lg:px-12 gradient-fade-bottom"
-      >
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-title font-bold mb-8 uppercase scroll-fade-in">
-            Bringing Your Vision to Life
-          </h2>
-          <p className="text-body text-muted mb-16 leading-relaxed max-w-3xl mx-auto">
-            With years of experience in music production and film scoring, KEY0N
-            and his team create distinctive sonic signatures for artists,
-            brands, short films, and feature movies that connect with audiences
-            on a deeper level.
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
-            <div className="p-6 card-minimal">
-              <div className="text-stats font-bold mb-2">150+</div>
-              <div className="text-small text-muted uppercase">Projects</div>
-            </div>
-            <div className="p-6 card-minimal">
-              <div className="text-stats font-bold mb-2">50+</div>
-              <div className="text-small text-muted uppercase">Brands</div>
-            </div>
-            <div className="p-6 card-minimal">
-              <div className="text-stats font-bold mb-2">100M+</div>
-              <div className="text-small text-muted uppercase">Streams</div>
-            </div>
-            <div className="p-6 card-minimal">
-              <div className="text-stats font-bold mb-2">4</div>
-              <div className="text-small text-muted uppercase">Genres</div>
-            </div>
+      {/* Beats Section - What I Create */}
+      <section id="beats" className="py-32 px-6 sm:px-8 lg:px-12 bg-gradient-to-b from-background via-background/95 to-background">
+        <div className="max-w-7xl mx-auto">
+          <motion.div 
+            className="text-center mb-20"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="text-5xl lg:text-6xl font-bold mb-6">
+              <span className="text-foreground/80">What I Create </span>
+              <span className="bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">for You</span>
+            </h2>
+            <p className="text-lg text-muted/70 max-w-2xl mx-auto">
+              Transforming your vision into unforgettable sonic experiences
+            </p>
+          </motion.div>
+
+          <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
+            {/* Custom Brand Music */}
+            <motion.div
+              className="group relative"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <div className="relative p-8 lg:p-10 h-full rounded-2xl bg-gradient-to-br from-foreground/5 to-transparent border border-foreground/10 overflow-hidden transition-all duration-500 group-hover:border-foreground/20">
+                {/* Background glow on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                {/* Icon */}
+                <motion.div 
+                  className="w-16 h-16 mb-6 relative"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <div className="absolute inset-0 bg-foreground/10 rounded-xl blur-xl" />
+                  <div className="relative w-full h-full bg-gradient-to-br from-foreground/20 to-foreground/10 rounded-xl flex items-center justify-center">
+                    <span className="text-2xl">✨</span>
+                  </div>
+                </motion.div>
+
+                <h3 className="text-2xl font-semibold mb-4 text-foreground/90">
+                  Custom Brand Music
+                </h3>
+                
+                <p className="text-muted/80 leading-relaxed mb-6">
+                  Full commercial tracks with strategic variations. We finalize the full track first, then create professional cutdowns for every need.
+                </p>
+
+                {/* Features */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-muted/60">
+                    <div className="w-1 h-1 bg-foreground/40 rounded-full" />
+                    <span>Full track + variations (60s, 30s, 15s)</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted/60">
+                    <div className="w-1 h-1 bg-foreground/40 rounded-full" />
+                    <span>Professional cutdowns included</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted/60">
+                    <div className="w-1 h-1 bg-foreground/40 rounded-full" />
+                    <span>Campaign-ready deliverables</span>
+                  </div>
+                </div>
+
+                {/* Hover indicator */}
+                <div className="absolute bottom-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="w-8 h-8 rounded-full bg-foreground/10 flex items-center justify-center">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Sonic Logos */}
+            <motion.div
+              className="group relative"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <div className="relative p-8 lg:p-10 h-full rounded-2xl bg-gradient-to-br from-foreground/5 to-transparent border border-foreground/10 overflow-hidden transition-all duration-500 group-hover:border-foreground/20">
+                {/* Background glow on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                {/* Icon */}
+                <motion.div 
+                  className="w-16 h-16 mb-6 relative"
+                  whileHover={{ scale: 1.1, rotate: -5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <div className="absolute inset-0 bg-foreground/10 rounded-xl blur-xl" />
+                  <div className="relative w-full h-full bg-gradient-to-br from-foreground/20 to-foreground/10 rounded-xl flex items-center justify-center">
+                    <span className="text-2xl">🎵</span>
+                  </div>
+                </motion.div>
+
+                <h3 className="text-2xl font-semibold mb-4 text-foreground/90">
+                  Sonic Logos & Audio Branding
+                </h3>
+                
+                <p className="text-muted/80 leading-relaxed mb-6">
+                  Short, memorable sonic identities that make your brand instantly recognizable across every platform.
+                </p>
+
+                {/* Features */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-muted/60">
+                    <div className="w-1 h-1 bg-foreground/40 rounded-full" />
+                    <span>3-5 second signatures</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted/60">
+                    <div className="w-1 h-1 bg-foreground/40 rounded-full" />
+                    <span>Platform-optimized versions</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted/60">
+                    <div className="w-1 h-1 bg-foreground/40 rounded-full" />
+                    <span>Instant brand recall</span>
+                  </div>
+                </div>
+
+                {/* Hover indicator */}
+                <div className="absolute bottom-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="w-8 h-8 rounded-full bg-foreground/10 flex items-center justify-center">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Ready-to-use Beats */}
+            <motion.div
+              className="group relative"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <div className="relative p-8 lg:p-10 h-full rounded-2xl bg-gradient-to-br from-foreground/5 to-transparent border border-foreground/10 overflow-hidden transition-all duration-500 group-hover:border-foreground/20">
+                {/* Background glow on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                {/* Icon */}
+                <motion.div 
+                  className="w-16 h-16 mb-6 relative"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <div className="absolute inset-0 bg-foreground/10 rounded-xl blur-xl" />
+                  <div className="relative w-full h-full bg-gradient-to-br from-foreground/20 to-foreground/10 rounded-xl flex items-center justify-center">
+                    <span className="text-2xl">⚡</span>
+                  </div>
+                </motion.div>
+
+                <h3 className="text-2xl font-semibold mb-4 text-foreground/90">
+                  Ready-to-use Beats & Tracks
+                </h3>
+                
+                <p className="text-muted/80 leading-relaxed mb-6">
+                  High-quality, pre-made tracks for brands looking for quick, catchy, and affordable music solutions.
+                </p>
+
+                {/* Features */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-muted/60">
+                    <div className="w-1 h-1 bg-foreground/40 rounded-full" />
+                    <span>Instant licensing</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted/60">
+                    <div className="w-1 h-1 bg-foreground/40 rounded-full" />
+                    <span>Multiple genres available</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted/60">
+                    <div className="w-1 h-1 bg-foreground/40 rounded-full" />
+                    <span>Budget-friendly options</span>
+                  </div>
+                </div>
+
+                {/* Hover indicator */}
+                <div className="absolute bottom-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="w-8 h-8 rounded-full bg-foreground/10 flex items-center justify-center">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </div>
+
+          {/* Call to action */}
+          <motion.div 
+            className="text-center mt-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <p className="text-muted/60 mb-6">Ready to elevate your brand's sonic identity?</p>
+            <a 
+              href="#contact" 
+              className="inline-flex items-center gap-3 px-8 py-4 bg-foreground/5 hover:bg-foreground/10 border border-foreground/20 hover:border-foreground/30 rounded-full transition-all duration-300 group"
+            >
+              <span className="text-foreground/90 font-medium">Let's create something amazing</span>
+              <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </motion.div>
         </div>
       </section>
 
       <section id="contact" className="py-24 px-6 sm:px-8 lg:px-12">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-title font-bold mb-6 uppercase scroll-fade-in">
+            <h2 className="text-title font-semibold mb-6 uppercase scroll-fade-in">
               Let&apos;s Create
               <br />
               Something Amazing
             </h2>
-            <p className="text-body text-muted uppercase">
+            <p className="text-body text-muted uppercase font-normal">
               Ready to elevate your project?
             </p>
           </div>
@@ -386,9 +822,17 @@ export default function Home() {
                   required
                 />
                 <div className="absolute bottom-0 left-0 right-0 h-[2px] opacity-0 peer-focus:opacity-100 transition-opacity duration-200">
-                  <div className="w-full h-full bg-foreground rounded-full" />
-                  <div className="absolute inset-0 bg-foreground rounded-full blur-sm" />
-                  <div className="absolute inset-0 bg-foreground rounded-full blur-md opacity-50" />
+                  {browserOpts.reduceBlur ? (
+                    <div className="w-full h-full bg-foreground rounded-full" style={{
+                      boxShadow: '0 0 6px rgba(250, 250, 250, 0.6)'
+                    }} />
+                  ) : (
+                    <>
+                      <div className="w-full h-full bg-foreground rounded-full" />
+                      <div className="absolute inset-0 bg-foreground rounded-full blur-sm" />
+                      <div className="absolute inset-0 bg-foreground rounded-full blur-md opacity-50" />
+                    </>
+                  )}
                 </div>
               </div>
               <div className="relative">
@@ -399,9 +843,17 @@ export default function Home() {
                   required
                 />
                 <div className="absolute bottom-0 left-0 right-0 h-[2px] opacity-0 peer-focus:opacity-100 transition-opacity duration-200">
-                  <div className="w-full h-full bg-foreground rounded-full" />
-                  <div className="absolute inset-0 bg-foreground rounded-full blur-sm" />
-                  <div className="absolute inset-0 bg-foreground rounded-full blur-md opacity-50" />
+                  {browserOpts.reduceBlur ? (
+                    <div className="w-full h-full bg-foreground rounded-full" style={{
+                      boxShadow: '0 0 6px rgba(250, 250, 250, 0.6)'
+                    }} />
+                  ) : (
+                    <>
+                      <div className="w-full h-full bg-foreground rounded-full" />
+                      <div className="absolute inset-0 bg-foreground rounded-full blur-sm" />
+                      <div className="absolute inset-0 bg-foreground rounded-full blur-md opacity-50" />
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -419,9 +871,17 @@ export default function Home() {
                 <option value="other">Other</option>
               </select>
               <div className="absolute bottom-0 left-0 right-0 h-[2px] opacity-0 peer-focus:opacity-100 transition-opacity duration-200">
-                <div className="w-full h-full bg-foreground rounded-full" />
-                <div className="absolute inset-0 bg-foreground rounded-full blur-sm" />
-                <div className="absolute inset-0 bg-foreground rounded-full blur-md opacity-50" />
+                {browserOpts.reduceBlur ? (
+                  <div className="w-full h-full bg-foreground rounded-full" style={{
+                    boxShadow: '0 0 6px rgba(250, 250, 250, 0.6)'
+                  }} />
+                ) : (
+                  <>
+                    <div className="w-full h-full bg-foreground rounded-full" />
+                    <div className="absolute inset-0 bg-foreground rounded-full blur-sm" />
+                    <div className="absolute inset-0 bg-foreground rounded-full blur-md opacity-50" />
+                  </>
+                )}
               </div>
             </div>
             <div className="relative">
@@ -432,22 +892,38 @@ export default function Home() {
                 required
               />
               <div className="absolute bottom-0 left-0 right-0 h-[2px] opacity-0 peer-focus:opacity-100 transition-opacity duration-200 -translate-y-[6px]">
-                <div className="w-full h-full bg-foreground rounded-full" />
-                <div className="absolute inset-0 bg-foreground rounded-full blur-sm" />
-                <div className="absolute inset-0 bg-foreground rounded-full blur-md opacity-50" />
+                {browserOpts.reduceBlur ? (
+                  <div className="w-full h-full bg-foreground rounded-full" style={{
+                    boxShadow: '0 0 6px rgba(250, 250, 250, 0.6)'
+                  }} />
+                ) : (
+                  <>
+                    <div className="w-full h-full bg-foreground rounded-full" />
+                    <div className="absolute inset-0 bg-foreground rounded-full blur-sm" />
+                    <div className="absolute inset-0 bg-foreground rounded-full blur-md opacity-50" />
+                  </>
+                )}
               </div>
             </div>
             <div className="relative group">
               <button
                 type="submit"
-                className="w-full border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background py-5 font-semibold text-small uppercase rounded-sm transition-all duration-300 relative z-10"
+                className="w-full border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background py-5 font-medium text-small uppercase rounded-sm transition-all duration-300 relative z-10"
               >
                 Send Message
               </button>
               <div className="absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="absolute inset-0 border-2 border-foreground rounded-sm" />
-                <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-sm" />
-                <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-md opacity-50" />
+                {browserOpts.reduceBlur ? (
+                  <div className="absolute inset-0 border-2 border-foreground rounded-sm" style={{
+                    boxShadow: '0 0 8px rgba(250, 250, 250, 0.5)'
+                  }} />
+                ) : (
+                  <>
+                    <div className="absolute inset-0 border-2 border-foreground rounded-sm" />
+                    <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-sm" />
+                    <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-md opacity-50" />
+                  </>
+                )}
               </div>
             </div>
           </form>
@@ -457,7 +933,7 @@ export default function Home() {
       <footer className="py-16 px-6 sm:px-8 lg:px-12 border-t-2 border-zinc-800">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-            <div className="text-small text-muted uppercase">
+            <div className="text-small text-muted uppercase font-normal">
               © 2024 Music Producer. All rights reserved.
             </div>
             <div className="flex gap-8">

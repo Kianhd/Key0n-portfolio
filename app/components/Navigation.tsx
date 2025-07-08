@@ -16,10 +16,10 @@ const Navigation = () => {
 
   const menuItems = [
     { label: "Home", href: "/", section: "home" },
-    { label: "Work", href: "/#work", section: "work" },
-    { label: "BEATS", href: "/beats", section: "beats", bold: true },
     { label: "About", href: "/#about", section: "about" },
+    { label: "Work", href: "/#work", section: "work" },
     { label: "Contact", href: "/#contact", section: "contact" },
+    { label: "BEATS", href: "/beats", section: "beats", bold: true },
   ];
 
   const handleNavigation = (item: typeof menuItems[0], e: React.MouseEvent) => {
@@ -119,7 +119,7 @@ const Navigation = () => {
               size="small"
               glowIntensity="subtle"
             />
-            <span className="text-foreground font-semibold text-lg hidden sm:block uppercase">
+            <span className="text-foreground font-medium text-lg hidden sm:block uppercase">
               KEY0N
             </span>
           </Link>
@@ -132,11 +132,11 @@ const Navigation = () => {
                   onClick={(e) => handleNavigation(item, e)}
                   className={`transition-colors duration-200 uppercase text-small cursor-pointer ${
                     item.label === "BEATS"
-                      ? "text-[#FFC60B] hover:text-[#FFC60B]/80 font-bold"
+                      ? "text-[#FFC60B] hover:text-[#FFC60B]/80 font-semibold"
                       : activeSection === item.section
-                      ? "text-foreground"
-                      : "text-muted hover:text-foreground"
-                  } ${item.bold && item.label !== "BEATS" ? "font-bold" : ""}`}
+                      ? "text-foreground font-medium"
+                      : "text-muted hover:text-foreground font-normal"
+                  } ${item.bold && item.label !== "BEATS" ? "font-medium" : ""}`}
                   style={
                     item.label === "BEATS"
                       ? { fontFamily: "Subway Berlin OT, sans-serif" }
@@ -152,12 +152,21 @@ const Navigation = () => {
                     animate={{ opacity: 1, scaleX: 1 }}
                     exit={{ opacity: 0, scaleX: 0 }}
                     transition={{
-                      opacity: { duration: 0.2 },
-                      scaleX: { duration: 0.3, ease: "easeOut" }
+                      opacity: { duration: browserOpts.simplifyFramerMotion ? 0.15 : 0.2 },
+                      scaleX: { 
+                        duration: browserOpts.simplifyFramerMotion ? 0.2 : 0.3, 
+                        ease: browserOpts.useSimpleEasing ? "easeOut" : "easeOut" 
+                      }
                     }}
                   >
                     <div className="w-full h-full bg-foreground rounded-full" />
-                    {!browserOpts.limitGlowLayers ? (
+                    {browserOpts.reduceBlur ? (
+                      /* Firefox optimized - single line with box-shadow */
+                      <div className="absolute inset-0 bg-foreground rounded-full" style={{
+                        boxShadow: '0 0 6px rgba(250, 250, 250, 0.6)',
+                        transform: 'translateZ(0)'
+                      }} />
+                    ) : !browserOpts.limitGlowLayers ? (
                       <>
                         <div className="absolute inset-0 bg-foreground rounded-full blur-sm" style={{ transform: 'translateZ(0)' }} />
                         <div className="absolute inset-0 bg-foreground rounded-full blur-md opacity-50" style={{ transform: 'translateZ(0)' }} />
@@ -224,11 +233,11 @@ const Navigation = () => {
                     onClick={(e) => handleMobileNavigation(item, e)}
                     className={`block transition-colors duration-200 uppercase text-small pb-2 cursor-pointer ${
                       item.label === "BEATS"
-                        ? "text-[#FFC60B] hover:text-[#FFC60B]/80 font-bold"
+                        ? "text-[#FFC60B] hover:text-[#FFC60B]/80 font-semibold"
                         : activeSection === item.section
-                        ? "text-foreground"
-                        : "text-muted hover:text-foreground"
-                    } ${item.bold && item.label !== "BEATS" ? "font-bold" : ""}`}
+                        ? "text-foreground font-medium"
+                        : "text-muted hover:text-foreground font-normal"
+                    } ${item.bold && item.label !== "BEATS" ? "font-medium" : ""}`}
                     style={
                       item.label === "BEATS"
                         ? { fontFamily: "Subway Berlin OT, sans-serif" }
@@ -240,7 +249,13 @@ const Navigation = () => {
                   {activeSection === item.section && (
                     <div className="absolute bottom-0 left-0 right-0 h-[2px]">
                       <div className="w-full h-full bg-foreground rounded-full" />
-                      {!browserOpts.limitGlowLayers && (
+                      {browserOpts.reduceBlur ? (
+                        /* Firefox optimized - box-shadow instead of blur */
+                        <div className="absolute inset-0 bg-foreground rounded-full" style={{
+                          boxShadow: '0 0 4px rgba(250, 250, 250, 0.4)',
+                          transform: 'translateZ(0)'
+                        }} />
+                      ) : !browserOpts.limitGlowLayers && (
                         <div className="absolute inset-0 bg-foreground rounded-full blur-sm" style={{ transform: 'translateZ(0)' }} />
                       )}
                     </div>

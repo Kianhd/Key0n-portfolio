@@ -242,13 +242,13 @@ export default function BeatCard({ beat, onCustomize }: BeatCardProps) {
         <div className="relative p-4">
           {/* Text content */}
           <div className="relative z-10">
-            <h3 className="text-lg font-bold text-foreground mb-2 uppercase">
+            <h3 className="text-lg font-medium text-foreground mb-2 uppercase">
               {beat.title}
             </h3>
 
             <div className="flex items-center justify-between mb-3">
-              <div className="text-sm text-muted">
-                <span className="text-[#FFC60B] font-semibold">
+              <div className="text-sm text-muted font-normal">
+                <span className="text-[#FFC60B] font-medium">
                   {beat.bpm} BPM
                 </span>
                 <span className="mx-2">•</span>

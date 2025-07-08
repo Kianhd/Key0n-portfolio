@@ -31,13 +31,28 @@ export default function BrowserTestPage() {
         
         <div className="p-4 border border-border rounded">
           <h2 className="text-xl font-semibold mb-2">Active Optimizations</h2>
-          <ul className="space-y-1">
-            {Object.entries(browserInfo.optimizations).map(([key, value]) => (
-              <li key={key}>
-                <span className="font-mono">{key}:</span> {String(value)}
-              </li>
-            ))}
-          </ul>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h3 className="font-semibold text-sm mb-2 text-red-400">Firefox Performance Fixes</h3>
+              <ul className="space-y-1 text-xs">
+                <li><span className="font-mono">disableComplexAnimations:</span> {String(browserInfo.optimizations.disableComplexAnimations)}</li>
+                <li><span className="font-mono">simplifyFramerMotion:</span> {String(browserInfo.optimizations.simplifyFramerMotion)}</li>
+                <li><span className="font-mono">disableCanvasAnimations:</span> {String(browserInfo.optimizations.disableCanvasAnimations)}</li>
+                <li><span className="font-mono">forceHardwareAcceleration:</span> {String(browserInfo.optimizations.forceHardwareAcceleration)}</li>
+                <li><span className="font-mono">disableFilterAnimations:</span> {String(browserInfo.optimizations.disableFilterAnimations)}</li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold text-sm mb-2">All Optimizations</h3>
+              <ul className="space-y-1 text-xs max-h-40 overflow-y-auto">
+                {Object.entries(browserInfo.optimizations).map(([key, value]) => (
+                  <li key={key}>
+                    <span className="font-mono">{key}:</span> {String(value)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
         
         <div className="p-4 border border-border rounded">

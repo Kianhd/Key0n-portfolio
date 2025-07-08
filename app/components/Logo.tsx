@@ -3,6 +3,7 @@
 import { motion, useMotionValue, useTransform } from "motion/react";
 import { useEffect, useState } from "react";
 import { getBrowserOptimizations } from "@/lib/browser-detect";
+import { useThrottledMouseTracking } from "@/app/hooks/useThrottledAnimation";
 
 interface LogoProps {
   className?: string;
@@ -36,20 +37,20 @@ export const Logo = ({
 
   useEffect(() => {
     setMounted(true);
+  }, []);
 
-    if (mouseReactive) {
-      const handleMouseMove = (e: MouseEvent) => {
+  // Use throttled mouse tracking for better Firefox performance
+  useThrottledMouseTracking(
+    (clientX: number, clientY: number) => {
+      if (mouseReactive && mounted) {
         const rect = document.body.getBoundingClientRect();
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
-        mouseX.set(e.clientX - centerX);
-        mouseY.set(e.clientY - centerY);
-      };
-
-      window.addEventListener("mousemove", handleMouseMove);
-      return () => window.removeEventListener("mousemove", handleMouseMove);
+        mouseX.set(clientX - centerX);
+        mouseY.set(clientY - centerY);
+      }
     }
-  }, [mouseReactive, mouseX, mouseY]);
+  );
 
   if (!mounted) return null;
 
@@ -71,8 +72,11 @@ export const Logo = ({
       }}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      whileHover={size === "small" ? { scale: 1.1 } : {}}
+      transition={{ 
+        duration: browserOpts.simplifyFramerMotion ? 0.3 : 0.6, 
+        ease: browserOpts.useSimpleEasing ? "easeOut" : "easeOut" 
+      }}
+      whileHover={size === "small" && !browserOpts.simplifyFramerMotion ? { scale: 1.1 } : {}}
     >
       {/* Smooth multi-layered glow effect - Safari optimized */}
       {glowIntensity !== "subtle" && (
@@ -174,7 +178,7 @@ export const LogoDivider = () => {
             {/* Base ambient glow */}
             <motion.div
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-              animate={browserOpts.avoidFilterAnimations ? {} : {
+              animate={browserOpts.avoidFilterAnimations || browserOpts.disableHeavyBlurAnimations ? { opacity: 0.5 } : {
                 opacity: [0.4, 0.6, 0.4],
               }}
               transition={{
@@ -198,7 +202,7 @@ export const LogoDivider = () => {
             {!browserOpts.limitGlowLayers && (
               <motion.div
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                animate={browserOpts.avoidFilterAnimations ? { opacity: 0.4 } : {
+                animate={browserOpts.avoidFilterAnimations || browserOpts.disableHeavyBlurAnimations ? { opacity: 0.4 } : {
                   opacity: [0.3, 0.5, 0.3],
                   scale: [1, 1.1, 1],
                 }}

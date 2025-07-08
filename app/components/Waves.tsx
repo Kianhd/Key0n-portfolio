@@ -114,31 +114,58 @@ export default function Waves({
     canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mouseleave", handleMouseLeave);
 
-    // Animation loop
+    // Animation loop with Firefox optimization
     const animate = () => {
       if (!ctx || !canvas) return;
 
-      time += 0.016; // ~60fps
+      // Firefox: Reduce animation frequency slightly
+      time += browserOpts.reduceMotionComplexity ? 0.025 : 0.016;
+
+      // Firefox: Skip some frames for performance (but not too aggressive)
+      if (browserOpts.reduceMotionComplexity && Math.floor(time * 40) % 3 === 0) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
 
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      // Firefox: Slightly reduce calculation complexity
+      const pointsToUpdate = browserOpts.reduceMotionComplexity 
+        ? points.filter((_, i) => i % 2 === 0) // Process every other point
+        : points;
+
       // Update points
-      points.forEach((point, index) => {
-        // Wave motion - multiple overlapping waves
-        const wave1 = Math.sin(time * waveSpeedX + point.x * 0.008) * waveAmpX * 0.3;
-        const wave2 = Math.cos(time * waveSpeedY * 1.5 + point.y * 0.012) * waveAmpY * 0.4;
-        const wave3 = Math.sin(time * waveSpeedX * 0.7 + (point.x + point.y) * 0.005) * waveAmpX * 0.2;
+      pointsToUpdate.forEach((point, index) => {
+        if (browserOpts.reduceMotionComplexity) {
+          // Firefox: Simplified wave calculation (single wave instead of 3)
+          const wave1 = Math.sin(time * waveSpeedX + point.x * 0.008) * waveAmpX * 0.5;
+          
+          // Simplified mouse influence
+          const dx = mouseRef.current.x - point.x;
+          const dy = mouseRef.current.y - point.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          const influence = Math.max(0, Math.min(1, 1 - distance / maxCursorMove));
+          const mouseEffect = influence * -30; // Reduced effect
 
-        // Mouse influence with smooth falloff
-        const dx = mouseRef.current.x - point.x;
-        const dy = mouseRef.current.y - point.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const influence = Math.max(0, Math.min(1, 1 - distance / maxCursorMove));
-        const mouseEffect = influence * influence * -60; // Stronger effect, smoother falloff
+          // Calculate target position (simplified)
+          point.targetY = point.baseY + wave1 + mouseEffect;
+        } else {
+          // Full complexity for other browsers
+          const wave1 = Math.sin(time * waveSpeedX + point.x * 0.008) * waveAmpX * 0.3;
+          const wave2 = Math.cos(time * waveSpeedY * 1.5 + point.y * 0.012) * waveAmpY * 0.4;
+          const wave3 = Math.sin(time * waveSpeedX * 0.7 + (point.x + point.y) * 0.005) * waveAmpX * 0.2;
 
-        // Calculate target position
-        point.targetY = point.baseY + wave1 + wave2 + wave3 + mouseEffect;
+          // Mouse influence with smooth falloff
+          const dx = mouseRef.current.x - point.x;
+          const dy = mouseRef.current.y - point.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          const influence = Math.max(0, Math.min(1, 1 - distance / maxCursorMove));
+          const mouseEffect = influence * influence * -60;
+
+          // Calculate target position
+          point.targetY = point.baseY + wave1 + wave2 + wave3 + mouseEffect;
+        }
 
         // Apply spring physics for smooth movement
         const springForce = (point.targetY - point.y) * tension;
@@ -146,9 +173,11 @@ export default function Waves({
         point.vy *= friction;
         point.y += point.vy;
 
-        // Horizontal movement for more organic feel
-        const horizontalWave = Math.sin(time * waveSpeedX * 0.5 + point.y * 0.01) * 2;
-        point.x = (index % Math.ceil(canvas.width / xGap)) * xGap + horizontalWave;
+        // Horizontal movement (simplified for Firefox)
+        if (!browserOpts.reduceMotionComplexity) {
+          const horizontalWave = Math.sin(time * waveSpeedX * 0.5 + point.y * 0.01) * 2;
+          point.x = (index % Math.ceil(canvas.width / xGap)) * xGap + horizontalWave;
+        }
       });
 
       // Draw connections

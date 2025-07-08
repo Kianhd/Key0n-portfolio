@@ -11,8 +11,10 @@
   --color-border: #2a2a2a;
   --color-muted: #a0a0a0;
   
-  /* Single clean font system */
-  --font-family-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  /* Custom font system with your branded fonts */
+  --font-family-sans: 'Futura PT', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-family-display: 'Margo', 'Futura PT', 'SF Pro Display', serif;
+  --font-family-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Courier New', monospace;
 }
 
 /* Gradient utilities */
@@ -31,7 +33,7 @@
 }
 
 .animate-marquee {
-  animation: marquee 40s linear infinite;
+  animation: marquee 26.67s linear infinite;
   will-change: transform;
   /* Safari optimization: Force hardware acceleration */
   transform: translateZ(0);
@@ -102,43 +104,55 @@ body > * {
   background: var(--color-foreground);
 }
 
-/* Typography scales */
+/* Typography scales - Optimized hierarchy */
 .text-hero {
   font-size: clamp(3rem, 12vw, 8rem);
   line-height: 0.9;
   letter-spacing: -0.02em;
-  font-weight: 800;
+  font-weight: 700; /* Reduced from 800 for better balance */
 }
 
 .text-title {
   font-size: clamp(2rem, 8vw, 5rem);
   line-height: 1;
   letter-spacing: -0.02em;
-  font-weight: 700;
+  font-weight: 600; /* Reduced from 700 */
 }
 
 .text-subtitle {
   font-size: clamp(1.25rem, 3vw, 2rem);
   line-height: 1.2;
-  font-weight: 600;
+  font-weight: 500; /* Reduced from 600 for project titles */
 }
 
 .text-stats {
   font-size: clamp(1.75rem, 6vw, 3.5rem);
   line-height: 1.1;
-  font-weight: 700;
+  font-weight: 600; /* Reduced from 700 */
 }
 
 .text-body {
   font-size: clamp(1rem, 1.5vw, 1.25rem);
   line-height: 1.6;
-  font-weight: 400;
+  font-weight: 400; /* Regular weight for body text */
+}
+
+.text-body-large {
+  font-size: clamp(1.125rem, 2vw, 1.375rem);
+  line-height: 1.6;
+  font-weight: 400; /* For subtitle descriptions */
 }
 
 .text-small {
   font-size: clamp(0.875rem, 1vw, 1rem);
   line-height: 1.5;
   font-weight: 400;
+}
+
+.text-caption {
+  font-size: clamp(0.75rem, 0.875vw, 0.875rem);
+  line-height: 1.4;
+  font-weight: 400; /* For helper text */
 }
 
 /* Text utilities */
@@ -150,6 +164,96 @@ body > * {
 /* Performance optimizations for animations */
 [class*="animate-"] {
   will-change: auto;
+}
+
+/* Firefox-specific performance optimizations - SELECTIVE */
+@-moz-document url-prefix() {
+  /* Only apply hardware acceleration to specific elements */
+  .animate-marquee,
+  [class*="motion-"],
+  .scroll-indicator {
+    transform: translateZ(0);
+  }
+  
+  /* Frame rate optimization for Firefox */
+  * {
+    /* Force consistent frame timing */
+    animation-timing-function: linear !important;
+  }
+  
+  /* Throttle high-frequency animations */
+  .animate-marquee {
+    animation-duration: 40s !important; /* 1.5x faster than original 60s */
+  }
+  
+  /* Reduce motion complexity only for heavy animations */
+  @media (prefers-reduced-motion: no-preference) {
+    [class*="animate-"] {
+      animation-duration: calc(var(--animation-duration, 1s) * 1.5) !important;
+    }
+  }
+  
+  /* Optimize video and canvas elements */
+  video, canvas {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  /* Limit CSS transforms for better performance */
+  [style*="transform"] {
+    will-change: transform;
+    transform-style: flat !important;
+  }
+  
+  /* Optimize all blur filters for Firefox */
+  [style*="blur(40px)"],
+  [style*="blur(60px)"] {
+    filter: blur(15px) !important;
+  }
+  
+  [style*="blur(20px)"] {
+    filter: blur(8px) !important;
+  }
+  
+  [style*="blur(10px)"] {
+    filter: blur(4px) !important;
+  }
+  
+  /* Replace backdrop-blur with solid backgrounds */
+  .backdrop-blur-sm,
+  .backdrop-blur-md,
+  .backdrop-blur-lg {
+    backdrop-filter: none !important;
+    background-color: rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  /* Prevent stuck blur animations in hero section */
+  .text-hero [style*="filter: blur"] {
+    filter: none !important;
+    animation: none !important;
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out !important;
+  }
+  
+  /* Optimize filter stacking - remove multiple blur layers */
+  .blur-sm + .blur-md,
+  .blur-md + .blur-lg,
+  .blur-sm + .blur-lg {
+    display: none !important;
+  }
+  
+  /* Replace heavy CSS filters with box-shadow alternatives */
+  .filter-blur-replacement {
+    filter: none !important;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3) !important;
+  }
+  
+  /* Optimize particle animations */
+  [class*="particle"],
+  [class*="floating"] {
+    animation-duration: calc(var(--duration, 10s) * 2) !important;
+    will-change: transform, opacity;
+  }
 }
 
 /* Animations */
@@ -179,6 +283,67 @@ body > * {
 
 .animate-fade-in {
   animation: fadeIn 1s ease-out;
+}
+
+/* Custom Font Utility Classes */
+.font-futura {
+  font-family: var(--font-family-sans);
+}
+
+.font-margo {
+  font-family: var(--font-family-display);
+}
+
+.font-mono {
+  font-family: var(--font-family-mono);
+}
+
+/* Typography hierarchy defaults */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-sans);
+  font-weight: 500; /* Default medium weight for headings */
+}
+
+h1 {
+  font-weight: 700; /* Hero titles */
+}
+
+h2 {
+  font-weight: 600; /* Section titles */
+}
+
+h3 {
+  font-weight: 500; /* Subsection titles */
+}
+
+h4, h5, h6 {
+  font-weight: 400; /* Regular weight for smaller headings */
+}
+
+p, span, div, a, button, input, textarea {
+  font-family: var(--font-family-sans);
+  font-weight: 400; /* Regular weight for body text */
+}
+
+/* Font weight utilities */
+.font-light {
+  font-weight: 300;
+}
+
+.font-normal {
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
 }
 
 /* Scroll animations */

@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { useEffect, useState, useCallback } from "react";
 import { getBrowserOptimizations } from "@/lib/browser-detect";
 import { throttle } from "@/lib/throttle";
+import { useThrottledMouseTracking } from "@/app/hooks/useThrottledAnimation";
 
 interface Particle {
   id: number;
@@ -46,21 +47,13 @@ export default function FloatingParticles({ count = 20, className = "" }: Floati
     generateParticles();
   }, [adjustedCount]);
 
-  useEffect(() => {
-    const handleMouseMoveRaw = (e: MouseEvent) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100,
-      });
-    };
-    
-    const handleMouseMove = browserOpts.throttleMouseEvents
-      ? throttle(handleMouseMoveRaw, 32)
-      : handleMouseMoveRaw;
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+  // Use throttled mouse tracking for better Firefox performance
+  useThrottledMouseTracking((clientX: number, clientY: number) => {
+    setMousePosition({
+      x: (clientX / window.innerWidth) * 100,
+      y: (clientY / window.innerHeight) * 100,
+    });
+  });
 
   return (
     <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}>
