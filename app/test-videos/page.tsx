@@ -47,7 +47,6 @@ export default function TestVideos() {
             <div className="bg-card rounded-lg p-4 border border-border">
               <VideoCarousel
                 videos={project.videos}
-                autoSlide={false}
                 className="max-h-96"
               />
               

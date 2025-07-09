@@ -15,7 +15,6 @@ export const getCloudinaryUrl = (
   // Just use the publicId directly
   const url = `${baseUrl}/${resourceType}/upload/${transform}/${publicId}`;
   
-  console.log('Generated Cloudinary URL:', url);
   return url;
 };
 
