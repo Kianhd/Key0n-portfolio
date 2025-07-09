@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback, useLayoutEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { getBrowserOptimizations } from '@/lib/browser-detect';
 
@@ -69,17 +69,18 @@ export default function VideoPlayer({
   const [touchStartY, setTouchStartY] = useState(0);
   const [brightness, setBrightness] = useState(1);
   const [showSeekFeedback, setShowSeekFeedback] = useState<{show: boolean, direction: 'forward' | 'backward', time: number}>({show: false, direction: 'forward', time: 0});
-  const [showVolumeIndicator, setShowVolumeIndicator] = useState(false);
-  const [showBrightnessIndicator, setShowBrightnessIndicator] = useState(false);
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const volumeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const loadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const mobileControlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Handle unmute and replay (only on initial unmute) - moved here to fix dependency issue
+  const [hasBeenUnmuted, setHasBeenUnmuted] = useState(false);
 
   // Helper function to detect mobile devices properly
-  const isMobileDevice = () => {
+  function isMobileDevice () {
     if (typeof window === "undefined") return false;
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const isSmallScreen = window.innerWidth <= 768 || window.innerHeight <= 768;
@@ -88,11 +89,11 @@ export default function VideoPlayer({
 
   // Mobile detection and fullscreen handling
   useEffect(() => {
-    const checkMobile = () => {
+    function checkMobile () {
       setIsMobile(isMobileDevice());
     };
     
-    const checkMobileWithDelay = () => {
+    function checkMobileWithDelay () {
       // Add small delay for orientation changes to ensure proper dimensions
       setTimeout(checkMobile, 100);
     };
@@ -102,7 +103,7 @@ export default function VideoPlayer({
     window.addEventListener('orientationchange', checkMobileWithDelay);
     
     // Fullscreen change listener
-    const handleFullscreenChange = () => {
+    function handleFullscreenChange () {
       setIsFullscreen(!!document.fullscreenElement);
     };
     
@@ -116,6 +117,24 @@ export default function VideoPlayer({
       document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
     };
   }, []);
+
+  // Callback wrapper functions - now using function declarations
+  // Direct callback functions - no memoization needed
+  function handlePlayEvent() {
+    onPlay?.();
+  }
+  
+  function handlePauseEvent() {
+    onPause?.();
+  }
+  
+  function handleEndedEvent() {
+    onEnded?.();
+  }
+  
+  function handleErrorEvent(e: Event) {
+    onError?.(e);
+  }
 
   useEffect(() => {
     const video = videoRef.current;
@@ -191,22 +210,22 @@ export default function VideoPlayer({
       setIsLoading(false);
       setLoadError(true);
       if (loadTimeoutRef.current) clearTimeout(loadTimeoutRef.current);
-      onError?.(e);
+      handleErrorEvent(e);
     };
 
     const handlePlay = () => {
       setIsPlaying(true);
-      onPlay?.();
+      handlePlayEvent();
     };
 
     const handlePause = () => {
       setIsPlaying(false);
-      onPause?.();
+      handlePauseEvent();
     };
 
     const handleEnded = () => {
       setIsPlaying(false);
-      onEnded?.();
+      handleEndedEvent();
     };
 
     const handleProgress = (e: Event) => {
@@ -248,10 +267,26 @@ export default function VideoPlayer({
       video.removeEventListener('error', handleError);
       video.removeEventListener('progress', handleProgress);
     };
-  }, [volume, onPlay, onPause, onEnded, src]);
+  }, [volume, src]); // Only essential dependencies - callbacks are handled directly
+
+  // Toggle fullscreen function - now uses function declaration
+  async function toggleFullscreen() {
+    const container = containerRef.current;
+    if (!container) return;
+
+    try {
+      if (!document.fullscreenElement) {
+        await container.requestFullscreen();
+      } else {
+        await document.exitFullscreen();
+      }
+    } catch (error) {
+      console.error('Fullscreen error:', error);
+    }
+  }
 
   // Mobile touch controls auto-hide
-  const showMobileControlsTemporary = () => {
+  function showMobileControlsTemporary() {
     if (!isMobile) return;
     
     setShowMobileControls(true);
@@ -263,16 +298,16 @@ export default function VideoPlayer({
     mobileControlsTimeoutRef.current = setTimeout(() => {
       setShowMobileControls(false);
     }, 3000);
-  };
+  }
 
   // Enhanced mobile touch handler with industry-standard gestures
-  const handleMobileTouchStart = (e: React.TouchEvent) => {
+  function handleMobileTouchStart(e: React.TouchEvent) {
     const touch = e.touches[0];
     setLastTouchX(touch.clientX);
     setTouchStartY(touch.clientY);
-  };
+  }
 
-  const handleMobileTouchEnd = (e: React.TouchEvent) => {
+  function handleMobileTouchEnd(e: React.TouchEvent) {
     const touch = e.changedTouches[0];
     const now = Date.now();
     const timeDiff = now - lastTouchTime;
@@ -361,28 +396,18 @@ export default function VideoPlayer({
     
     setLastTouchTime(now);
     setLastTouchX(touchX);
-  };
+  }
 
   // Removed volume and brightness control via vertical swipe for mobile
 
-  const toggleFullscreen = async () => {
-    const container = containerRef.current;
-    if (!container) return;
+  // Consolidated unmute and mobile controls logic
+  useEffect(() => {
+    // Reset state when src changes (new video)
+    setHasBeenUnmuted(false);
+    setShowMobileControls(false);
+  }, [src]);
 
-    try {
-      if (!document.fullscreenElement) {
-        await container.requestFullscreen();
-      } else {
-        await document.exitFullscreen();
-      }
-    } catch (error) {
-      console.error('Fullscreen error:', error);
-    }
-  };
-
-  // Handle unmute and replay (only on initial unmute)
-  const [hasBeenUnmuted, setHasBeenUnmuted] = useState(false);
-  
+  // Handle unmute logic
   useEffect(() => {
     if (onUnmute && !muted && !hasBeenUnmuted && videoRef.current) {
       const video = videoRef.current;
@@ -396,27 +421,16 @@ export default function VideoPlayer({
           showMobileControlsTemporary();
         }, 100);
       }
-    }
-  }, [muted, onUnmute, hasBeenUnmuted, isMobile]);
-
-  // Additional effect to handle when muted state changes to false (unmute)
-  useEffect(() => {
-    if (!muted && hasBeenUnmuted && isMobile) {
+    } else if (!muted && hasBeenUnmuted && isMobile) {
       // Ensure controls show when video is unmuted
       setTimeout(() => {
         showMobileControlsTemporary();
       }, 100);
     }
-  }, [muted, hasBeenUnmuted, isMobile]);
+  }, [muted, hasBeenUnmuted, isMobile]); // Removed onUnmute to prevent loops
 
-  // Reset hasBeenUnmuted when src changes (new video)
-  useEffect(() => {
-    setHasBeenUnmuted(false);
-    setShowMobileControls(false);
-  }, [src]);
-
-  // Notify parent about mobile controls state changes
-  useEffect(() => {
+  // Mobile controls callback - called only when needed to prevent loops
+  function notifyMobileControlsChange() {
     if (onMobileControlsChange && isMobile) {
       onMobileControlsChange({
         showControls: showMobileControls,
@@ -435,16 +449,23 @@ export default function VideoPlayer({
         formatTime
       });
     }
-  }, [showMobileControls, isPlaying, currentTime, duration, volume, isMuted, isFullscreen, hasBeenUnmuted, isMobile, onMobileControlsChange]);
+  }
 
-  // Expose toggle play/pause function to parent
+  // Only notify on showMobileControls changes to prevent excessive re-renders
   useEffect(() => {
+    if (isMobile) {
+      notifyMobileControlsChange();
+    }
+  }, [showMobileControls]); // Removed isMobile to prevent loops
+
+  // Expose toggle play/pause function to parent - done once on mount
+  useLayoutEffect(() => {
     if (onTogglePlayPause) {
       onTogglePlayPause(togglePlayPause);
     }
-  }, [onTogglePlayPause]);
+  }, []); // Empty dependency array to run only once
 
-  const togglePlayPause = () => {
+  function togglePlayPause() {
     const video = videoRef.current;
     if (!video) return;
 
@@ -453,9 +474,9 @@ export default function VideoPlayer({
     } else {
       video.play();
     }
-  };
+  }
 
-  const handleVolumeChange = (newVolume: number) => {
+  function handleVolumeChange(newVolume: number) {
     const video = videoRef.current;
     if (!video) return;
 
@@ -470,9 +491,9 @@ export default function VideoPlayer({
     volumeTimeoutRef.current = setTimeout(() => {
       setShowVolumeSlider(false);
     }, 2000);
-  };
+  }
 
-  const toggleMute = () => {
+  function toggleMute() {
     const video = videoRef.current;
     if (!video) return;
 
@@ -483,20 +504,20 @@ export default function VideoPlayer({
       video.volume = 0;
       setIsMuted(true);
     }
-  };
+  }
 
-  const handleSeek = (newTime: number) => {
+  function handleSeek(newTime: number) {
     const video = videoRef.current;
     if (!video) return;
 
     video.currentTime = newTime;
-  };
+  }
 
-  const formatTime = (time: number) => {
+  function formatTime(time: number) {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  };
+  }
 
   return (
     <div 
