@@ -1,6 +1,7 @@
 "use client";
 
-import { getBrowserOptimizations } from "@/lib/browser-detect";
+import React, { useMemo } from "react";
+import { useBrowserOptimizations } from "../hooks/useBrowserOptimizations";
 
 interface Brand {
   name: string;
@@ -12,10 +13,10 @@ interface BrandMarqueeProps {
   brands: Brand[];
 }
 
-export default function BrandMarquee({ brands }: BrandMarqueeProps) {
-  // Duplicate arrays for seamless loop
-  const duplicatedBrands = [...brands, ...brands];
-  const browserOpts = getBrowserOptimizations();
+const BrandMarquee = React.memo(function BrandMarquee({ brands }: BrandMarqueeProps) {
+  // Memoize duplicated brands to prevent recreation
+  const duplicatedBrands = useMemo(() => [...brands, ...brands], [brands]);
+  const browserOpts = useBrowserOptimizations();
 
   return (
     <div className="w-full overflow-hidden py-20 bg-background">
@@ -53,15 +54,19 @@ export default function BrandMarquee({ brands }: BrandMarqueeProps) {
                     src={brand.logo}
                     alt={`${brand.name} logo`}
                     className={`h-9 md:h-12 lg:h-15 w-auto opacity-80 hover:opacity-100 transition-opacity duration-300 ${
-                      // Safari: Avoid filter stacking to prevent glitch
+                      // Safari: Apply filters differently to avoid stacking issues
                       browserOpts.disableFilterStacking
-                        ? (brand.invertColor ? 'filter brightness-0 invert' : 'drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)]')
-                        : `drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)] ${brand.invertColor ? 'filter brightness-0 invert' : ''}`
+                        ? (brand.invertColor ? '' : 'drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)]')
+                        : `drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)] ${brand.invertColor ? 'brightness-0 invert' : ''}`
                     }`}
                     style={{
                       // Hardware acceleration for Safari
                       transform: 'translateZ(0)',
-                      willChange: browserOpts.avoidFilterAnimations ? 'opacity' : 'auto'
+                      willChange: browserOpts.avoidFilterAnimations ? 'opacity' : 'auto',
+                      // Apply invert filter via inline style for Safari to ensure it works
+                      ...(browserOpts.disableFilterStacking && brand.invertColor 
+                        ? { filter: 'brightness(0) invert(1)' } 
+                        : {})
                     }}
                     loading="lazy"
                   />
@@ -82,15 +87,19 @@ export default function BrandMarquee({ brands }: BrandMarqueeProps) {
                     src={brand.logo}
                     alt={`${brand.name} logo`}
                     className={`h-9 md:h-12 lg:h-15 w-auto opacity-80 hover:opacity-100 transition-opacity duration-300 ${
-                      // Safari: Avoid filter stacking to prevent glitch
+                      // Safari: Apply filters differently to avoid stacking issues
                       browserOpts.disableFilterStacking
-                        ? (brand.invertColor ? 'filter brightness-0 invert' : 'drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)]')
-                        : `drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)] ${brand.invertColor ? 'filter brightness-0 invert' : ''}`
+                        ? (brand.invertColor ? '' : 'drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)]')
+                        : `drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)] ${brand.invertColor ? 'brightness-0 invert' : ''}`
                     }`}
                     style={{
                       // Hardware acceleration for Safari
                       transform: 'translateZ(0)',
-                      willChange: browserOpts.avoidFilterAnimations ? 'opacity' : 'auto'
+                      willChange: browserOpts.avoidFilterAnimations ? 'opacity' : 'auto',
+                      // Apply invert filter via inline style for Safari to ensure it works
+                      ...(browserOpts.disableFilterStacking && brand.invertColor 
+                        ? { filter: 'brightness(0) invert(1)' } 
+                        : {})
                     }}
                     loading="lazy"
                   />
@@ -102,4 +111,6 @@ export default function BrandMarquee({ brands }: BrandMarqueeProps) {
       </div>
     </div>
   );
-}
+});
+
+export default BrandMarquee;

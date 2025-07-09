@@ -1,19 +1,97 @@
 "use client";
 
+import React, { useEffect, useMemo } from "react";
 import Navigation from "./components/Navigation";
 import VideoCarousel from "./components/VideoCarousel";
 import SchemaMarkup from "./components/SchemaMarkup";
 import BrandMarquee from "./components/BrandMarquee";
 import { motion } from "motion/react";
 import { useScrollAnimation } from "./hooks/useScrollAnimation";
-import { getBrowserOptimizations } from "@/lib/browser-detect";
-import { usePerformanceMonitor, usePerformanceWarnings } from "./hooks/usePerformanceMonitor";
+import { useBrowserOptimizations } from "./hooks/useBrowserOptimizations";
 import {
-  generateProjectVideos,
-  projectFolders,
-  brandDescriptions,
-  getCloudinaryUrl,
-} from "../lib/cloudinary";
+  usePerformanceMonitor,
+  usePerformanceWarnings,
+} from "./hooks/usePerformanceMonitor";
+import { generateProjectVideos } from "../lib/cloudinary";
+import { GlareCard } from "./components/ui/glare-card";
+
+// Optimized Waveform Component
+const WaveformVisualization = React.memo(() => {
+  const bars = useMemo(
+    () =>
+      Array.from({ length: 24 }, (_, i) => ({
+        id: i,
+        height: `${30 + ((i * 7) % 40)}%`,
+        duration: 2 + ((i * 0.3) % 2),
+        delay: i * 0.1,
+      })),
+    []
+  );
+
+  return (
+    <div className="w-full h-full flex items-center justify-center gap-1">
+      {bars.map((bar) => (
+        <motion.div
+          key={bar.id}
+          className="flex-1 bg-foreground/20 rounded-full"
+          style={{
+            willChange: "height",
+            height: "20%",
+          }}
+          animate={{
+            height: ["20%", bar.height, "20%"],
+          }}
+          transition={{
+            duration: bar.duration,
+            repeat: Infinity,
+            delay: bar.delay,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+});
+
+// Optimized Floating Particles Component
+const OptimizedFloatingParticles = React.memo(() => {
+  const particles = useMemo(
+    () =>
+      Array.from({ length: 6 }, (_, i) => ({
+        id: i,
+        left: `${20 + i * 15}%`,
+        top: `${30 + i * 10}%`,
+        duration: 3 + i,
+        delay: i * 0.5,
+      })),
+    []
+  );
+
+  return (
+    <div className="absolute inset-0">
+      {particles.map((particle) => (
+        <motion.div
+          key={particle.id}
+          className="absolute w-1 h-1 bg-foreground/30 rounded-full"
+          style={{
+            left: particle.left,
+            top: particle.top,
+            willChange: "transform, opacity",
+          }}
+          animate={{
+            y: [0, -30, 0],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: particle.duration,
+            repeat: Infinity,
+            delay: particle.delay,
+          }}
+        />
+      ))}
+    </div>
+  );
+});
 
 interface Video {
   id: string;
@@ -34,11 +112,23 @@ interface Project {
 
 export default function Home() {
   useScrollAnimation();
-  const browserOpts = getBrowserOptimizations();
-  
+  const browserOpts = useBrowserOptimizations();
+
   // Performance monitoring for Firefox debugging (development only)
-  usePerformanceMonitor();
-  usePerformanceWarnings();
+  if (process.env.NODE_ENV === "development") {
+    usePerformanceMonitor();
+    usePerformanceWarnings();
+  }
+
+  // Apply Zen Browser detection to body for CSS targeting - only after hydration
+  useEffect(() => {
+    if (browserOpts.isZenBrowser) {
+      document.body.setAttribute("data-zen-browser", "true");
+    }
+    return () => {
+      document.body.removeAttribute("data-zen-browser");
+    };
+  }, [browserOpts.isZenBrowser]);
 
   const brands = [
     { name: "Always", logo: "/Brands/Always Logo.png" },
@@ -152,88 +242,131 @@ export default function Home() {
       <SchemaMarkup />
       <Navigation />
 
-      <section className="min-h-screen flex items-center justify-center relative overflow-hidden pt-16 gradient-fade-bottom">
+      <section
+        id="home"
+        className="min-h-screen flex items-center justify-center relative overflow-hidden pt-16 gradient-fade-bottom"
+      >
         <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 text-center relative z-10 py-32 sm:py-40">
           <motion.h1
             className="text-hero mb-12 relative leading-[0.85]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ 
-              duration: browserOpts.simplifyFramerMotion ? 0.3 : 1, 
+            transition={{
+              duration: browserOpts.simplifyFramerMotion ? 0.3 : 1,
               delay: browserOpts.simplifyFramerMotion ? 0 : 0.2,
-              ease: browserOpts.useSimpleEasing ? "easeOut" : [0.4, 0, 0.2, 1]
+              ease: browserOpts.useSimpleEasing ? "easeOut" : [0.4, 0, 0.2, 1],
             }}
-            style={{ willChange: browserOpts.forceHardwareAcceleration ? 'transform, opacity' : 'auto' }}
+            style={{
+              willChange: browserOpts.forceHardwareAcceleration
+                ? "transform, opacity"
+                : "auto",
+            }}
           >
             <motion.span
-              className="relative inline-block text-foreground/90 font-normal tracking-tight"
-              initial={{ opacity: 0, y: browserOpts.simplifyFramerMotion ? 10 : 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: browserOpts.simplifyFramerMotion ? 0.3 : 0.8, 
-                delay: browserOpts.simplifyFramerMotion ? 0.05 : 0.3, 
-                ease: browserOpts.useSimpleEasing ? "easeOut" : "easeOut" 
+              className="relative inline-block text-foreground/90 font-bold tracking-tight"
+              initial={{
+                opacity: 0,
+                y: browserOpts.simplifyFramerMotion ? 10 : 20,
               }}
-              style={{ willChange: browserOpts.forceHardwareAcceleration ? 'transform, opacity' : 'auto' }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: browserOpts.simplifyFramerMotion ? 0.3 : 0.8,
+                delay: browserOpts.simplifyFramerMotion ? 0.05 : 0.3,
+                ease: browserOpts.useSimpleEasing ? "easeOut" : "easeOut",
+              }}
+              style={{
+                willChange: browserOpts.forceHardwareAcceleration
+                  ? "transform, opacity"
+                  : "auto",
+              }}
             >
               MUSIC THAT
             </motion.span>
             <br />
             <motion.span
-              className="relative inline-block text-foreground/70 font-light tracking-wider"
-              initial={{ opacity: 0, y: browserOpts.simplifyFramerMotion ? 10 : 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: browserOpts.simplifyFramerMotion ? 0.3 : 0.8, 
-                delay: browserOpts.simplifyFramerMotion ? 0.1 : 0.5, 
-                ease: browserOpts.useSimpleEasing ? "easeOut" : "easeOut" 
+              className="relative inline-block text-foreground/70 font-bold tracking-wider"
+              initial={{
+                opacity: 0,
+                y: browserOpts.simplifyFramerMotion ? 10 : 20,
               }}
-              style={{ willChange: browserOpts.forceHardwareAcceleration ? 'transform, opacity' : 'auto' }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: browserOpts.simplifyFramerMotion ? 0.3 : 0.8,
+                delay: browserOpts.simplifyFramerMotion ? 0.1 : 0.5,
+                ease: browserOpts.useSimpleEasing ? "easeOut" : "easeOut",
+              }}
+              style={{
+                willChange: browserOpts.forceHardwareAcceleration
+                  ? "transform, opacity"
+                  : "auto",
+              }}
             >
               TELLS
             </motion.span>
             <br />
-            <motion.span
-              className="relative inline-block bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent font-semibold tracking-tight"
-              initial={{ 
-                opacity: 0, 
-                y: browserOpts.simplifyFramerMotion ? 10 : 20,
-                ...(browserOpts.disableBlurTransitions ? {} : { filter: "blur(4px)" })
-              }}
-              animate={{ 
-                opacity: 1, 
-                y: 0,
-                ...(browserOpts.disableBlurTransitions ? {} : { filter: "blur(0px)" })
-              }}
-              transition={{ 
-                duration: browserOpts.simplifyFramerMotion ? 0.3 : 1.2, 
-                delay: browserOpts.simplifyFramerMotion ? 0.15 : 0.6, 
-                ease: browserOpts.useSimpleEasing ? "easeOut" : "easeOut" 
-              }}
-              style={{ willChange: browserOpts.forceHardwareAcceleration ? 'transform, opacity' : 'auto' }}
-            >
-              YOUR STORY
-            </motion.span>
+            {browserOpts.isZenBrowser ? (
+              // Static fallback for Zen Browser to prevent animation issues
+              <span className="relative inline-block bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent font-bold tracking-tight">
+                YOUR STORY
+              </span>
+            ) : (
+              <motion.span
+                className="relative inline-block bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent font-bold tracking-tight"
+                initial={{
+                  opacity: 0,
+                  y: browserOpts.simplifyFramerMotion ? 10 : 20,
+                  ...(browserOpts.disableBlurTransitions
+                    ? {}
+                    : { filter: "blur(4px)" }),
+                }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  ...(browserOpts.disableBlurTransitions
+                    ? {}
+                    : { filter: "blur(0px)" }),
+                }}
+                transition={{
+                  duration: browserOpts.simplifyFramerMotion ? 0.3 : 1.2,
+                  delay: browserOpts.simplifyFramerMotion ? 0.15 : 0.6,
+                  ease: browserOpts.useSimpleEasing ? "easeOut" : "easeOut",
+                }}
+                style={{
+                  willChange: browserOpts.forceHardwareAcceleration
+                    ? "transform, opacity"
+                    : "auto",
+                }}
+              >
+                YOUR STORY
+              </motion.span>
+            )}
           </motion.h1>
           <motion.p
             className="text-body-large text-muted/60 mb-16 max-w-xl mx-auto leading-relaxed font-normal tracking-wide"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ 
-              duration: browserOpts.simplifyFramerMotion ? 0.3 : 1, 
+            transition={{
+              duration: browserOpts.simplifyFramerMotion ? 0.3 : 1,
               delay: browserOpts.simplifyFramerMotion ? 0.2 : 1.2,
-              ease: browserOpts.useSimpleEasing ? "easeOut" : [0.4, 0, 0.2, 1]
+              ease: browserOpts.useSimpleEasing ? "easeOut" : [0.4, 0, 0.2, 1],
             }}
-            style={{ willChange: browserOpts.forceHardwareAcceleration ? 'opacity' : 'auto' }}
+            style={{
+              willChange: browserOpts.forceHardwareAcceleration
+                ? "opacity"
+                : "auto",
+            }}
           >
-            Helping brands express their unique identity through unforgettable, custom-made music.
+            Helping brands express their unique identity through unforgettable,
+            custom-made music.
           </motion.p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center max-w-md mx-auto sm:max-w-none">
             <div className="relative group">
               <a
                 href="#work"
                 className={`border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background px-12 py-5 text-small uppercase font-medium transition-all duration-300 inline-block rounded-sm relative z-10 ${
-                  browserOpts.disableBackdropFilter ? 'bg-background/80' : 'backdrop-blur-[20px]'
+                  browserOpts.disableBackdropFilter
+                    ? "bg-background/80"
+                    : "backdrop-blur-[20px]"
                 }`}
               >
                 View Our Work
@@ -241,9 +374,12 @@ export default function Home() {
               <div className="absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 {browserOpts.reduceBlur ? (
                   /* Firefox optimized - single border with box-shadow */
-                  <div className="absolute inset-0 border-2 border-foreground rounded-sm" style={{
-                    boxShadow: '0 0 8px rgba(250, 250, 250, 0.5)'
-                  }} />
+                  <div
+                    className="absolute inset-0 border-2 border-foreground rounded-sm"
+                    style={{
+                      boxShadow: "0 0 8px rgba(250, 250, 250, 0.5)",
+                    }}
+                  />
                 ) : (
                   /* Full effect for other browsers */
                   <>
@@ -264,9 +400,12 @@ export default function Home() {
               <div className="absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 {browserOpts.reduceBlur ? (
                   /* Firefox optimized - single border with box-shadow */
-                  <div className="absolute inset-0 border-2 border-foreground rounded-sm" style={{
-                    boxShadow: '0 0 8px rgba(250, 250, 250, 0.5)'
-                  }} />
+                  <div
+                    className="absolute inset-0 border-2 border-foreground rounded-sm"
+                    style={{
+                      boxShadow: "0 0 8px rgba(250, 250, 250, 0.5)",
+                    }}
+                  />
                 ) : (
                   /* Full effect for other browsers */
                   <>
@@ -282,25 +421,40 @@ export default function Home() {
           {/* Scroll indicator */}
           <motion.div
             className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-            initial={{ opacity: 0, y: browserOpts.simplifyFramerMotion ? -10 : -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ 
-              duration: browserOpts.simplifyFramerMotion ? 0.2 : 0.6, 
-              delay: browserOpts.simplifyFramerMotion ? 0.25 : 1.4,
-              ease: browserOpts.useSimpleEasing ? "easeOut" : [0.4, 0, 0.2, 1]
+            initial={{
+              opacity: 0,
+              y: browserOpts.simplifyFramerMotion ? -10 : -20,
             }}
-            style={{ willChange: browserOpts.forceHardwareAcceleration ? 'transform, opacity' : 'auto' }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: browserOpts.simplifyFramerMotion ? 0.2 : 0.6,
+              delay: browserOpts.simplifyFramerMotion ? 0.25 : 1.4,
+              ease: browserOpts.useSimpleEasing ? "easeOut" : [0.4, 0, 0.2, 1],
+            }}
+            style={{
+              willChange: browserOpts.forceHardwareAcceleration
+                ? "transform, opacity"
+                : "auto",
+            }}
           >
             <motion.div
               className="flex flex-col items-center gap-2"
-              animate={browserOpts.reduceMotionComplexity ? { y: [0, 3, 0] } : { y: [0, 8, 0] }}
-              transition={{ 
-                duration: browserOpts.reduceMotionComplexity ? 2.5 : 2, 
-                repeat: Infinity, 
+              animate={
+                browserOpts.reduceMotionComplexity
+                  ? { y: [0, 3, 0] }
+                  : { y: [0, 8, 0] }
+              }
+              transition={{
+                duration: browserOpts.reduceMotionComplexity ? 2.5 : 2,
+                repeat: Infinity,
                 ease: browserOpts.useSimpleEasing ? "linear" : "easeInOut",
-                repeatType: "reverse"
+                repeatType: "reverse",
               }}
-              style={{ willChange: browserOpts.forceHardwareAcceleration ? 'transform' : 'auto' }}
+              style={{
+                willChange: browserOpts.forceHardwareAcceleration
+                  ? "transform"
+                  : "auto",
+              }}
             >
               <span className="text-xs text-muted/60 uppercase tracking-wider">
                 Scroll
@@ -326,7 +480,7 @@ export default function Home() {
 
         <div className="max-w-7xl mx-auto relative">
           {/* Floating sound wave visualization */}
-          <motion.div 
+          <motion.div
             className="absolute -top-10 left-1/2 -translate-x-1/2 w-full max-w-4xl opacity-10"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 0.1 }}
@@ -349,7 +503,7 @@ export default function Home() {
 
           <div className="grid lg:grid-cols-12 gap-16 items-center">
             {/* Left side - Main content */}
-            <motion.div 
+            <motion.div
               className="lg:col-span-7 space-y-8"
               initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -357,8 +511,8 @@ export default function Home() {
               transition={{ duration: 0.8 }}
             >
               <div>
-                <motion.span 
-                  className="text-small uppercase tracking-[0.2em] text-muted/60 font-light"
+                <motion.span
+                  className="text-small uppercase tracking-[0.2em] text-muted/60 font-normal"
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -366,38 +520,50 @@ export default function Home() {
                 >
                   Since Age 13
                 </motion.span>
-                <motion.h2 
-                  className="text-5xl lg:text-6xl font-bold mt-4 leading-[1.1]"
+                <motion.h2
+                  className="text-5xl lg:text-6xl font-semibold mt-4 leading-[1.1]"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.1 }}
                 >
                   <span className="text-foreground/90">I'm </span>
-                  <span className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">Key0n</span>
+                  <span className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                    Key0n
+                  </span>
                 </motion.h2>
               </div>
 
               <div className="space-y-6">
-                <motion.p 
-                  className="text-xl lg:text-2xl leading-relaxed text-foreground/80 font-light"
+                <motion.p
+                  className="text-xl lg:text-2xl leading-relaxed text-foreground/80 font-normal"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.2 }}
                 >
-                  I don't just make beats.<br />
-                  I craft <span className="text-foreground font-medium">emotional experiences</span> that move people and make brands <span className="text-foreground font-medium">unforgettable</span>.
+                  I don't just make beats.
+                  <br />I craft{" "}
+                  <span className="text-foreground font-medium">
+                    emotional experiences
+                  </span>{" "}
+                  that move people and make brands{" "}
+                  <span className="text-foreground font-medium">
+                    unforgettable
+                  </span>
+                  .
                 </motion.p>
 
-                <motion.p 
+                <motion.p
                   className="text-lg text-muted/80 leading-relaxed"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.3 }}
                 >
-                  My passion? Helping brands discover their <span className="italic">true voice</span> through custom-made, cinematic sound identities that resonate.
+                  My passion? Helping brands discover their{" "}
+                  <span className="italic">true voice</span> through
+                  custom-made, cinematic sound identities that resonate.
                 </motion.p>
 
                 <motion.div
@@ -409,7 +575,9 @@ export default function Home() {
                   <div className="inline-flex items-center gap-4 pt-4">
                     <div className="h-px w-12 bg-foreground/30" />
                     <p className="text-lg font-medium italic text-foreground/90">
-                      Your brand deserves to be heard,<br />not just seen.
+                      Your brand deserves to be heard,
+                      <br />
+                      not just seen.
                     </p>
                   </div>
                 </motion.div>
@@ -417,7 +585,7 @@ export default function Home() {
             </motion.div>
 
             {/* Right side - Visual element */}
-            <motion.div 
+            <motion.div
               className="lg:col-span-5 relative"
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -426,50 +594,16 @@ export default function Home() {
             >
               <div className="relative">
                 {/* Audio waveform visualization */}
-                <div className="aspect-[4/3] relative rounded-2xl overflow-hidden bg-gradient-to-br from-foreground/5 to-transparent">
+                <div
+                  className="aspect-[4/3] relative rounded-2xl overflow-hidden bg-gradient-to-br from-foreground/5 to-transparent"
+                  suppressHydrationWarning
+                >
                   <div className="absolute inset-0 flex items-center justify-center p-8">
-                    <div className="w-full h-full flex items-center justify-center gap-1">
-                      {[...Array(24)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="flex-1 bg-foreground/20 rounded-full"
-                          initial={{ height: "20%" }}
-                          animate={{ 
-                            height: ["20%", `${30 + Math.random() * 40}%`, "20%"]
-                          }}
-                          transition={{
-                            duration: 2 + Math.random() * 2,
-                            repeat: Infinity,
-                            delay: i * 0.1,
-                            ease: "easeInOut"
-                          }}
-                        />
-                      ))}
-                    </div>
+                    <WaveformVisualization />
                   </div>
-                  
+
                   {/* Floating particles */}
-                  <div className="absolute inset-0">
-                    {[...Array(6)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className="absolute w-1 h-1 bg-foreground/30 rounded-full"
-                        style={{
-                          left: `${20 + i * 15}%`,
-                          top: `${30 + i * 10}%`
-                        }}
-                        animate={{
-                          y: [0, -30, 0],
-                          opacity: [0.3, 0.6, 0.3]
-                        }}
-                        transition={{
-                          duration: 3 + i,
-                          repeat: Infinity,
-                          delay: i * 0.5
-                        }}
-                      />
-                    ))}
-                  </div>
+                  <OptimizedFloatingParticles />
                 </div>
 
                 {/* Quote marks */}
@@ -484,7 +618,7 @@ export default function Home() {
           </div>
 
           {/* Bottom section - Team mention */}
-          <motion.div 
+          <motion.div
             className="mt-20 text-center"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -492,11 +626,12 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.5 }}
           >
             <p className="text-lg text-muted/70 max-w-3xl mx-auto leading-relaxed">
-              Together with my team, we create distinctive sonic signatures for 
-              <span className="text-foreground/80"> artists</span>, 
-              <span className="text-foreground/80"> brands</span>, 
-              <span className="text-foreground/80"> films</span>, and 
-              <span className="text-foreground/80"> experiences</span> that connect on a deeper level.
+              Together with my team, we create distinctive sonic signatures for
+              <span className="text-foreground/80"> artists</span>,
+              <span className="text-foreground/80"> brands</span>,
+              <span className="text-foreground/80"> films</span>, and
+              <span className="text-foreground/80"> experiences</span> that
+              connect on a deeper level.
             </p>
           </motion.div>
         </div>
@@ -514,21 +649,33 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="space-y-16 md:space-y-24">
+          <div className="space-y-24 md:space-y-32">
             {projects.map((project, index) => (
               <motion.div
                 key={project.id}
                 className={`flex flex-col ${
                   index % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"
                 } gap-8 lg:gap-12 items-start lg:items-center`}
-                initial={{ opacity: 0, y: browserOpts.simplifyFramerMotion ? 20 : 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: browserOpts.simplifyFramerMotion ? "-50px" : "-100px" }}
-                transition={{ 
-                  duration: browserOpts.simplifyFramerMotion ? 0.2 : 0.6,
-                  ease: browserOpts.useSimpleEasing ? "easeOut" : [0.4, 0, 0.2, 1]
+                initial={{
+                  opacity: 0,
+                  y: browserOpts.simplifyFramerMotion ? 20 : 50,
                 }}
-                style={{ willChange: browserOpts.forceHardwareAcceleration ? 'transform, opacity' : 'auto' }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{
+                  once: true,
+                  margin: browserOpts.simplifyFramerMotion ? "-50px" : "-100px",
+                }}
+                transition={{
+                  duration: browserOpts.simplifyFramerMotion ? 0.2 : 0.6,
+                  ease: browserOpts.useSimpleEasing
+                    ? "easeOut"
+                    : [0.4, 0, 0.2, 1],
+                }}
+                style={{
+                  willChange: browserOpts.forceHardwareAcceleration
+                    ? "transform, opacity"
+                    : "auto",
+                }}
               >
                 {/* Video Side */}
                 <div className="w-full lg:w-3/5 max-w-full">
@@ -580,9 +727,12 @@ export default function Home() {
       </section>
 
       {/* Beats Section - What I Create */}
-      <section id="beats" className="py-32 px-6 sm:px-8 lg:px-12 bg-gradient-to-b from-background via-background/95 to-background">
+      <section
+        id="beats"
+        className="py-32 px-6 sm:px-8 lg:px-12 bg-gradient-to-b from-background via-background/95 to-background"
+      >
         <div className="max-w-7xl mx-auto">
-          <motion.div 
+          <motion.div
             className="text-center mb-20"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -591,7 +741,9 @@ export default function Home() {
           >
             <h2 className="text-5xl lg:text-6xl font-bold mb-6">
               <span className="text-foreground/80">What I Create </span>
-              <span className="bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">for You</span>
+              <span className="bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
+                for You
+              </span>
             </h2>
             <p className="text-lg text-muted/70 max-w-2xl mx-auto">
               Transforming your vision into unforgettable sonic experiences
@@ -601,198 +753,161 @@ export default function Home() {
           <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
             {/* Custom Brand Music */}
             <motion.div
-              className="group relative"
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              <div className="relative p-8 lg:p-10 h-full rounded-2xl bg-gradient-to-br from-foreground/5 to-transparent border border-foreground/10 overflow-hidden transition-all duration-500 group-hover:border-foreground/20">
-                {/* Background glow on hover */}
-                <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                {/* Icon */}
-                <motion.div 
-                  className="w-16 h-16 mb-6 relative"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <div className="absolute inset-0 bg-foreground/10 rounded-xl blur-xl" />
-                  <div className="relative w-full h-full bg-gradient-to-br from-foreground/20 to-foreground/10 rounded-xl flex items-center justify-center">
-                    <span className="text-2xl">✨</span>
-                  </div>
-                </motion.div>
-
-                <h3 className="text-2xl font-semibold mb-4 text-foreground/90">
-                  Custom Brand Music
-                </h3>
-                
-                <p className="text-muted/80 leading-relaxed mb-6">
-                  Full commercial tracks with strategic variations. We finalize the full track first, then create professional cutdowns for every need.
-                </p>
-
-                {/* Features */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-muted/60">
-                    <div className="w-1 h-1 bg-foreground/40 rounded-full" />
-                    <span>Full track + variations (60s, 30s, 15s)</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted/60">
-                    <div className="w-1 h-1 bg-foreground/40 rounded-full" />
-                    <span>Professional cutdowns included</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted/60">
-                    <div className="w-1 h-1 bg-foreground/40 rounded-full" />
-                    <span>Campaign-ready deliverables</span>
-                  </div>
+              <GlareCard
+                glareColor="red"
+                backgroundColor="red"
+                className="flex flex-col p-8 lg:p-10 h-full"
+              >
+                <div className="mb-8">
+                  <h3 className="text-xl font-medium mb-5 text-white tracking-wide">
+                    Custom Brand Music
+                  </h3>
+                  <p className="text-white/70 font-normal leading-relaxed text-large">
+                    Complete commercial tracks with strategic variations—from
+                    full compositions to professional cutdowns tailored for
+                    every campaign need.
+                  </p>
                 </div>
 
-                {/* Hover indicator */}
-                <div className="absolute bottom-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className="w-8 h-8 rounded-full bg-foreground/10 flex items-center justify-center">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
+                <div className="mt-auto">
+                  <div className="space-y-3">
+                    <div className="text-xs text-white/50 uppercase tracking-wider font-medium mb-2">
+                      What's included
+                    </div>
+                    <div className="grid grid-cols-1 gap-2">
+                      <div className="text-sm text-white/60">
+                        Full track + variations
+                      </div>
+                      <div className="text-sm text-white/60">
+                        Professional cutdowns
+                      </div>
+                      <div className="text-sm text-white/60">
+                        Campaign-ready deliverables
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </GlareCard>
             </motion.div>
 
             {/* Sonic Logos */}
             <motion.div
-              className="group relative"
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <div className="relative p-8 lg:p-10 h-full rounded-2xl bg-gradient-to-br from-foreground/5 to-transparent border border-foreground/10 overflow-hidden transition-all duration-500 group-hover:border-foreground/20">
-                {/* Background glow on hover */}
-                <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                {/* Icon */}
-                <motion.div 
-                  className="w-16 h-16 mb-6 relative"
-                  whileHover={{ scale: 1.1, rotate: -5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <div className="absolute inset-0 bg-foreground/10 rounded-xl blur-xl" />
-                  <div className="relative w-full h-full bg-gradient-to-br from-foreground/20 to-foreground/10 rounded-xl flex items-center justify-center">
-                    <span className="text-2xl">🎵</span>
-                  </div>
-                </motion.div>
-
-                <h3 className="text-2xl font-semibold mb-4 text-foreground/90">
-                  Sonic Logos & Audio Branding
-                </h3>
-                
-                <p className="text-muted/80 leading-relaxed mb-6">
-                  Short, memorable sonic identities that make your brand instantly recognizable across every platform.
-                </p>
-
-                {/* Features */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-muted/60">
-                    <div className="w-1 h-1 bg-foreground/40 rounded-full" />
-                    <span>3-5 second signatures</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted/60">
-                    <div className="w-1 h-1 bg-foreground/40 rounded-full" />
-                    <span>Platform-optimized versions</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted/60">
-                    <div className="w-1 h-1 bg-foreground/40 rounded-full" />
-                    <span>Instant brand recall</span>
-                  </div>
+              <GlareCard className="flex flex-col p-8 lg:p-10 h-full">
+                <div className="mb-8">
+                  <h3 className="text-xl font-medium mb-3 text-white tracking-wide">
+                    Sonic Logos & Audio Branding
+                  </h3>
+                  <p className="text-white/70 font-normal leading-relaxed text-sm">
+                    Memorable sonic identities that create instant brand
+                    recognition across every platform and touchpoint.
+                  </p>
                 </div>
 
-                {/* Hover indicator */}
-                <div className="absolute bottom-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className="w-8 h-8 rounded-full bg-foreground/10 flex items-center justify-center">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
+                <div className="mt-auto">
+                  <div className="space-y-3">
+                    <div className="text-xs text-white/50 uppercase tracking-wider font-medium mb-2">
+                      What's included
+                    </div>
+                    <div className="grid grid-cols-1 gap-2">
+                      <div className="text-sm text-white/60">
+                        3-5 second signatures
+                      </div>
+                      <div className="text-sm text-white/60">
+                        Platform-optimized versions
+                      </div>
+                      <div className="text-sm text-white/60">
+                        Instant brand recall
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </GlareCard>
             </motion.div>
 
             {/* Ready-to-use Beats */}
             <motion.div
-              className="group relative"
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              <div className="relative p-8 lg:p-10 h-full rounded-2xl bg-gradient-to-br from-foreground/5 to-transparent border border-foreground/10 overflow-hidden transition-all duration-500 group-hover:border-foreground/20">
-                {/* Background glow on hover */}
-                <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                {/* Icon */}
-                <motion.div 
-                  className="w-16 h-16 mb-6 relative"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <div className="absolute inset-0 bg-foreground/10 rounded-xl blur-xl" />
-                  <div className="relative w-full h-full bg-gradient-to-br from-foreground/20 to-foreground/10 rounded-xl flex items-center justify-center">
-                    <span className="text-2xl">⚡</span>
-                  </div>
-                </motion.div>
-
-                <h3 className="text-2xl font-semibold mb-4 text-foreground/90">
-                  Ready-to-use Beats & Tracks
-                </h3>
-                
-                <p className="text-muted/80 leading-relaxed mb-6">
-                  High-quality, pre-made tracks for brands looking for quick, catchy, and affordable music solutions.
-                </p>
-
-                {/* Features */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-muted/60">
-                    <div className="w-1 h-1 bg-foreground/40 rounded-full" />
-                    <span>Instant licensing</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted/60">
-                    <div className="w-1 h-1 bg-foreground/40 rounded-full" />
-                    <span>Multiple genres available</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted/60">
-                    <div className="w-1 h-1 bg-foreground/40 rounded-full" />
-                    <span>Budget-friendly options</span>
-                  </div>
+              <GlareCard
+                glareColor="yellow"
+                backgroundColor="yellow"
+                className="flex flex-col p-8 lg:p-10 h-full"
+              >
+                <div className="mb-8">
+                  <h3 className="text-xl font-medium mb-3 text-white tracking-wide">
+                    Ready-to-use Beats & Tracks
+                  </h3>
+                  <p className="text-white/70 font-normal leading-relaxed text-sm">
+                    High-quality, pre-made tracks for brands seeking quick,
+                    catchy, and budget-friendly music solutions.
+                  </p>
                 </div>
 
-                {/* Hover indicator */}
-                <div className="absolute bottom-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className="w-8 h-8 rounded-full bg-foreground/10 flex items-center justify-center">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
+                <div className="mt-auto">
+                  <div className="space-y-3">
+                    <div className="text-xs text-white/50 uppercase tracking-wider font-medium mb-2">
+                      What's included
+                    </div>
+                    <div className="grid grid-cols-1 gap-2">
+                      <div className="text-sm text-white/60">
+                        Instant licensing
+                      </div>
+                      <div className="text-sm text-white/60">
+                        Multiple genres available
+                      </div>
+                      <div className="text-sm text-white/60">
+                        Budget-friendly options
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </GlareCard>
             </motion.div>
           </div>
 
           {/* Call to action */}
-          <motion.div 
+          <motion.div
             className="text-center mt-16"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <p className="text-muted/60 mb-6">Ready to elevate your brand's sonic identity?</p>
-            <a 
-              href="#contact" 
+            <p className="text-muted/60 mb-6">
+              Ready to elevate your brand's sonic identity?
+            </p>
+            <a
+              href="#contact"
               className="inline-flex items-center gap-3 px-8 py-4 bg-foreground/5 hover:bg-foreground/10 border border-foreground/20 hover:border-foreground/30 rounded-full transition-all duration-300 group"
             >
-              <span className="text-foreground/90 font-medium">Let's create something amazing</span>
-              <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <span className="text-foreground/90 font-medium">
+                Let's create something amazing
+              </span>
+              <svg
+                className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </a>
           </motion.div>
@@ -823,9 +938,12 @@ export default function Home() {
                 />
                 <div className="absolute bottom-0 left-0 right-0 h-[2px] opacity-0 peer-focus:opacity-100 transition-opacity duration-200">
                   {browserOpts.reduceBlur ? (
-                    <div className="w-full h-full bg-foreground rounded-full" style={{
-                      boxShadow: '0 0 6px rgba(250, 250, 250, 0.6)'
-                    }} />
+                    <div
+                      className="w-full h-full bg-foreground rounded-full"
+                      style={{
+                        boxShadow: "0 0 6px rgba(250, 250, 250, 0.6)",
+                      }}
+                    />
                   ) : (
                     <>
                       <div className="w-full h-full bg-foreground rounded-full" />
@@ -844,9 +962,12 @@ export default function Home() {
                 />
                 <div className="absolute bottom-0 left-0 right-0 h-[2px] opacity-0 peer-focus:opacity-100 transition-opacity duration-200">
                   {browserOpts.reduceBlur ? (
-                    <div className="w-full h-full bg-foreground rounded-full" style={{
-                      boxShadow: '0 0 6px rgba(250, 250, 250, 0.6)'
-                    }} />
+                    <div
+                      className="w-full h-full bg-foreground rounded-full"
+                      style={{
+                        boxShadow: "0 0 6px rgba(250, 250, 250, 0.6)",
+                      }}
+                    />
                   ) : (
                     <>
                       <div className="w-full h-full bg-foreground rounded-full" />
@@ -872,9 +993,12 @@ export default function Home() {
               </select>
               <div className="absolute bottom-0 left-0 right-0 h-[2px] opacity-0 peer-focus:opacity-100 transition-opacity duration-200">
                 {browserOpts.reduceBlur ? (
-                  <div className="w-full h-full bg-foreground rounded-full" style={{
-                    boxShadow: '0 0 6px rgba(250, 250, 250, 0.6)'
-                  }} />
+                  <div
+                    className="w-full h-full bg-foreground rounded-full"
+                    style={{
+                      boxShadow: "0 0 6px rgba(250, 250, 250, 0.6)",
+                    }}
+                  />
                 ) : (
                   <>
                     <div className="w-full h-full bg-foreground rounded-full" />
@@ -893,9 +1017,12 @@ export default function Home() {
               />
               <div className="absolute bottom-0 left-0 right-0 h-[2px] opacity-0 peer-focus:opacity-100 transition-opacity duration-200 -translate-y-[6px]">
                 {browserOpts.reduceBlur ? (
-                  <div className="w-full h-full bg-foreground rounded-full" style={{
-                    boxShadow: '0 0 6px rgba(250, 250, 250, 0.6)'
-                  }} />
+                  <div
+                    className="w-full h-full bg-foreground rounded-full"
+                    style={{
+                      boxShadow: "0 0 6px rgba(250, 250, 250, 0.6)",
+                    }}
+                  />
                 ) : (
                   <>
                     <div className="w-full h-full bg-foreground rounded-full" />
@@ -914,9 +1041,12 @@ export default function Home() {
               </button>
               <div className="absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 {browserOpts.reduceBlur ? (
-                  <div className="absolute inset-0 border-2 border-foreground rounded-sm" style={{
-                    boxShadow: '0 0 8px rgba(250, 250, 250, 0.5)'
-                  }} />
+                  <div
+                    className="absolute inset-0 border-2 border-foreground rounded-sm"
+                    style={{
+                      boxShadow: "0 0 8px rgba(250, 250, 250, 0.5)",
+                    }}
+                  />
                 ) : (
                   <>
                     <div className="absolute inset-0 border-2 border-foreground rounded-sm" />

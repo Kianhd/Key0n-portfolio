@@ -1,18 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { useActiveSection } from "../hooks/useActiveSection";
 import { motion } from "motion/react";
-import { getBrowserOptimizations } from "@/lib/browser-detect";
+import { useBrowserOptimizations } from "../hooks/useBrowserOptimizations";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const activeSection = useActiveSection();
   const pathname = usePathname();
-  const browserOpts = getBrowserOptimizations();
+  const browserOpts = useBrowserOptimizations();
 
   const menuItems = [
     { label: "Home", href: "/", section: "home" },
@@ -22,7 +22,7 @@ const Navigation = () => {
     { label: "BEATS", href: "/beats", section: "beats", bold: true },
   ];
 
-  const handleNavigation = (item: typeof menuItems[0], e: React.MouseEvent) => {
+  const handleNavigation = useCallback((item: typeof menuItems[0], e: React.MouseEvent) => {
     e.preventDefault();
     
     console.log('Navigation clicked:', item.label, item.href, 'Current pathname:', pathname);
@@ -66,9 +66,9 @@ const Navigation = () => {
       console.log('Regular page navigation to:', item.href);
       window.location.href = item.href;
     }
-  };
+  }, [pathname]);
 
-  const handleMobileNavigation = (item: typeof menuItems[0], e: React.MouseEvent) => {
+  const handleMobileNavigation = useCallback((item: typeof menuItems[0], e: React.MouseEvent) => {
     e.preventDefault();
     setIsMenuOpen(false);
     
@@ -107,7 +107,7 @@ const Navigation = () => {
         window.location.href = item.href;
       }
     }, 100); // Small delay to allow menu to close
-  };
+  }, [pathname]);
 
   return (
     <nav className={`fixed top-0 left-0 right-0 bg-background/95 ${browserOpts.disableBackdropFilter || browserOpts.disableSafariBackdrop ? '' : 'backdrop-blur-md'} border-b border-border z-50`} style={{ transform: 'translateZ(0)', backgroundColor: browserOpts.disableBackdropFilter || browserOpts.disableSafariBackdrop ? 'rgba(0, 0, 0, 0.98)' : undefined }}>

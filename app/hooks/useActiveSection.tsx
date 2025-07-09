@@ -5,10 +5,14 @@ import { usePathname } from 'next/navigation';
 
 export function useActiveSection() {
   const pathname = usePathname();
-  // Initialize with 'home' if we're on the main page
-  const [activeSection, setActiveSection] = useState<string>(pathname === '/' ? 'home' : '');
+  // Initialize with safe default to prevent hydration mismatch
+  const [activeSection, setActiveSection] = useState<string>('home');
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
+    // Mark as hydrated and set initial state
+    setIsHydrated(true);
+    
     // Handle route-based navigation (e.g., /beats)
     if (pathname === '/beats') {
       setActiveSection('beats');
@@ -17,7 +21,7 @@ export function useActiveSection() {
 
     // Handle section-based navigation on main page
     if (pathname === '/') {
-      const sections = ['home', 'work', 'about', 'contact'];
+      const sections = ['home', 'about', 'work', 'contact']; // Fixed order to match navigation
       
       const observerOptions = {
         root: null,
@@ -36,19 +40,11 @@ export function useActiveSection() {
 
       const observer = new IntersectionObserver(observerCallback, observerOptions);
 
-      // Observe hero section (no id, so we'll check position)
-      const heroSection = document.querySelector('section:first-of-type');
-      if (heroSection) {
-        observer.observe(heroSection);
-      }
-
-      // Observe other sections
+      // Observe all sections including home
       sections.forEach((section) => {
-        if (section !== 'home') {
-          const element = document.getElementById(section);
-          if (element) {
-            observer.observe(element);
-          }
+        const element = document.getElementById(section);
+        if (element) {
+          observer.observe(element);
         }
       });
 
@@ -76,5 +72,6 @@ export function useActiveSection() {
     }
   }, [pathname]);
 
-  return activeSection;
+  // Return safe default until hydrated to prevent mismatches
+  return isHydrated ? activeSection : 'home';
 }

@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useEffect, useState, useCallback } from "react";
-import { getBrowserOptimizations } from "@/lib/browser-detect";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
+import { useBrowserOptimizations } from "@/app/hooks/useBrowserOptimizations";
 import { throttle } from "@/lib/throttle";
 import { useThrottledMouseTracking } from "@/app/hooks/useThrottledAnimation";
 
@@ -20,31 +20,33 @@ interface FloatingParticlesProps {
   className?: string;
 }
 
-export default function FloatingParticles({ count = 20, className = "" }: FloatingParticlesProps) {
-  const [particles, setParticles] = useState<Particle[]>([]);
+const FloatingParticles = React.memo(function FloatingParticles({ count = 20, className = "" }: FloatingParticlesProps) {
+  const browserOpts = useBrowserOptimizations();
+  
+  // Completely disable for Firefox, Zen Browser, or reduced motion preference
+  if (browserOpts.disableInfiniteAnimations || browserOpts.useStaticFallbacks || browserOpts.prefersReducedMotion) {
+    return null;
+  }
+  
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const browserOpts = getBrowserOptimizations();
   
   // Reduce particle count for Firefox
   const adjustedCount = browserOpts.reduceParticles ? Math.max(5, Math.floor(count / 3)) : count;
 
-  useEffect(() => {
-    const generateParticles = () => {
-      const newParticles: Particle[] = [];
-      for (let i = 0; i < adjustedCount; i++) {
-        newParticles.push({
-          id: i,
-          x: Math.random() * 100,
-          y: Math.random() * 100,
-          size: Math.random() * 4 + 1,
-          duration: Math.random() * 20 + 10,
-          delay: Math.random() * 5,
-        });
-      }
-      setParticles(newParticles);
-    };
-
-    generateParticles();
+  // Memoize particles to prevent recreation on every render
+  const particles = useMemo(() => {
+    const newParticles: Particle[] = [];
+    for (let i = 0; i < adjustedCount; i++) {
+      newParticles.push({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 4 + 1,
+        duration: Math.random() * 20 + 10,
+        delay: Math.random() * 5,
+      });
+    }
+    return newParticles;
   }, [adjustedCount]);
 
   // Use throttled mouse tracking for better Firefox performance
@@ -100,4 +102,6 @@ export default function FloatingParticles({ count = 20, className = "" }: Floati
       />
     </div>
   );
-}
+});
+
+export default FloatingParticles;

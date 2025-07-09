@@ -1,6 +1,26 @@
 export function isFirefox(): boolean {
   if (typeof window === 'undefined') return false;
-  return navigator.userAgent.toLowerCase().includes('firefox');
+  const userAgent = navigator.userAgent.toLowerCase();
+  // Detect Firefox, Zen Browser, and other Firefox-based browsers
+  return userAgent.includes('firefox') || 
+         userAgent.includes('zen/') ||
+         userAgent.includes('gecko/') && !userAgent.includes('webkit');
+}
+
+export function isZenBrowser(): boolean {
+  if (typeof window === 'undefined') return false;
+  const userAgent = navigator.userAgent.toLowerCase();
+  return userAgent.includes('zen/') || userAgent.includes('zen browser');
+}
+
+export function isPrivacyFocusedBrowser(): boolean {
+  if (typeof window === 'undefined') return false;
+  const userAgent = navigator.userAgent.toLowerCase();
+  // Detect privacy-focused browsers that typically have reduced hardware acceleration
+  return userAgent.includes('zen/') || 
+         userAgent.includes('librewolf') ||
+         userAgent.includes('tor browser') ||
+         (userAgent.includes('firefox') && userAgent.includes('resist'));
 }
 
 export function isSafari(): boolean {
@@ -9,38 +29,114 @@ export function isSafari(): boolean {
 }
 
 export function getBrowserOptimizations() {
+  // Only run browser detection on client-side to prevent hydration mismatches
+  if (typeof window === 'undefined') {
+    // Server-side fallback - return safe defaults
+    return {
+      reduceBlur: false,
+      disableBackdropFilter: false,
+      reduceSVGEffects: false,
+      throttleMouseEvents: false,
+      reduceParticles: false,
+      disableComplexAnimations: false,
+      simplifyFramerMotion: false,
+      disableCanvasAnimations: false,
+      forceHardwareAcceleration: false,
+      disableFilterAnimations: false,
+      reduceMotionComplexity: false,
+      disableHeavyBlurAnimations: false,
+      disableBlurTransitions: false,
+      disableVideoBackgrounds: false,
+      useStaticFallbacks: false,
+      disableParallax: false,
+      limitLayerCreation: false,
+      disableTransform3D: false,
+      useCSSAnimationsOnly: false,
+      useSimpleEasing: false,
+      reduceConcurrentAnimations: false,
+      targetFrameRate: 60,
+      enableFrameThrottling: false,
+      disableFilterStacking: false,
+      useSimpleHover: false,
+      avoidFilterAnimations: false,
+      reduceSafariBlur: false,
+      disableSafariBackdrop: false,
+      limitGlowLayers: false,
+      useCompositorAnimations: false,
+      preventLayoutThrashing: false,
+      conservativeWillChange: false,
+      replaceBackdropBlur: false,
+      disableInfiniteAnimations: false,
+      useRequestIdleCallback: false,
+      avoidTransform3d: false,
+      prefersReducedMotion: false,
+      isZenBrowser: false,
+      isPrivacyFocused: false,
+    };
+  }
+
   const firefox = isFirefox();
   const safari = isSafari();
+  const zen = isZenBrowser();
+  const privacyFocused = isPrivacyFocusedBrowser();
+  
+  // Check for reduced motion preference - only on client
+  const prefersReducedMotion = window.matchMedia && 
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   
   return {
+    // Basic browser optimizations
     reduceBlur: firefox || safari,
-    disableBackdropFilter: firefox,
-    reduceSVGEffects: firefox,
-    throttleMouseEvents: firefox,
-    reduceParticles: firefox,
-    // Firefox-specific performance optimizations - SELECTIVE
-    disableComplexAnimations: false, // Keep complex animations, just optimize them
-    simplifyFramerMotion: firefox,
-    disableCanvasAnimations: false, // Keep canvas, just reduce frequency
-    forceHardwareAcceleration: firefox,
-    disableFilterAnimations: false, // Only disable animated filters, not static ones
-    reduceMotionComplexity: firefox,
-    // Only disable heavy blur animations, not essential filters
-    disableHeavyBlurAnimations: firefox,
-    // Specifically disable blur transitions that get stuck in Firefox
-    disableBlurTransitions: firefox,
-    // Enhanced Firefox Motion optimizations
-    useSimpleEasing: firefox, // Use linear/ease instead of complex bezier curves
-    reduceConcurrentAnimations: firefox, // Limit simultaneous animations
-    // Frame rate optimization
-    targetFrameRate: firefox ? 30 : 60, // Limit Firefox to 30fps
-    enableFrameThrottling: firefox,
+    disableBackdropFilter: firefox || zen,
+    reduceSVGEffects: firefox || zen,
+    throttleMouseEvents: firefox || zen,
+    reduceParticles: firefox || zen,
+    
+    // Enhanced Zen Browser optimizations
+    disableComplexAnimations: zen || privacyFocused || prefersReducedMotion,
+    simplifyFramerMotion: firefox || zen,
+    disableCanvasAnimations: firefox || zen || privacyFocused,
+    forceHardwareAcceleration: false, // Don't force - Zen may have it disabled for privacy
+    disableFilterAnimations: firefox || zen,
+    reduceMotionComplexity: firefox || zen || prefersReducedMotion,
+    disableHeavyBlurAnimations: firefox || zen,
+    disableBlurTransitions: firefox || zen,
+    
+    // Zen-specific aggressive optimizations
+    disableVideoBackgrounds: zen || privacyFocused,
+    useStaticFallbacks: zen || privacyFocused || prefersReducedMotion,
+    disableParallax: zen || privacyFocused || prefersReducedMotion,
+    limitLayerCreation: zen || privacyFocused,
+    disableTransform3D: zen || privacyFocused,
+    useCSSAnimationsOnly: zen || privacyFocused,
+    
+    // Performance settings
+    useSimpleEasing: firefox || zen,
+    reduceConcurrentAnimations: firefox || zen || prefersReducedMotion,
+    targetFrameRate: zen ? 24 : firefox ? 30 : 60, // Even lower for Zen
+    enableFrameThrottling: firefox || zen,
+    
+    // Safari optimizations
     disableFilterStacking: safari,
     useSimpleHover: safari,
     avoidFilterAnimations: safari,
     reduceSafariBlur: safari,
     disableSafariBackdrop: safari,
     limitGlowLayers: safari,
+    
+    // Advanced optimizations
+    useCompositorAnimations: firefox || zen,
+    preventLayoutThrashing: firefox || zen,
+    conservativeWillChange: firefox || zen,
+    replaceBackdropBlur: firefox || zen,
+    disableInfiniteAnimations: zen || privacyFocused || prefersReducedMotion,
+    useRequestIdleCallback: firefox || zen,
+    avoidTransform3d: firefox || zen,
+    
+    // User preference respect
+    prefersReducedMotion,
+    isZenBrowser: zen,
+    isPrivacyFocused: privacyFocused,
   };
 }
 

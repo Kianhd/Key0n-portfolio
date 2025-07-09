@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { motion } from "motion/react";
-import { getBrowserOptimizations } from "@/lib/browser-detect";
+import { useBrowserOptimizations } from "@/app/hooks/useBrowserOptimizations";
 import { throttle } from "@/lib/throttle";
 import { useThrottledMouseTracking } from "@/app/hooks/useThrottledAnimation";
 
@@ -17,7 +17,7 @@ export const TextHoverEffect = ({
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);
   const [maskPosition, setMaskPosition] = useState({ cx: "50%", cy: "50%" });
-  const browserOpts = getBrowserOptimizations();
+  const browserOpts = useBrowserOptimizations();
 
   useEffect(() => {
     if (svgRef.current && cursor.x !== null && cursor.y !== null) {
@@ -43,7 +43,7 @@ export const TextHoverEffect = ({
     }
   }, [browserOpts.throttleMouseEvents]);
 
-  if (browserOpts.reduceSVGEffects) {
+  if (browserOpts.reduceSVGEffects || browserOpts.useStaticFallbacks || browserOpts.prefersReducedMotion) {
     return (
       <div className="text-7xl font-bold text-neutral-200 dark:text-neutral-800 font-[helvetica]">
         {text}

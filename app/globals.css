@@ -11,9 +11,9 @@
   --color-border: #2a2a2a;
   --color-muted: #a0a0a0;
   
-  /* Custom font system with your branded fonts */
-  --font-family-sans: 'Futura PT', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-  --font-family-display: 'Margo', 'Futura PT', 'SF Pro Display', serif;
+  /* League Spartan - Professional geometric sans-serif font stack */
+  --font-family-sans: 'League Spartan', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-family-display: 'League Spartan', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --font-family-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Courier New', monospace;
 }
 
@@ -22,7 +22,7 @@
   background-image: radial-gradient(circle, var(--tw-gradient-stops));
 }
 
-/* Marquee animation */
+/* Compositor-friendly marquee animation - Pure transform */
 @keyframes marquee {
   0% {
     transform: translateX(0);
@@ -32,15 +32,44 @@
   }
 }
 
+/* Compositor-friendly fade animations - Pure opacity */
+@keyframes fadeInCompositor {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInCompositor {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .animate-marquee {
   animation: marquee 26.67s linear infinite;
   will-change: transform;
-  /* Safari optimization: Force hardware acceleration */
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  /* Improve animation performance */
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  /* Remove translateZ(0) hacks to prevent excessive layer creation */
+  /* Only use necessary properties for compositor */
+  contain: layout style;
+}
+
+/* Firefox/Zen Browser - MDN recommended compositor approach */
+@supports (-moz-appearance: none) {
+  .animate-marquee {
+    animation: marquee 40s linear infinite !important;
+    /* Use only transform as recommended by MDN for compositor */
+    will-change: transform !important;
+    /* Avoid excessive containment - use minimal approach */
+    contain: layout !important;
+  }
 }
 
 html {
@@ -104,55 +133,55 @@ body > * {
   background: var(--color-foreground);
 }
 
-/* Typography scales - Optimized hierarchy */
+/* Typography scales - League Spartan Professional Hierarchy */
 .text-hero {
   font-size: clamp(3rem, 12vw, 8rem);
   line-height: 0.9;
   letter-spacing: -0.02em;
-  font-weight: 700; /* Reduced from 800 for better balance */
+  font-weight: 800; /* Extra bold for maximum impact with League Spartan */
 }
 
 .text-title {
   font-size: clamp(2rem, 8vw, 5rem);
   line-height: 1;
   letter-spacing: -0.02em;
-  font-weight: 600; /* Reduced from 700 */
+  font-weight: 700; /* Bold for section headings */
 }
 
 .text-subtitle {
   font-size: clamp(1.25rem, 3vw, 2rem);
   line-height: 1.2;
-  font-weight: 500; /* Reduced from 600 for project titles */
+  font-weight: 600; /* Semibold for subsection headings */
 }
 
 .text-stats {
   font-size: clamp(1.75rem, 6vw, 3.5rem);
   line-height: 1.1;
-  font-weight: 600; /* Reduced from 700 */
+  font-weight: 700; /* Bold for emphasis */
 }
 
 .text-body {
   font-size: clamp(1rem, 1.5vw, 1.25rem);
   line-height: 1.6;
-  font-weight: 400; /* Regular weight for body text */
+  font-weight: 400; /* Regular for optimal readability */
 }
 
 .text-body-large {
   font-size: clamp(1.125rem, 2vw, 1.375rem);
   line-height: 1.6;
-  font-weight: 400; /* For subtitle descriptions */
+  font-weight: 400; /* Regular for subtitle descriptions */
 }
 
 .text-small {
   font-size: clamp(0.875rem, 1vw, 1rem);
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 400; /* Regular for UI text */
 }
 
 .text-caption {
   font-size: clamp(0.75rem, 0.875vw, 0.875rem);
   line-height: 1.4;
-  font-weight: 400; /* For helper text */
+  font-weight: 400; /* Regular for helper text */
 }
 
 /* Text utilities */
@@ -161,98 +190,163 @@ body > * {
   letter-spacing: 0.05em;
 }
 
-/* Performance optimizations for animations */
-[class*="animate-"] {
+/* Ensure Tailwind font weights override custom classes when explicitly applied */
+/* League Spartan supports full weight range (100-900) */
+.font-thin {
+  font-weight: 100 !important;
+}
+
+.font-extralight {
+  font-weight: 200 !important;
+}
+
+.font-light {
+  font-weight: 300 !important;
+}
+
+.font-normal {
+  font-weight: 400 !important;
+}
+
+.font-medium {
+  font-weight: 500 !important;
+}
+
+.font-semibold {
+  font-weight: 600 !important;
+}
+
+.font-bold {
+  font-weight: 700 !important;
+}
+
+.font-extrabold {
+  font-weight: 800 !important;
+}
+
+.font-black {
+  font-weight: 900 !important;
+}
+
+/* Performance optimizations for animations - Conservative will-change usage */
+/* Only apply will-change to essential animations to prevent memory issues */
+.animate-marquee {
+  will-change: transform;
+}
+
+/* All other animations use auto to prevent Firefox memory budget overflow */
+[class*="animate-"]:not(.animate-marquee) {
   will-change: auto;
 }
 
-/* Firefox-specific performance optimizations - SELECTIVE */
-@-moz-document url-prefix() {
-  /* Only apply hardware acceleration to specific elements */
-  .animate-marquee,
-  [class*="motion-"],
-  .scroll-indicator {
-    transform: translateZ(0);
+/* Respect user motion preferences - highest priority */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
   
-  /* Frame rate optimization for Firefox */
-  * {
-    /* Force consistent frame timing */
-    animation-timing-function: linear !important;
-  }
-  
-  /* Throttle high-frequency animations */
+  /* Completely disable complex animations */
   .animate-marquee {
-    animation-duration: 40s !important; /* 1.5x faster than original 60s */
+    animation: none !important;
   }
   
-  /* Reduce motion complexity only for heavy animations */
-  @media (prefers-reduced-motion: no-preference) {
-    [class*="animate-"] {
-      animation-duration: calc(var(--animation-duration, 1s) * 1.5) !important;
-    }
+  /* Hide all decorative animations */
+  [class*="particle"],
+  [class*="floating"],
+  [class*="wave"] {
+    display: none !important;
+  }
+}
+
+/* Firefox/Zen Browser - MDN Performance Best Practices */
+@supports (-moz-appearance: none) {
+  /* Conservative will-change usage - prevent memory budget overflow */
+  * {
+    will-change: auto !important;
   }
   
-  /* Optimize video and canvas elements */
-  video, canvas {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+  /* Only essential marquee gets will-change as per MDN guidelines */
+  .animate-marquee {
+    will-change: transform !important;
   }
   
-  /* Limit CSS transforms for better performance */
-  [style*="transform"] {
-    will-change: transform;
-    transform-style: flat !important;
-  }
-  
-  /* Optimize all blur filters for Firefox */
-  [style*="blur(40px)"],
-  [style*="blur(60px)"] {
-    filter: blur(15px) !important;
-  }
-  
-  [style*="blur(20px)"] {
-    filter: blur(8px) !important;
-  }
-  
-  [style*="blur(10px)"] {
-    filter: blur(4px) !important;
-  }
-  
-  /* Replace backdrop-blur with solid backgrounds */
+  /* Replace heavy effects with compositor-friendly alternatives */
   .backdrop-blur-sm,
   .backdrop-blur-md,
   .backdrop-blur-lg {
     backdrop-filter: none !important;
-    background-color: rgba(0, 0, 0, 0.8) !important;
+    background-color: rgba(0, 0, 0, 0.85) !important;
   }
   
-  /* Prevent stuck blur animations in hero section */
-  .text-hero [style*="filter: blur"] {
-    filter: none !important;
-    animation: none !important;
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out !important;
-  }
-  
-  /* Optimize filter stacking - remove multiple blur layers */
-  .blur-sm + .blur-md,
-  .blur-md + .blur-lg,
-  .blur-sm + .blur-lg {
+  /* Hide compositor-unfriendly elements */
+  canvas,
+  svg filter,
+  [class*="particle"],
+  [class*="floating"] {
     display: none !important;
   }
   
-  /* Replace heavy CSS filters with box-shadow alternatives */
-  .filter-blur-replacement {
-    filter: none !important;
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3) !important;
+  /* Zen Browser specific - ultra-conservative approach */
+  body[data-zen-browser="true"] {
+    /* Disable all 3D transforms */
+    * {
+      transform: none !important;
+      transform-style: flat !important;
+      perspective: none !important;
+    }
+    
+    /* Remove all filters */
+    *:not(.animate-marquee) {
+      filter: none !important;
+      backdrop-filter: none !important;
+    }
+    
+    /* Simplify all animations to basic opacity/position changes */
+    [class*="animate-"] {
+      animation: fadeInBasic 0.3s ease-out !important;
+    }
+    
+    /* Hide all decorative elements */
+    video,
+    canvas,
+    svg[class*="decoration"],
+    [class*="particle"],
+    [class*="floating"],
+    [class*="wave"],
+    [class*="glow"] {
+      display: none !important;
+    }
+  }
+}
+
+/* Ultra-simple animation for Zen Browser */
+@keyframes fadeInBasic {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Firefox requestAnimationFrame throttling fix */
+@-moz-document url-prefix() {
+  /* Use CSS animations instead of JS for better throttling behavior */
+  [class*="animate-"]:not(.animate-marquee) {
+    animation: fadeInCompositor 0.6s ease-out !important;
   }
   
-  /* Optimize particle animations */
-  [class*="particle"],
-  [class*="floating"] {
-    animation-duration: calc(var(--duration, 10s) * 2) !important;
-    will-change: transform, opacity;
+  /* Prevent layout thrashing from inline styles */
+  [style*="transform"]:not(.animate-marquee) {
+    transform: none !important;
+    animation: slideInCompositor 0.6s ease-out !important;
+  }
+  
+  /* Marquee optimization for 40s smooth timing */
+  .animate-marquee {
+    animation: marquee 40s linear infinite !important;
+    will-change: transform !important;
   }
 }
 
@@ -282,7 +376,11 @@ body > * {
 }
 
 .animate-fade-in {
-  animation: fadeIn 1s ease-out;
+  animation: fadeInCompositor 0.6s ease-out;
+}
+
+.animate-slide-in {
+  animation: slideInCompositor 0.6s ease-out;
 }
 
 /* Custom Font Utility Classes */

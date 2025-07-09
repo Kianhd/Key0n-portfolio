@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, PanInfo } from "motion/react";
 import VideoPlayer from "./VideoPlayer";
-import { getBrowserOptimizations } from "@/lib/browser-detect";
+import { useBrowserOptimizations } from "@/app/hooks/useBrowserOptimizations";
 
 
 interface Video {
@@ -18,7 +18,7 @@ interface VideoCarouselProps {
   className?: string;
 }
 
-export default function VideoCarousel({
+const VideoCarousel = React.memo(function VideoCarousel({
   videos,
   className = "",
 }: VideoCarouselProps) {
@@ -34,8 +34,26 @@ export default function VideoCarousel({
     null
   );
   const [mobileControlsData, setMobileControlsData] = useState<any>(null);
-  const browserOpts = getBrowserOptimizations();
+  const browserOpts = useBrowserOptimizations();
 
+  // For Zen Browser and privacy-focused browsers, show static fallback
+  if (browserOpts.disableVideoBackgrounds || browserOpts.useStaticFallbacks) {
+    return (
+      <div className={`relative w-full aspect-video bg-card rounded-lg border border-border ${className}`}>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-foreground/10 flex items-center justify-center">
+              <svg className="w-6 h-6 text-foreground/60" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            </div>
+            <p className="text-sm text-muted">Video content optimized for performance</p>
+            <p className="text-xs text-muted/60 mt-1">Enable hardware acceleration for full experience</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Cleanup timeouts
   useEffect(() => {
@@ -506,4 +524,6 @@ export default function VideoCarousel({
       )}
     </div>
   );
-}
+});
+
+export default VideoCarousel;

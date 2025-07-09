@@ -1,59 +1,8 @@
-/* Import Adobe Fonts for Futura PT */
-@import url('https://use.typekit.net/');
+/* Import League Spartan from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-/* Import Subway Berlin OT for BEATS */
+/* Import Subway Berlin OT for BEATS branding */
 @import url('./Reisenberg.css');
 
-/* Custom Font Definitions */
-
-/* Futura PT - Primary display font */
-@font-face {
-  font-family: 'Futura PT';
-  src: local('Futura PT'),
-       url('/fonts/FuturaPT-Book.woff2') format('woff2'),
-       url('/fonts/FuturaPT-Book.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Futura PT';
-  src: local('Futura PT Medium'),
-       url('/fonts/FuturaPT-Medium.woff2') format('woff2'),
-       url('/fonts/FuturaPT-Medium.woff') format('woff');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Futura PT';
-  src: local('Futura PT Bold'),
-       url('/fonts/FuturaPT-Bold.woff2') format('woff2'),
-       url('/fonts/FuturaPT-Bold.woff') format('woff');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* Margo - Elegant display font */
-@font-face {
-  font-family: 'Margo';
-  src: local('Margo'),
-       url('/fonts/Margo-Regular.woff2') format('woff2'),
-       url('/fonts/Margo-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* SF Pro - System font fallback */
-@font-face {
-  font-family: 'SF Pro Display';
-  src: local('SF Pro Display'),
-       local('-apple-system'),
-       local('BlinkMacSystemFont');
-  font-weight: 300 900;
-  font-style: normal;
-}
+/* League Spartan - Professional geometric sans-serif */
+/* Perfect for modern music producer branding with clean, bold aesthetics */
