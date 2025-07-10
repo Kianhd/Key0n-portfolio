@@ -9,8 +9,8 @@ export const GlareCard = ({
 }: {
   children: React.ReactNode;
   className?: string;
-  glareColor?: "white" | "red" | "yellow";
-  backgroundColor?: "slate" | "red" | "yellow";
+  glareColor?: "white" | "red" | "yellow" | "gray";
+  backgroundColor?: "slate" | "red" | "yellow" | "gray";
 }) => {
   const isPointerInside = useRef(false);
   const refElement = useRef<HTMLDivElement>(null);
@@ -59,6 +59,11 @@ export const GlareCard = ({
       rainbow: "repeating-linear-gradient( 0deg,rgb(255,198,11) calc(var(--step) * 1),rgba(255,206,30,1) calc(var(--step) * 2),rgba(255,214,60,1) calc(var(--step) * 3),rgba(255,222,90,1) calc(var(--step) * 4),rgba(255,230,120,1) calc(var(--step) * 5),rgb(255,198,11) calc(var(--step) * 6),rgb(255,198,11) calc(var(--step) * 7) ) 0% var(--bg-y)/200% 700% no-repeat",
       shade: "radial-gradient( farthest-corner circle at var(--m-x) var(--m-y),rgba(255,198,11,0.1) 12%,rgba(255,198,11,0.15) 20%,rgba(255,198,11,0.25) 120% ) var(--bg-x) var(--bg-y)/300% no-repeat",
       glare: "radial-gradient(farthest-corner_circle_at_var(--m-x)_var(--m-y),_rgba(255,198,11,0.8)_10%,_rgba(255,198,11,0.65)_20%,_rgba(255,198,11,0)_90%)"
+    },
+    gray: {
+      rainbow: "repeating-linear-gradient( 0deg,rgb(120,120,120) calc(var(--step) * 1),rgba(140,140,140,1) calc(var(--step) * 2),rgba(160,160,160,1) calc(var(--step) * 3),rgba(180,180,180,1) calc(var(--step) * 4),rgba(200,200,200,1) calc(var(--step) * 5),rgb(120,120,120) calc(var(--step) * 6),rgb(120,120,120) calc(var(--step) * 7) ) 0% var(--bg-y)/200% 700% no-repeat",
+      shade: "radial-gradient( farthest-corner circle at var(--m-x) var(--m-y),rgba(120,120,120,0.1) 12%,rgba(140,140,140,0.15) 20%,rgba(160,160,160,0.25) 120% ) var(--bg-x) var(--bg-y)/300% no-repeat",
+      glare: "radial-gradient(farthest-corner_circle_at_var(--m-x)_var(--m-y),_rgba(120,120,120,0.8)_10%,_rgba(140,140,140,0.65)_20%,_rgba(120,120,120,0)_90%)"
     }
   };
 
@@ -68,14 +73,16 @@ export const GlareCard = ({
   const backgroundColors = {
     slate: "bg-slate-950",
     red: "bg-red-950",
-    yellow: "bg-yellow-950"
+    yellow: "bg-yellow-950",
+    gray: "bg-gray-950"
   };
 
   // Custom background styles for specific colors
   const customBackgroundStyles = {
     slate: {},
     red: { backgroundColor: '#130707' }, // Quadruple darker red
-    yellow: { backgroundColor: '#130f03' } // Quadruple darker yellow
+    yellow: { backgroundColor: '#130f03' }, // Quadruple darker yellow
+    gray: { backgroundColor: '#0a0a0a' } // Dark gray matching website background
   };
 
   const currentBackgroundColor = backgroundColors[backgroundColor];

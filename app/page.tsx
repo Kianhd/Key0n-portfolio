@@ -179,8 +179,8 @@ export default function Home() {
     <div className="min-h-screen bg-background overflow-x-hidden">
       <SchemaMarkup />
       <Navigation />
-      
-      <HeroSection 
+
+      <HeroSection
         isButtonHovered={isButtonHovered}
         setIsButtonHovered={setIsButtonHovered}
       />
