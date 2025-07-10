@@ -72,6 +72,29 @@ const ContactSection: React.FC = () => {
             </div>
           </div>
           <div className="relative">
+            <input
+              type="tel"
+              placeholder="Your Phone (Optional)"
+              className="w-full px-6 py-4 bg-transparent border-b-2 border-border focus:outline-none transition-all duration-200 text-body peer"
+            />
+            <div className="absolute bottom-0 left-0 right-0 h-[2px] opacity-0 peer-focus:opacity-100 transition-opacity duration-200">
+              {browserOpts.reduceBlur ? (
+                <div
+                  className="w-full h-full bg-foreground rounded-full"
+                  style={{
+                    boxShadow: "0 0 6px rgba(250, 250, 250, 0.6)",
+                  }}
+                />
+              ) : (
+                <>
+                  <div className="w-full h-full bg-foreground rounded-full" />
+                  <div className="absolute inset-0 bg-foreground rounded-full blur-sm" />
+                  <div className="absolute inset-0 bg-foreground rounded-full blur-md opacity-50" />
+                </>
+              )}
+            </div>
+          </div>
+          <div className="relative">
             <select
               className="w-full px-6 py-4 bg-transparent border-b-2 border-border focus:outline-none transition-all duration-200 text-foreground text-body peer"
               required

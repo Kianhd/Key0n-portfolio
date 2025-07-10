@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Navigation from '../components/Navigation';
 import BeatCard from '../components/BeatCard';
 import ContactModal from '../components/ContactModal';
+import ComingSoonOverlay from '../components/ComingSoonOverlay';
 import { motion, AnimatePresence } from 'motion/react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
@@ -23,6 +24,8 @@ export default function BeatsPage() {
   const [selectedGenre, setSelectedGenre] = useState<string>('all');
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [selectedBeat, setSelectedBeat] = useState<Beat | null>(null);
+  // 🚀 LAUNCH CONTROL: Set to false when ready to go live with beats page
+  const [isComingSoonActive, setIsComingSoonActive] = useState(true);
   
   useScrollAnimation();
 
@@ -147,6 +150,15 @@ export default function BeatsPage() {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
+      
+      {/* Coming Soon Overlay */}
+      <ComingSoonOverlay
+        isActive={isComingSoonActive}
+        title="Premium BEATS"
+        description="We're crafting something extraordinary for you. Our premium beats collection will feature exclusive tracks, instant licensing, and custom production services."
+        estimatedDate="November 2025"
+        notifyEmail="hello@key0n.com"
+      />
       
       {/* Hero Section */}
       <section className="min-h-screen flex items-center justify-center relative overflow-hidden pt-16 gradient-fade-bottom">
