@@ -57,14 +57,14 @@ const BrandMarquee = React.memo(function BrandMarquee({ brands }: BrandMarqueePr
                       // Safari: Apply filters differently to avoid stacking issues
                       browserOpts.disableFilterStacking
                         ? (brand.invertColor ? '' : 'drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)]')
-                        : `drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)] ${brand.invertColor ? 'brightness-0 invert' : ''}`
+                        : `drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)] ${brand.invertColor ? '[filter:brightness(0)_invert(1)]' : ''}`
                     }`}
                     style={{
                       // Hardware acceleration for Safari
                       transform: 'translateZ(0)',
                       willChange: browserOpts.avoidFilterAnimations ? 'opacity' : 'auto',
-                      // Apply invert filter via inline style for Safari to ensure it works
-                      ...(browserOpts.disableFilterStacking && brand.invertColor 
+                      // Apply invert filter via inline style to ensure it works across all browsers
+                      ...(brand.invertColor 
                         ? { filter: 'brightness(0) invert(1)' } 
                         : {})
                     }}
@@ -90,14 +90,14 @@ const BrandMarquee = React.memo(function BrandMarquee({ brands }: BrandMarqueePr
                       // Safari: Apply filters differently to avoid stacking issues
                       browserOpts.disableFilterStacking
                         ? (brand.invertColor ? '' : 'drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)]')
-                        : `drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)] ${brand.invertColor ? 'brightness-0 invert' : ''}`
+                        : `drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)] ${brand.invertColor ? '[filter:brightness(0)_invert(1)]' : ''}`
                     }`}
                     style={{
                       // Hardware acceleration for Safari
                       transform: 'translateZ(0)',
                       willChange: browserOpts.avoidFilterAnimations ? 'opacity' : 'auto',
-                      // Apply invert filter via inline style for Safari to ensure it works
-                      ...(browserOpts.disableFilterStacking && brand.invertColor 
+                      // Apply invert filter via inline style to ensure it works across all browsers
+                      ...(brand.invertColor 
                         ? { filter: 'brightness(0) invert(1)' } 
                         : {})
                     }}
