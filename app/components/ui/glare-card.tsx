@@ -82,7 +82,7 @@ export const GlareCard = ({
     slate: {},
     red: { backgroundColor: '#130707' }, // Quadruple darker red
     yellow: { backgroundColor: '#130f03' }, // Quadruple darker yellow
-    gray: { backgroundColor: '#0a0a0a' } // Dark gray matching website background
+    gray: { backgroundColor: '#1a1a1a' } // Lighter gray to stand out from background
   };
 
   const currentBackgroundColor = backgroundColors[backgroundColor];

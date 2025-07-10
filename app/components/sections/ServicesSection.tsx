@@ -10,7 +10,7 @@ const ServicesSection: React.FC = () => {
       id="beats"
       className="py-32 px-6 sm:px-8 lg:px-12 bg-gradient-to-b from-background via-background/95 to-background"
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-8xl mx-auto">
         <motion.div
           className="text-center mb-20"
           initial={{ opacity: 0, y: 30 }}
@@ -29,55 +29,54 @@ const ServicesSection: React.FC = () => {
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 lg:gap-12 max-w-none">
           <ServiceCard
-            title="Custom Brand Music"
-            description="Complete commercial tracks with strategic variations—from full compositions to professional cutdowns tailored for every campaign need."
+            title="🎵 Custom Brand Music"
+            description="Your brand deserves a soundtrack as powerful as its story. I create full-length anthems that transform campaigns into emotional experiences and make your brand unforgettable."
             features={[
-              "Full track + variations",
-              "Professional cutdowns",
-              "Campaign-ready deliverables"
+              "Original full track + variations",
+              "Edits for social & ads",
+              "Exclusive usage rights"
             ]}
             delay={0.1}
-            glareColor="red"
-            backgroundColor="red"
+            accentColor="red"
           />
 
           <ServiceCard
-            title="Sonic Logos & Audio Branding"
-            description="Memorable sonic identities that create instant brand recognition across every platform and touchpoint."
+            title="⚡ Sonic Logos & Audio Branding"
+            description="Be recognized in a heartbeat. A custom sonic signature that makes your brand stand out instantly — and stay top-of-mind everywhere it plays."
             features={[
-              "3-5 second signatures",
-              "Platform-optimized versions",
-              "Instant brand recall"
+              "3–5 sec original sonic logo",
+              "Optimized cuts for all platforms",
+              "Full brand sound ownership"
             ]}
             delay={0.2}
+            accentColor="blue"
           />
 
           <ServiceCard
-            title="Ready-to-use Beats & Tracks"
-            description="High-quality, pre-made tracks for brands seeking quick, catchy, and budget-friendly music solutions."
+            title="🎧 Ready-to-use Beats & Tracks"
+            description="Need it fast? Choose from premium, pre-made tracks designed to energize your brand and boost your content instantly — no compromise on quality. You can also customize any track to perfectly match your brand's unique vibe."
             features={[
-              "Instant licensing",
-              "Multiple genres available",
-              "Budget-friendly options"
+              "Immediate licensing",
+              "Multi-genre selections",
+              "Optional customizations",
+              "Flexible budget options"
             ]}
             delay={0.3}
-            glareColor="yellow"
-            backgroundColor="yellow"
+            accentColor="yellow"
           />
 
           <ServiceCard
-            title="Film & Short Film Scoring"
-            description="Cinematic soundtracks and atmospheric scores that enhance storytelling and create emotional depth for films and short films."
+            title="🎬 Film & Short Film Scoring"
+            description="Go beyond visuals. Original cinematic scores and ambient soundscapes that give your films emotional depth and make every scene unforgettable."
             features={[
-              "Original film scores",
-              "Atmospheric soundscapes",
-              "Sync-ready compositions"
+              "Custom original film scores",
+              "Atmospheric textures",
+              "Sync-ready masters"
             ]}
             delay={0.4}
-            glareColor="gray"
-            backgroundColor="gray"
+            accentColor="purple"
           />
         </div>
 
