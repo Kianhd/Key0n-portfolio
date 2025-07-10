@@ -2,6 +2,8 @@
 
 import { motion } from "motion/react";
 import { useState } from "react";
+import { IoCheckmark } from "react-icons/io5";
+import { IconType } from "react-icons";
 
 interface ServiceCardProps {
   title: string;
@@ -9,6 +11,8 @@ interface ServiceCardProps {
   features: string[];
   delay?: number;
   accentColor?: "red" | "yellow" | "blue" | "green" | "purple" | "pink" | "orange" | "white" | "gray" | "default";
+  icon?: IconType;
+  textIcon?: string;
 }
 
 export default function ServiceCard({
@@ -17,6 +21,8 @@ export default function ServiceCard({
   features,
   delay = 0,
   accentColor = "default",
+  icon: Icon,
+  textIcon,
 }: ServiceCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -97,6 +103,34 @@ export default function ServiceCard({
         <div className="flex flex-col h-full p-8 lg:p-10 relative z-10">
           {/* Header */}
           <div className="mb-8">
+            {(Icon || textIcon) && (
+              <div className="mb-6">
+                {Icon ? (
+                  <Icon 
+                    className="w-8 h-8 lg:w-10 lg:h-10 transition-all duration-300 hover:scale-110"
+                    style={{
+                      color: isHovered 
+                        ? accentBorders[accentColor].replace('0.2)', '0.8)') // Much brighter on card hover
+                        : "rgba(255, 255, 255, 0.7)",
+                      filter: isHovered ? 'brightness(1.3) saturate(1.2)' : 'none'
+                    }}
+                  />
+                ) : (
+                  <div 
+                    className="text-2xl lg:text-3xl font-semibold tracking-wider transition-all duration-300 hover:scale-110"
+                    style={{
+                      fontFamily: "Subway Berlin OT, sans-serif",
+                      color: isHovered 
+                        ? accentBorders[accentColor].replace('0.2)', '0.8)') // Much brighter on card hover
+                        : "rgba(255, 255, 255, 0.7)",
+                      filter: isHovered ? 'brightness(1.3) saturate(1.2)' : 'none'
+                    }}
+                  >
+                    {textIcon}
+                  </div>
+                )}
+              </div>
+            )}
             <h3 className="text-xl lg:text-2xl font-semibold mb-6 text-white/95 tracking-wide leading-tight">
               {title}
             </h3>
@@ -116,10 +150,13 @@ export default function ServiceCard({
               <div className="space-y-4">
                 {features.map((feature, index) => (
                   <div key={index} className="flex items-start gap-3 text-sm lg:text-base text-white/80 leading-relaxed">
-                    <div 
-                      className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0 transition-colors duration-300"
+                    <IoCheckmark 
+                      className="w-4 h-4 mt-0.5 flex-shrink-0 transition-all duration-300 hover:scale-110"
                       style={{
-                        backgroundColor: isHovered ? accentBorders[accentColor] : "rgba(255, 255, 255, 0.4)"
+                        color: isHovered 
+                          ? accentBorders[accentColor].replace('0.2)', '0.8)') // Much brighter on card hover
+                          : "rgba(255, 255, 255, 0.6)",
+                        filter: isHovered ? 'brightness(1.3) saturate(1.2)' : 'none'
                       }}
                     />
                     <span>{feature}</span>

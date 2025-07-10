@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "motion/react";
 import ServiceCard from "../ServiceCard";
+import { IoMusicalNotes, IoPulse, IoFilm } from "react-icons/io5";
 
 const ServicesSection: React.FC = () => {
   return (
@@ -31,7 +32,7 @@ const ServicesSection: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 lg:gap-12 max-w-none">
           <ServiceCard
-            title="🎵 Custom Brand Music"
+            title="Custom Brand Music"
             description="Your brand deserves a soundtrack as powerful as its story. I create full-length anthems that transform campaigns into emotional experiences and make your brand unforgettable."
             features={[
               "Original full track + variations",
@@ -40,10 +41,11 @@ const ServicesSection: React.FC = () => {
             ]}
             delay={0.1}
             accentColor="red"
+            icon={IoMusicalNotes}
           />
 
           <ServiceCard
-            title="⚡ Sonic Logos & Audio Branding"
+            title="Sonic Logos & Audio Branding"
             description="Be recognized in a heartbeat. A custom sonic signature that makes your brand stand out instantly — and stay top-of-mind everywhere it plays."
             features={[
               "3–5 sec original sonic logo",
@@ -52,10 +54,11 @@ const ServicesSection: React.FC = () => {
             ]}
             delay={0.2}
             accentColor="blue"
+            icon={IoPulse}
           />
 
           <ServiceCard
-            title="🎧 Ready-to-use Beats & Tracks"
+            title="Ready-to-use Beats & Tracks"
             description="Need it fast? Choose from premium, pre-made tracks designed to energize your brand and boost your content instantly — no compromise on quality. You can also customize any track to perfectly match your brand's unique vibe."
             features={[
               "Immediate licensing",
@@ -65,10 +68,11 @@ const ServicesSection: React.FC = () => {
             ]}
             delay={0.3}
             accentColor="yellow"
+            textIcon="BEATS"
           />
 
           <ServiceCard
-            title="🎬 Film & Short Film Scoring"
+            title="Film & Short Film Scoring"
             description="Go beyond visuals. Original cinematic scores and ambient soundscapes that give your films emotional depth and make every scene unforgettable."
             features={[
               "Custom original film scores",
@@ -77,6 +81,7 @@ const ServicesSection: React.FC = () => {
             ]}
             delay={0.4}
             accentColor="purple"
+            icon={IoFilm}
           />
         </div>
 
