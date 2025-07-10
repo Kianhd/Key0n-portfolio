@@ -1,0 +1,24 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .logo-path {
+      fill: black;
+    }
+    @media (prefers-color-scheme: dark) {
+      .logo-path {
+        fill: white;
+      }
+    }
+  </style>
+  <!-- Simplified KEY0N logo for favicon -->
+  <g class="logo-path">
+    <!-- K -->
+    <path d="M3 4h3v8l5-8h3l-4 6 4 10h-3l-3-6-2 2v4H3V4z"/>
+    <!-- E -->
+    <path d="M16 4h8v3h-5v3h4v3h-4v3h5v3h-8V4z"/>
+    <!-- Y -->
+    <path d="M26 4h2l2 6 2-6h2l-3 8v8h-3v-8l-3-8z"/>
+  </g>
+  <!-- Power symbol for 0 -->
+  <circle cx="26" cy="26" r="3" stroke="currentColor" stroke-width="1.5" fill="none" class="logo-path"/>
+  <line x1="26" y1="23" x2="26" y2="25" stroke="currentColor" stroke-width="1.5" class="logo-path"/>
+</svg>

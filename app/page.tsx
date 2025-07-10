@@ -90,7 +90,7 @@ export default function Home() {
         'Clorox - platinum campaign - "mhhmm..." - music composition - commercial'
       ),
       description:
-        "I had the honor of collaborating with Clorox on their iconic MMHHMM... campaign. Working with this leading global manufacturer of cleaning products, I crafted a premium commercial soundtrack that embodies their commitment to health, wellness, and superior cleaning power through an uplifting, fresh sonic identity.",
+        "I had the honor of collaborating with Clorox on their iconic MMHHMM... campaign. I created a fresh, uplifting sonic identity that embodies their dedication to health, wellness, and powerful cleaning — turning their message into an unforgettable sound experience.",
     },
     {
       id: 2,
@@ -100,7 +100,7 @@ export default function Home() {
       category: "sound design",
       videos: generateProjectVideos("Evvoli - sound design"),
       description:
-        "Sophisticated sound design for Evvoli's premium home appliances. This Italian luxury brand blends human-centric technology with neo-modern designs, requiring audio that embodies innovation, elegance, and cutting-edge functionality.",
+        "I designed a sophisticated sound experience for Evvoli's premium home appliances. The audio embodies their innovative, elegant, and human-centric approach — making every interaction feel luxurious and forward-thinking.",
     },
     {
       id: 3,
@@ -112,7 +112,7 @@ export default function Home() {
         "Always Generic pack - music composition - hiphop"
       ),
       description:
-        "Always commissioned me to compose trap music for their new product's TikTok campaign. I created hard-hitting hip-hop beats with modern trap influences that connect with young women and resonate with digital audiences across social media platforms.",
+        "Always invited me to create a bold trap-inspired soundtrack for their TikTok campaign. I composed energetic, modern hip-hop beats that connect with young women and resonate strongly across social platforms.",
     },
     {
       id: 4,
@@ -124,7 +124,7 @@ export default function Home() {
         "Key0n Resume - Music Video - music composition - hiphop trap"
       ),
       description:
-        "I created this track called 'Resume' as my musical portfolio piece, designed to showcase my production skills and artistic range to potential clients and collaborators. This innovative approach to self-promotion features trap-influenced hip-hop production, serving as both a creative calling card and a demonstration of my ability to blend modern trap elements with classic hip-hop foundations.",
+        "I created 'Resume' as my personal musical portfolio — a bold statement showcasing my production skills and artistic range. It blends modern trap energy with classic hip-hop roots, serving as a living resume and a creative invitation to future collaborations.",
     },
     {
       id: 5,
@@ -134,7 +134,7 @@ export default function Home() {
       category: "sound design",
       videos: generateProjectVideos("LG Dual Sense - Sound Design"),
       description:
-        "Innovative sound design for LG's advanced home appliance technology. Global technology leader LG required audio that represents their dual inverter innovations, smart AI features, and energy-efficient solutions.",
+        "I crafted an innovative sound design for LG's advanced home appliances, capturing the essence of their dual inverter innovations, smart AI features, and energy-efficient solutions — translating technology into an elegant sonic identity.",
     },
     {
       id: 6,
@@ -146,7 +146,7 @@ export default function Home() {
         "Nolte Kuchen - Music composition + Sound design - commercial"
       ),
       description:
-        "Premium audio branding for Germany's favorite kitchen manufacturer. Nolte Küchen's 65+ years of German precision and luxury design required sophisticated music composition that reflects their award-winning quality and craftsmanship.",
+        "I composed premium audio branding for Nolte Küchen, Germany’s leading kitchen manufacturer. The music reflects over 65 years of German precision, luxury design, and award-winning craftsmanship — turning their brand story into a sophisticated sound.",
     },
     {
       id: 7,
@@ -158,7 +158,7 @@ export default function Home() {
         "Oral B - overnight toothpaste - music composition"
       ),
       description:
-        "Gentle, reassuring musical composition for Oral-B's overnight toothpaste campaign. The world's leading oral care brand trusted by dentists worldwide, featuring soothing melodies that convey nighttime care and morning freshness.",
+        "I composed a gentle, reassuring soundtrack for Oral-B’s overnight toothpaste campaign. The soothing melodies convey nighttime care and morning freshness, perfectly aligning with the brand’s trusted promise of a healthy smile.",
     },
   ];
 

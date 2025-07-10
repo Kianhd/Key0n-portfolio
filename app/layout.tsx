@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
+import DynamicFavicon from "./components/DynamicFavicon";
 import "./globals.css";
 import "./fonts/fonts.css";
 
@@ -73,6 +74,10 @@ export default function RootLayout({
       <head>
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#0a0a0a" />
+        {/* Initial favicon - will be replaced by DynamicFavicon component */}
+        <link rel="icon" type="image/png" href="/favicons/favicon-black.png" sizes="32x32" />
+        {/* Apple Touch Icon */}
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-black.png" />
         {/* Google Analytics */}
         <script
           async
@@ -90,6 +95,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
+        <DynamicFavicon />
         {children}
         <Analytics />
       </body>

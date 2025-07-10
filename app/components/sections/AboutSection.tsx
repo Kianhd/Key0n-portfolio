@@ -157,12 +157,11 @@ const AboutSection: React.FC = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                I don't just make beats.
-                <br />I craft{" "}
+                Music has been my true language since I was 13. I don't just compose tracks — I shape{" "}
                 <span className="text-foreground font-medium">
-                  emotional experiences
+                  living sound identities
                 </span>{" "}
-                that move people and make brands{" "}
+                that breathe life into brands and make them{" "}
                 <span className="text-foreground font-medium">
                   unforgettable
                 </span>
@@ -176,9 +175,8 @@ const AboutSection: React.FC = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
-                My passion? Helping brands discover their{" "}
-                <span className="italic">true voice</span> through
-                custom-made, cinematic sound identities that resonate.
+                Each project is a deep collaboration, turning brand stories into{" "}
+                <span className="italic">emotional soundscapes</span> that people don't just hear, but truly feel.
               </motion.p>
 
               <motion.div

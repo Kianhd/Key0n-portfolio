@@ -35,8 +35,8 @@ const ServicesSection: React.FC = () => {
             title="Custom Brand Music"
             description="Your brand deserves a soundtrack as powerful as its story. I create full-length anthems that transform campaigns into emotional experiences and make your brand unforgettable."
             features={[
-              "Original full track + variations",
-              "Edits for social & ads",
+              "Original full tracks",
+              "Cutdowns + variations",
               "Exclusive usage rights"
             ]}
             delay={0.1}

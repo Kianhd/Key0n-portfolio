@@ -80,8 +80,42 @@ const WorkSection: React.FC<WorkSectionProps> = ({ projects }) => {
                 <div className="space-y-4">
                   {/* Genre Badge */}
                   <div className="inline-flex">
-                    <span className="px-3 py-1 bg-foreground/10 border border-foreground/20 rounded-full text-xs uppercase tracking-wide font-medium">
-                      {project.type}
+                    <span 
+                      className={`
+                        inline-flex items-center justify-center px-4 py-1.5 rounded-full text-[11px] uppercase tracking-[0.1em] font-semibold
+                        transition-all duration-300 backdrop-blur-sm relative overflow-hidden
+                        ${project.type === 'commercial' 
+                          ? 'bg-[#1442B5]/15 border border-[#1442B5]/30 text-[#6B9BFF] hover:bg-[#1442B5]/25 hover:border-[#1442B5]/50 hover:text-[#85ADFF]' 
+                          : project.type === 'hiphop' 
+                          ? 'bg-[#FFC60B]/15 border border-[#FFC60B]/30 text-[#FFD23F] hover:bg-[#FFC60B]/25 hover:border-[#FFC60B]/50 hover:text-[#FFDB66]'
+                          : project.type === 'sound design'
+                          ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/25 hover:border-emerald-500/50 hover:text-emerald-300'
+                          : 'bg-foreground/10 border border-foreground/20 text-foreground/70 hover:bg-foreground/15'
+                        }
+                      `}
+                      style={{
+                        boxShadow: project.type === 'commercial' 
+                          ? '0 0 24px rgba(20, 66, 181, 0.1), inset 0 0 12px rgba(107, 155, 255, 0.1)' 
+                          : project.type === 'hiphop'
+                          ? '0 0 24px rgba(255, 198, 11, 0.1), inset 0 0 12px rgba(255, 210, 63, 0.1)'
+                          : project.type === 'sound design'
+                          ? '0 0 24px rgba(16, 185, 129, 0.1), inset 0 0 12px rgba(52, 211, 153, 0.1)'
+                          : 'none'
+                      }}
+                    >
+                      <span className="relative z-10">{project.type.replace(' design', ' Design')}</span>
+                      {/* Subtle gradient overlay */}
+                      <div className={`
+                        absolute inset-0 opacity-30
+                        ${project.type === 'commercial' 
+                          ? 'bg-gradient-to-r from-[#1442B5]/0 via-[#1442B5]/20 to-[#1442B5]/0' 
+                          : project.type === 'hiphop' 
+                          ? 'bg-gradient-to-r from-[#FFC60B]/0 via-[#FFC60B]/20 to-[#FFC60B]/0'
+                          : project.type === 'sound design'
+                          ? 'bg-gradient-to-r from-emerald-500/0 via-emerald-500/20 to-emerald-500/0'
+                          : ''
+                        }
+                      `} />
                     </span>
                   </div>
 
