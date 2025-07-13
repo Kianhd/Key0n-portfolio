@@ -63,17 +63,17 @@ const ComingSoonOverlay: React.FC<ComingSoonOverlayProps> = ({
         initial={{ opacity: 0, y: 40, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 1, delay: 0.3, ease: [0.4, 0, 0.2, 1] }}
-        className="relative max-w-2xl mx-auto px-8 text-center"
+        className="relative max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
       >
         {/* Subtle Coming Soon Badge */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-          className="mb-8"
+          className="mb-4 sm:mb-6 lg:mb-8"
         >
           <div 
-            className="inline-block px-6 py-2 rounded-full text-xs uppercase tracking-[0.15em] font-medium"
+            className="inline-block px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs uppercase tracking-[0.12em] sm:tracking-[0.15em] font-medium"
             style={{
               background: "linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%)",
               border: "1px solid rgba(255, 255, 255, 0.08)",
@@ -88,7 +88,7 @@ const ComingSoonOverlay: React.FC<ComingSoonOverlayProps> = ({
         </motion.div>
         {/* Premium glass card effect */}
         <div
-          className="relative overflow-hidden rounded-3xl p-16 border border-white/[0.08]"
+          className="relative overflow-hidden rounded-2xl sm:rounded-3xl p-6 sm:p-10 lg:p-16 border border-white/[0.08]"
           style={{
             background: `
               linear-gradient(135deg, 
@@ -118,10 +118,10 @@ const ComingSoonOverlay: React.FC<ComingSoonOverlayProps> = ({
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
-            className="mb-8"
+            className="mb-4 sm:mb-6 lg:mb-8"
           >
             <div 
-              className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center"
+              className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 mx-auto rounded-xl sm:rounded-2xl flex items-center justify-center"
               style={{
                 background: "linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%)",
                 border: "1px solid rgba(255, 255, 255, 0.08)",
@@ -129,7 +129,7 @@ const ComingSoonOverlay: React.FC<ComingSoonOverlayProps> = ({
               }}
             >
               <IoConstruct 
-                className="w-8 h-8"
+                className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8"
                 style={{ color: "rgba(255, 255, 255, 0.7)" }}
               />
             </div>
@@ -140,7 +140,7 @@ const ComingSoonOverlay: React.FC<ComingSoonOverlayProps> = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
-            className="text-4xl lg:text-5xl font-bold mb-6 tracking-tight"
+            className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 lg:mb-6 tracking-tight leading-tight"
           >
             {title.includes("BEATS") ? (
               <>
@@ -185,7 +185,7 @@ const ComingSoonOverlay: React.FC<ComingSoonOverlayProps> = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1, ease: "easeOut" }}
-            className="text-lg text-white/60 mb-8 leading-relaxed max-w-lg mx-auto"
+            className="text-sm sm:text-base lg:text-lg text-white/60 mb-4 sm:mb-6 lg:mb-8 leading-relaxed max-w-lg mx-auto px-2 sm:px-0"
           >
             {description}
           </motion.p>
@@ -196,54 +196,84 @@ const ComingSoonOverlay: React.FC<ComingSoonOverlayProps> = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.2, ease: "easeOut" }}
-            className="mb-10"
+            className="mb-6 sm:mb-8 lg:mb-10"
           >
             <div 
-              className="inline-flex items-center gap-3 px-6 py-3 rounded-xl"
+              className="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl"
               style={{
                 background: "rgba(255, 255, 255, 0.03)",
                 border: "1px solid rgba(255, 255, 255, 0.08)",
               }}
             >
-              <IoNotifications className="w-4 h-4 text-white/50" />
-              <span className="text-sm text-white/70 uppercase tracking-wider font-medium">
+              <IoNotifications className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/50" />
+              <span className="text-xs sm:text-sm text-white/70 uppercase tracking-wide sm:tracking-wider font-medium">
                 Expected {estimatedDate}
               </span>
             </div>
           </motion.div>
 
-          {/* Go Back Home Button */}
+          {/* Action Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.4, ease: "easeOut" }}
-            className="mt-8"
+            className="mt-6 sm:mt-8"
           >
-            <div className="relative group inline-block">
-              <a
-                href="/"
-                className="inline-flex items-center gap-3 px-8 py-4 text-sm uppercase font-medium tracking-wide transition-all duration-500 rounded-xl relative z-10"
-                style={{
-                  background: "linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%)",
-                  border: "1px solid rgba(255, 255, 255, 0.12)",
-                  color: "rgba(255, 255, 255, 0.9)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%)";
-                  e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                  e.currentTarget.style.boxShadow = "0 12px 40px -8px rgba(0, 0, 0, 0.4)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%)";
-                  e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.12)";
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "none";
-                }}
-              >
-                <IoArrowBack className="w-4 h-4" />
-                <span>Go Back Home</span>
-              </a>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center">
+              {/* Go Back Home Button */}
+              <div className="relative group">
+                <a
+                  href="/"
+                  className="inline-flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 text-xs sm:text-sm uppercase font-medium tracking-wide transition-all duration-500 rounded-lg sm:rounded-xl relative z-10 w-full sm:w-auto"
+                  style={{
+                    background: "linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%)",
+                    border: "1px solid rgba(255, 255, 255, 0.12)",
+                    color: "rgba(255, 255, 255, 0.9)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%)";
+                    e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "0 12px 40px -8px rgba(0, 0, 0, 0.4)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%)";
+                    e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.12)";
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                >
+                  <IoArrowBack className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <span>Go Back Home</span>
+                </a>
+              </div>
+
+              {/* Order Button */}
+              <div className="relative group">
+                <a
+                  href="/#contact"
+                  className="inline-flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 text-xs sm:text-sm uppercase font-medium tracking-wide transition-all duration-500 rounded-lg sm:rounded-xl relative z-10 w-full sm:w-auto"
+                  style={{
+                    background: "linear-gradient(135deg, rgba(255, 198, 11, 0.12) 0%, rgba(255, 198, 11, 0.08) 100%)",
+                    border: "1px solid rgba(255, 198, 11, 0.3)",
+                    color: "#FFC60B",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "linear-gradient(135deg, rgba(255, 198, 11, 0.2) 0%, rgba(255, 198, 11, 0.15) 100%)";
+                    e.currentTarget.style.borderColor = "rgba(255, 198, 11, 0.5)";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "0 12px 40px -8px rgba(255, 198, 11, 0.4)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "linear-gradient(135deg, rgba(255, 198, 11, 0.12) 0%, rgba(255, 198, 11, 0.08) 100%)";
+                    e.currentTarget.style.borderColor = "rgba(255, 198, 11, 0.3)";
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                >
+                  <span>Order</span>
+                </a>
+              </div>
             </div>
           </motion.div>
 
@@ -252,7 +282,7 @@ const ComingSoonOverlay: React.FC<ComingSoonOverlayProps> = ({
             initial={{ opacity: 0, scaleX: 0 }}
             animate={{ opacity: 1, scaleX: 1 }}
             transition={{ duration: 1, delay: 1.6, ease: "easeOut" }}
-            className="mt-8 pt-6"
+            className="mt-6 sm:mt-8 pt-4 sm:pt-6"
           >
             <div 
               className="h-[1px] max-w-xs mx-auto"

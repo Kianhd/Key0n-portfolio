@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoCheckmark } from "react-icons/io5";
 import { IconType } from "react-icons";
 
@@ -25,6 +25,20 @@ export default function ServiceCard({
   textIcon,
 }: ServiceCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Use scroll-triggered animation on mobile, hover on desktop
+  const isActive = isMobile ? isInView : isHovered;
 
   // Subtle accent colors for Fortune 500 aesthetic
   const accentColors = {
@@ -57,10 +71,12 @@ export default function ServiceCard({
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      viewport={{ once: true, margin: isMobile ? "-50px" : "-100px", amount: isMobile ? 0.3 : 0.1 }}
       transition={{ duration: 0.6, delay }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onViewportEnter={() => setIsInView(true)}
+      onViewportLeave={() => setIsInView(false)}
+      onMouseEnter={() => !isMobile && setIsHovered(true)}
+      onMouseLeave={() => !isMobile && setIsHovered(false)}
       className="group"
     >
       <div
@@ -69,23 +85,23 @@ export default function ServiceCard({
           backdrop-blur-xl
           transition-all duration-500 ease-out
           transform hover:scale-[1.02] hover:-translate-y-2
-          min-h-[700px] w-full
+          min-h-[400px] sm:min-h-[500px] lg:min-h-[700px] w-full
           flex flex-col
-          shadow-2xl shadow-black/20
-          hover:shadow-3xl hover:shadow-black/30
+          shadow-xl sm:shadow-2xl shadow-black/20
+          hover:shadow-2xl sm:hover:shadow-3xl hover:shadow-black/30
         `}
         style={{
           background: `linear-gradient(135deg, 
             rgba(255, 255, 255, 0.02) 0%, 
-            ${isHovered ? accentColors[accentColor] : "rgba(255, 255, 255, 0.01)"} 50%, 
+            ${isActive ? accentColors[accentColor] : "rgba(255, 255, 255, 0.01)"} 50%, 
             rgba(0, 0, 0, 0.02) 100%
           )`,
-          border: `1px solid ${isHovered ? accentBorders[accentColor] : "rgba(255, 255, 255, 0.06)"}`,
+          border: `1px solid ${isActive ? accentBorders[accentColor] : "rgba(255, 255, 255, 0.06)"}`,
           boxShadow: `
             0 0 0 1px rgba(255, 255, 255, 0.02),
             0 20px 40px -10px rgba(0, 0, 0, 0.3),
             0 8px 32px -8px rgba(0, 0, 0, 0.2),
-            ${isHovered ? `0 0 40px -10px ${accentColors[accentColor]}` : ""}
+            ${isActive ? `0 0 40px -10px ${accentColors[accentColor]}` : ""}
           `
         }}
       >
@@ -93,37 +109,37 @@ export default function ServiceCard({
         <div 
           className="absolute top-0 left-0 right-0 h-[1px] transition-all duration-500"
           style={{
-            background: isHovered 
+            background: isActive 
               ? `linear-gradient(90deg, transparent 0%, ${accentBorders[accentColor]} 50%, transparent 100%)`
               : "linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%)"
           }}
         />
 
         {/* Content */}
-        <div className="flex flex-col h-full p-8 lg:p-10 relative z-10">
+        <div className="flex flex-col h-full p-6 sm:p-8 lg:p-10 relative z-10">
           {/* Header */}
           <div className="mb-8">
             {(Icon || textIcon) && (
               <div className="mb-6">
                 {Icon ? (
                   <Icon 
-                    className="w-8 h-8 lg:w-10 lg:h-10 transition-all duration-300 hover:scale-110"
+                    className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 transition-all duration-300 hover:scale-110"
                     style={{
-                      color: isHovered 
+                      color: isActive 
                         ? accentBorders[accentColor].replace('0.2)', '0.8)') // Much brighter on card hover
                         : "rgba(255, 255, 255, 0.7)",
-                      filter: isHovered ? 'brightness(1.3) saturate(1.2)' : 'none'
+                      filter: isActive ? 'brightness(1.3) saturate(1.2)' : 'none'
                     }}
                   />
                 ) : (
                   <div 
-                    className="text-2xl lg:text-3xl font-semibold tracking-wider transition-all duration-300 hover:scale-110"
+                    className="text-xl sm:text-2xl lg:text-3xl font-semibold tracking-wider transition-all duration-300 hover:scale-110"
                     style={{
                       fontFamily: "Subway Berlin OT, sans-serif",
-                      color: isHovered 
+                      color: isActive 
                         ? accentBorders[accentColor].replace('0.2)', '0.8)') // Much brighter on card hover
                         : "rgba(255, 255, 255, 0.7)",
-                      filter: isHovered ? 'brightness(1.3) saturate(1.2)' : 'none'
+                      filter: isActive ? 'brightness(1.3) saturate(1.2)' : 'none'
                     }}
                   >
                     {textIcon}
@@ -131,32 +147,32 @@ export default function ServiceCard({
                 )}
               </div>
             )}
-            <h3 className="text-xl lg:text-2xl font-semibold mb-6 text-white/95 tracking-wide leading-tight">
+            <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-4 sm:mb-6 text-white/95 tracking-wide leading-tight">
               {title}
             </h3>
-            <p className="text-white/70 font-normal leading-relaxed text-base lg:text-lg">
+            <p className="text-white/70 font-normal leading-relaxed text-sm sm:text-base lg:text-lg">
               {description}
             </p>
           </div>
 
           {/* Features */}
           <div className="mt-auto">
-            <div className="mb-6 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="mb-4 sm:mb-6 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
             
-            <div className="space-y-5">
-              <div className="text-sm text-white/60 uppercase tracking-wider font-medium">
+            <div className="space-y-3 sm:space-y-5">
+              <div className="text-xs sm:text-sm text-white/60 uppercase tracking-wider font-medium">
                 What's included
               </div>
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {features.map((feature, index) => (
-                  <div key={index} className="flex items-start gap-3 text-sm lg:text-base text-white/80 leading-relaxed">
+                  <div key={index} className="flex items-start gap-2 sm:gap-3 text-xs sm:text-sm lg:text-base text-white/80 leading-relaxed">
                     <IoCheckmark 
-                      className="w-4 h-4 mt-0.5 flex-shrink-0 transition-all duration-300 hover:scale-110"
+                      className="w-3.5 h-3.5 sm:w-4 sm:h-4 mt-0.5 flex-shrink-0 transition-all duration-300 hover:scale-110"
                       style={{
-                        color: isHovered 
+                        color: isActive 
                           ? accentBorders[accentColor].replace('0.2)', '0.8)') // Much brighter on card hover
                           : "rgba(255, 255, 255, 0.6)",
-                        filter: isHovered ? 'brightness(1.3) saturate(1.2)' : 'none'
+                        filter: isActive ? 'brightness(1.3) saturate(1.2)' : 'none'
                       }}
                     />
                     <span>{feature}</span>
