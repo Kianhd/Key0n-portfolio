@@ -47,7 +47,7 @@ const BrandMarquee = React.memo(function BrandMarquee({ brands }: BrandMarqueePr
             {brands.map((brand, index) => (
               <div
                 key={`${brand.name}-${index}`}
-                className="flex-shrink-0 flex items-center justify-center px-6 md:px-10 lg:px-12"
+                className="flex-shrink-0 flex items-center justify-center px-4 md:px-10 lg:px-12"
               >
                 <div className="relative group">
                   <img
@@ -80,7 +80,40 @@ const BrandMarquee = React.memo(function BrandMarquee({ brands }: BrandMarqueePr
             {brands.map((brand, index) => (
               <div
                 key={`${brand.name}-${index}-duplicate`}
-                className="flex-shrink-0 flex items-center justify-center px-6 md:px-10 lg:px-12"
+                className="flex-shrink-0 flex items-center justify-center px-4 md:px-10 lg:px-12"
+              >
+                <div className="relative group">
+                  <img
+                    src={brand.logo}
+                    alt={`${brand.name} logo`}
+                    className={`h-9 md:h-12 lg:h-15 w-auto opacity-80 hover:opacity-100 transition-opacity duration-300 ${
+                      // Safari: Apply filters differently to avoid stacking issues
+                      browserOpts.disableFilterStacking
+                        ? (brand.invertColor ? '' : 'drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)]')
+                        : `drop-shadow-[0_4px_12px_rgba(255,255,255,0.2)] ${brand.invertColor ? '[filter:brightness(0)_invert(1)]' : ''}`
+                    }`}
+                    style={{
+                      // Hardware acceleration for Safari
+                      transform: 'translateZ(0)',
+                      willChange: browserOpts.avoidFilterAnimations ? 'opacity' : 'auto',
+                      // Apply invert filter via inline style to ensure it works across all browsers
+                      ...(brand.invertColor 
+                        ? { filter: 'brightness(0) invert(1)' } 
+                        : {})
+                    }}
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Third set for seamless loop */}
+          <div className="flex shrink-0" aria-hidden="true">
+            {brands.map((brand, index) => (
+              <div
+                key={`${brand.name}-${index}-triple`}
+                className="flex-shrink-0 flex items-center justify-center px-4 md:px-10 lg:px-12"
               >
                 <div className="relative group">
                   <img
