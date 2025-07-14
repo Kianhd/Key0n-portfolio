@@ -1,25 +1,19 @@
 "use client";
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { useBrowserOptimizations } from "@/app/hooks/useBrowserOptimizations";
-import { throttle } from "@/lib/throttle";
-import { useThrottledMouseTracking } from "@/app/hooks/useThrottledAnimation";
 
 export const TextHoverEffect = ({
   text,
   duration,
-  color,
 }: {
   text: string;
   duration?: number;
   automatic?: boolean;
-  color?: string;
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);
   const [maskPosition, setMaskPosition] = useState({ cx: "50%", cy: "50%" });
-  const browserOpts = useBrowserOptimizations();
 
   useEffect(() => {
     if (svgRef.current && cursor.x !== null && cursor.y !== null) {
@@ -33,26 +27,6 @@ export const TextHoverEffect = ({
     }
   }, [cursor]);
 
-  // Use throttled mouse tracking hook instead of manual throttling
-  useThrottledMouseTracking((x: number, y: number) => {
-    setCursor({ x, y });
-  });
-
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    // This will be automatically throttled by the hook for Firefox
-    if (!browserOpts.throttleMouseEvents) {
-      setCursor({ x: e.clientX, y: e.clientY });
-    }
-  }, [browserOpts.throttleMouseEvents]);
-
-  if (browserOpts.reduceSVGEffects || browserOpts.useStaticFallbacks || browserOpts.prefersReducedMotion) {
-    return (
-      <div className="text-7xl font-bold text-neutral-200 dark:text-neutral-800 font-[helvetica]">
-        {text}
-      </div>
-    );
-  }
-
   return (
     <svg
       ref={svgRef}
@@ -62,12 +36,12 @@ export const TextHoverEffect = ({
       xmlns="http://www.w3.org/2000/svg"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onMouseMove={handleMouseMove}
+      onMouseMove={(e) => setCursor({ x: e.clientX, y: e.clientY })}
       className="select-none"
     >
       <defs>
         <linearGradient
-          id={`textGradient-${text.replace(/\s+/g, '')}`}
+          id="textGradient"
           gradientUnits="userSpaceOnUse"
           cx="50%"
           cy="50%"
@@ -75,33 +49,41 @@ export const TextHoverEffect = ({
         >
           {hovered && (
             <>
-              <stop offset="0%" stopColor={color || "#eab308"} />
-              <stop offset="25%" stopColor={color || "#ef4444"} />
-              <stop offset="50%" stopColor={color || "#3b82f6"} />
-              <stop offset="75%" stopColor={color || "#06b6d4"} />
-              <stop offset="100%" stopColor={color || "#8b5cf6"} />
+              <stop offset="0%" stopColor="#eab308" />
+              <stop offset="25%" stopColor="#ef4444" />
+              <stop offset="50%" stopColor="#3b82f6" />
+              <stop offset="75%" stopColor="#06b6d4" />
+              <stop offset="100%" stopColor="#8b5cf6" />
             </>
           )}
         </linearGradient>
 
         <motion.radialGradient
-          id={`revealMask-${text.replace(/\s+/g, '')}`}
+          id="revealMask"
           gradientUnits="userSpaceOnUse"
           r="20%"
           initial={{ cx: "50%", cy: "50%" }}
           animate={maskPosition}
           transition={{ duration: duration ?? 0, ease: "easeOut" }}
+
+          // example for a smoother animation below
+
+          //   transition={{
+          //     type: "spring",
+          //     stiffness: 300,
+          //     damping: 50,
+          //   }}
         >
           <stop offset="0%" stopColor="white" />
           <stop offset="100%" stopColor="black" />
         </motion.radialGradient>
-        <mask id={`textMask-${text.replace(/\s+/g, '')}`}>
+        <mask id="textMask">
           <rect
             x="0"
             y="0"
             width="100%"
             height="100%"
-            fill={`url(#revealMask-${text.replace(/\s+/g, '')})`}
+            fill="url(#revealMask)"
           />
         </mask>
       </defs>
@@ -140,9 +122,9 @@ export const TextHoverEffect = ({
         y="50%"
         textAnchor="middle"
         dominantBaseline="middle"
-        stroke={`url(#textGradient-${text.replace(/\s+/g, '')})`}
+        stroke="url(#textGradient)"
         strokeWidth="0.3"
-        mask={`url(#textMask-${text.replace(/\s+/g, '')})`}
+        mask="url(#textMask)"
         className="fill-transparent font-[helvetica] text-7xl font-bold"
       >
         {text}

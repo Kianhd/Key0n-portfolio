@@ -21,7 +21,7 @@ export function useActiveSection() {
 
     // Handle section-based navigation on main page
     if (pathname === '/') {
-      const sections = ['home', 'about', 'work', 'contact']; // Fixed order to match navigation
+      const sections = ['home', 'about', 'services', 'work', 'contact']; // Fixed order to match navigation
       
       const observerOptions = {
         root: null,

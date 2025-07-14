@@ -77,7 +77,7 @@ export default function ServiceCard({
       onViewportLeave={() => setIsInView(false)}
       onMouseEnter={() => !isMobile && setIsHovered(true)}
       onMouseLeave={() => !isMobile && setIsHovered(false)}
-      className="group"
+      className="group h-full"
     >
       <div
         className={`
@@ -85,7 +85,7 @@ export default function ServiceCard({
           backdrop-blur-xl
           transition-all duration-500 ease-out
           transform hover:scale-[1.02] hover:-translate-y-2
-          min-h-[400px] sm:min-h-[500px] lg:min-h-[700px] w-full
+          h-full w-full
           flex flex-col
           shadow-xl sm:shadow-2xl shadow-black/20
           hover:shadow-2xl sm:hover:shadow-3xl hover:shadow-black/30
@@ -118,7 +118,7 @@ export default function ServiceCard({
         {/* Content */}
         <div className="flex flex-col h-full p-6 sm:p-8 lg:p-10 relative z-10">
           {/* Header */}
-          <div className="mb-8">
+          <div className="flex-1 mb-8">
             {(Icon || textIcon) && (
               <div className="mb-6">
                 {Icon ? (
@@ -156,7 +156,7 @@ export default function ServiceCard({
           </div>
 
           {/* Features */}
-          <div className="mt-auto">
+          <div className="flex-shrink-0">
             <div className="mb-4 sm:mb-6 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
             
             <div className="space-y-3 sm:space-y-5">

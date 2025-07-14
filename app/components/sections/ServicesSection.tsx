@@ -8,7 +8,7 @@ import { IoMusicalNotes, IoPulse, IoFilm } from "react-icons/io5";
 const ServicesSection: React.FC = () => {
   return (
     <section
-      id="beats"
+      id="services"
       className="py-32 px-6 sm:px-8 lg:px-12 bg-gradient-to-b from-background via-background/95 to-background"
     >
       <div className="max-w-8xl mx-auto">
@@ -30,7 +30,7 @@ const ServicesSection: React.FC = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 lg:gap-12 max-w-none">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 lg:gap-12 max-w-none auto-rows-fr">
           <ServiceCard
             title="Custom Brand Music"
             description="Your brand deserves a soundtrack as powerful as its story. I create full-length anthems that transform campaigns into emotional experiences and make your brand unforgettable."
@@ -45,10 +45,10 @@ const ServicesSection: React.FC = () => {
           />
 
           <ServiceCard
-            title="Sonic Logos & Audio Branding"
+            title="Sonic Logos and Jingles"
             description="Be recognized in a heartbeat. A custom sonic signature that makes your brand stand out instantly — and stay top-of-mind everywhere it plays."
             features={[
-              "3–5 sec original sonic logo",
+              "3–5 sec original jingle",
               "Optimized cuts for all platforms",
               "Full brand sound ownership"
             ]}

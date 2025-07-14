@@ -82,6 +82,28 @@ export default function Home() {
   const projects: Project[] = [
     {
       id: 1,
+      title: "LG Dual Sense",
+      client: "LG",
+      type: "sound design",
+      category: "sound design",
+      videos: generateProjectVideos("LG Dual Sense - Sound Design"),
+      description:
+        "I crafted an innovative sound design for LG's advanced home appliances, capturing the essence of their dual inverter innovations, smart AI features, and energy-efficient solutions — translating technology into an elegant sonic identity.",
+    },
+    {
+      id: 2,
+      title: "Oral-B Overnight Toothpaste",
+      client: "Oral-B",
+      type: "commercial",
+      category: "music composition",
+      videos: generateProjectVideos(
+        "Oral B - overnight toothpaste - music composition"
+      ),
+      description:
+        "I composed a gentle, reassuring soundtrack for Oral-B’s overnight toothpaste campaign. The soothing melodies convey nighttime care and morning freshness, perfectly aligning with the brand’s trusted promise of a healthy smile.",
+    },
+    {
+      id: 3,
       title: "Clorox Platinum Campaign",
       client: "Clorox",
       type: "commercial",
@@ -93,7 +115,7 @@ export default function Home() {
         "I had the honor of collaborating with Clorox on their iconic MMHHMM... campaign. I created a fresh, uplifting sonic identity that embodies their dedication to health, wellness, and powerful cleaning — turning their message into an unforgettable sound experience.",
     },
     {
-      id: 2,
+      id: 4,
       title: "Evvoli Dishwasher",
       client: "Evvoli",
       type: "sound design",
@@ -103,7 +125,7 @@ export default function Home() {
         "I designed a sophisticated sound experience for Evvoli's premium home appliances. The audio embodies their innovative, elegant, and human-centric approach — making every interaction feel luxurious and forward-thinking.",
     },
     {
-      id: 3,
+      id: 5,
       title: "Always Generic Pack",
       client: "Always",
       type: "hiphop",
@@ -115,7 +137,7 @@ export default function Home() {
         "Always invited me to create a bold trap-inspired soundtrack for their TikTok campaign. I composed energetic, modern hip-hop beats that connect with young women and resonate strongly across social platforms.",
     },
     {
-      id: 4,
+      id: 6,
       title: "KEY0N - Resume",
       client: "KEY0N",
       type: "hiphop",
@@ -126,18 +148,9 @@ export default function Home() {
       description:
         "I created 'Resume' as my personal musical portfolio — a bold statement showcasing my production skills and artistic range. It blends modern trap energy with classic hip-hop roots, serving as a living resume and a creative invitation to future collaborations.",
     },
+
     {
-      id: 5,
-      title: "LG Dual Sense",
-      client: "LG",
-      type: "sound design",
-      category: "sound design",
-      videos: generateProjectVideos("LG Dual Sense - Sound Design"),
-      description:
-        "I crafted an innovative sound design for LG's advanced home appliances, capturing the essence of their dual inverter innovations, smart AI features, and energy-efficient solutions — translating technology into an elegant sonic identity.",
-    },
-    {
-      id: 6,
+      id: 7,
       title: "Nolte Küchen Campaign",
       client: "Nolte Küchen",
       type: "commercial",
@@ -147,18 +160,6 @@ export default function Home() {
       ),
       description:
         "I composed premium audio branding for Nolte Küchen, Germany’s leading kitchen manufacturer. The music reflects over 65 years of German precision, luxury design, and award-winning craftsmanship — turning their brand story into a sophisticated sound.",
-    },
-    {
-      id: 7,
-      title: "Oral-B Overnight Toothpaste",
-      client: "Oral-B",
-      type: "commercial",
-      category: "music composition",
-      videos: generateProjectVideos(
-        "Oral B - overnight toothpaste - music composition"
-      ),
-      description:
-        "I composed a gentle, reassuring soundtrack for Oral-B’s overnight toothpaste campaign. The soothing melodies convey nighttime care and morning freshness, perfectly aligning with the brand’s trusted promise of a healthy smile.",
     },
   ];
 
@@ -189,9 +190,9 @@ export default function Home() {
 
       <AboutSection />
 
-      <WorkSection projects={projects} />
-
       <ServicesSection />
+
+      <WorkSection projects={projects} />
 
       <ContactSection />
 

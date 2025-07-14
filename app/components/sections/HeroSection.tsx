@@ -17,7 +17,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   const browserOpts = useBrowserOptimizations();
 
   return (
-    <section id="home" className="min-h-screen relative overflow-hidden pt-16">
+    <section id="home" className="min-h-screen relative pt-16">
       <WaveformBackground
         waveColor="#dc2626"
         backgroundColor="#0a0a0a"
@@ -25,9 +25,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         amplitude={60}
         speed={0.008}
         speedMultiplier={isButtonHovered ? 2 : 1}
-        className="gradient-fade-bottom"
+        className="gradient-fade-bottom overflow-visible"
       >
-        <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 text-center relative z-10 py-32 sm:py-40">
+        <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 text-center relative z-10 py-36 sm:py-44">
           <motion.div
             className="mb-16 relative"
             initial={{ opacity: 0 }}
@@ -46,12 +46,14 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               className="relative"
               style={{
                 fontSize: "clamp(3.2rem, 7.5vw, 7rem)",
-                lineHeight: "0.92",
+                lineHeight: "1.05",
                 letterSpacing: "-0.015em",
                 fontVariantNumeric: "lining-nums",
                 textRendering: "optimizeLegibility",
                 WebkitFontSmoothing: "antialiased",
                 MozOsxFontSmoothing: "grayscale",
+                paddingTop: "clamp(0.5rem, 1vw, 1rem)",
+                paddingBottom: "clamp(0.25rem, 0.5vw, 0.5rem)",
               }}
             >
               {/* Subtle background glow for depth */}
@@ -78,6 +80,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                   className="block"
                   style={{
                     fontWeight: 275,
+                    fontSize: "1em",
                     letterSpacing: "clamp(0.02em, 0.3vw, 0.08em)",
                     background: "linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 245, 245, 0.92) 25%, rgba(220, 220, 220, 0.88) 50%, rgba(200, 200, 200, 0.85) 75%, rgba(240, 240, 240, 0.9) 100%)",
                     WebkitBackgroundClip: "text",
@@ -108,16 +111,16 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 <span 
                   className="block"
                   style={{
-                    fontWeight: 350,
-                    fontSize: "0.88em",
-                    letterSpacing: "clamp(0.12em, 0.4vw, 0.18em)",
-                    background: "linear-gradient(180deg, rgba(250, 250, 250, 0.95) 0%, rgba(230, 230, 230, 0.88) 30%, rgba(190, 190, 190, 0.82) 60%, rgba(210, 210, 210, 0.86) 85%, rgba(235, 235, 235, 0.9) 100%)",
+                    fontWeight: 275,
+                    fontSize: "1em",
+                    letterSpacing: "clamp(0.02em, 0.3vw, 0.08em)",
+                    background: "linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 245, 245, 0.92) 25%, rgba(220, 220, 220, 0.88) 50%, rgba(200, 200, 200, 0.85) 75%, rgba(240, 240, 240, 0.9) 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
-                    textShadow: "0 1px 3px rgba(0,0,0,0.08), 0 0 25px rgba(255,255,255,0.03)",
+                    textShadow: "0 2px 4px rgba(0,0,0,0.12), 0 0 30px rgba(255,255,255,0.04)",
                     textTransform: "uppercase",
-                    filter: "contrast(1.02) brightness(1.01) drop-shadow(0 1px 1px rgba(0,0,0,0.08))",
+                    filter: "contrast(1.03) brightness(1.02) drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
                   }}
                 >
                   TELLS
@@ -134,8 +137,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                   <span 
                     className="block"
                     style={{
-                      fontWeight: 500,
-                      letterSpacing: "-0.01em",
+                      fontWeight: 275,
+                      fontSize: "1em",
+                      letterSpacing: "clamp(0.02em, 0.3vw, 0.08em)",
                       background: "linear-gradient(135deg, rgba(220, 38, 38, 0.95) 0%, rgba(239, 68, 68, 0.88) 25%, rgba(200, 35, 35, 0.92) 50%, rgba(185, 28, 28, 0.9) 75%, rgba(230, 55, 55, 0.93) 100%)",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
@@ -172,8 +176,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                   <span 
                     className="block relative"
                     style={{
-                      fontWeight: 500,
-                      letterSpacing: "-0.01em",
+                      fontWeight: 275,
+                      fontSize: "1em",
+                      letterSpacing: "clamp(0.02em, 0.3vw, 0.08em)",
                       background: "linear-gradient(135deg, rgba(220, 38, 38, 0.95) 0%, rgba(239, 68, 68, 0.88) 25%, rgba(200, 35, 35, 0.92) 50%, rgba(185, 28, 28, 0.9) 75%, rgba(230, 55, 55, 0.93) 100%)",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
@@ -183,20 +188,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                     }}
                   >
                     YOUR STORY
-                    {/* Premium metallic highlight effect */}
-                    <span
-                      className="absolute inset-0 block"
-                      style={{
-                        background: "linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.12) 35%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.08) 65%, transparent 100%)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        backgroundClip: "text",
-                        opacity: 0.7,
-                        mixBlendMode: "overlay",
-                      }}
-                    >
-                      YOUR STORY
-                    </span>
                   </span>
                 </motion.div>
               )}
@@ -244,11 +235,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             >
               <a
                 href="#work"
-                className={`border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background px-12 py-5 text-small uppercase font-medium transition-all duration-300 inline-block rounded-sm relative z-10 ${
+                className={`border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background text-small uppercase font-medium transition-all duration-300 inline-block rounded-sm relative z-10 text-center ${
                   browserOpts.disableBackdropFilter
                     ? "bg-background/80"
                     : "backdrop-blur-[20px]"
                 }`}
+                style={{ width: "180px", padding: "20px 12px" }}
               >
                 View Our Work
               </a>
@@ -276,7 +268,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             >
               <a
                 href="#contact"
-                className="border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background px-12 py-5 text-small uppercase font-medium transition-all duration-300 inline-block rounded-sm relative z-10"
+                className={`border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background text-small uppercase font-medium transition-all duration-300 inline-block rounded-sm relative z-10 text-center ${
+                  browserOpts.disableBackdropFilter
+                    ? "bg-background/80"
+                    : "backdrop-blur-[20px]"
+                }`}
+                style={{ width: "180px", padding: "20px 12px" }}
               >
                 Get In Touch
               </a>

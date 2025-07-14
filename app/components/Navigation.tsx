@@ -17,6 +17,7 @@ const Navigation = () => {
   const menuItems = [
     { label: "Home", href: "/", section: "home" },
     { label: "About", href: "/#about", section: "about" },
+    { label: "Services", href: "/#services", section: "services" },
     { label: "Work", href: "/#work", section: "work" },
     { label: "Contact", href: "/#contact", section: "contact" },
     { label: "BEATS", href: "/beats", section: "beats", bold: true },
