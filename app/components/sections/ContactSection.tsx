@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useBrowserOptimizations } from "@/app/hooks/useBrowserOptimizations";
+import { IoSend } from "react-icons/io5";
 
 const ContactSection: React.FC = () => {
   const browserOpts = useBrowserOptimizations();
@@ -171,14 +172,7 @@ const ContactSection: React.FC = () => {
                   >
                     <span className="relative z-10 flex items-center justify-center gap-3">
                       <span className="tracking-wide">Send Message</span>
-                      <svg 
-                        className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" 
-                        fill="none" 
-                        viewBox="0 0 24 24" 
-                        stroke="currentColor"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                      </svg>
+                      <IoSend className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
                     </span>
                   </button>
                 </div>

@@ -69,6 +69,7 @@ const ServicesSection: React.FC = () => {
             delay={0.3}
             accentColor="yellow"
             textIcon="BEATS"
+            comingSoon={true}
           />
 
           <ServiceCard

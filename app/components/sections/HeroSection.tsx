@@ -43,7 +43,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           >
             {/* Executive Typography Container */}
             <div 
-              className="relative"
+              className="relative text-center"
               style={{
                 fontSize: "clamp(3.2rem, 7.5vw, 7rem)",
                 lineHeight: "1.05",
@@ -105,7 +105,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 }}
                 style={{ 
                   marginBottom: "clamp(0.8rem, 2vw, 1.6rem)",
-                  marginLeft: "clamp(0.5rem, 2vw, 2rem)",
                 }}
               >
                 <span 
@@ -130,9 +129,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               {browserOpts.isZenBrowser ? (
                 <div 
                   className="relative block"
-                  style={{ 
-                    marginLeft: "clamp(-0.5rem, -1vw, -1rem)",
-                  }}
                 >
                   <span 
                     className="block"
@@ -169,9 +165,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                     delay: browserOpts.simplifyFramerMotion ? 0.2 : 0.6,
                     ease: [0.25, 0.46, 0.45, 0.94],
                   }}
-                  style={{ 
-                    marginLeft: "clamp(-0.5rem, -1vw, -1rem)",
-                  }}
+                  style={{}}
                 >
                   <span 
                     className="block relative"
@@ -210,7 +204,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </motion.div>
           <motion.p
-            className="text-body-large text-muted/60 mb-16 max-w-xl mx-auto leading-relaxed font-normal tracking-wide"
+            className="text-body-large text-muted/60 mb-16 max-w-2xl mx-auto leading-relaxed font-normal tracking-wide"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{
@@ -224,8 +218,31 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 : "auto",
             }}
           >
-            Helping brands express their unique identity through unforgettable,
-            custom-made music.
+            Helping{" "}
+            <span 
+              className="relative font-medium text-white/85"
+              style={{
+                background: "linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(220, 220, 220, 0.8) 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              brands, films, and artists
+            </span>{" "}
+            discover and express their true voice through unforgettable,{" "}
+            <span 
+              className="relative font-medium"
+              style={{
+                background: "linear-gradient(135deg, rgba(245, 158, 11, 0.9) 0%, rgba(217, 119, 6, 0.8) 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              custom-crafted
+            </span>{" "}
+            music.
           </motion.p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center max-w-md mx-auto sm:max-w-none">
             <div 

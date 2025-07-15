@@ -120,7 +120,7 @@ const Navigation = () => {
               size="small"
               glowIntensity="subtle"
             />
-            <span className="text-foreground font-medium text-lg hidden sm:block uppercase">
+            <span className="text-foreground font-medium text-lg hidden sm:block uppercase tracking-[0.08em]">
               KEY0N
             </span>
           </Link>
@@ -131,7 +131,7 @@ const Navigation = () => {
                 <a
                   href={item.href}
                   onClick={(e) => handleNavigation(item, e)}
-                  className={`transition-colors duration-200 uppercase text-small cursor-pointer ${
+                  className={`transition-colors duration-200 uppercase text-small cursor-pointer tracking-[0.08em] font-medium ${
                     item.label === "BEATS"
                       ? "text-[#FFC60B] hover:text-[#FFC60B]/80 font-semibold"
                       : activeSection === item.section
@@ -194,7 +194,7 @@ const Navigation = () => {
                     window.location.href = '/#contact';
                   }
                 }}
-                className="block border-2 text-background border-zinc-800 bg-foreground hover:bg-transparent hover:text-foreground px-6 py-2 transition-colors duration-300 font-medium uppercase text-small rounded-sm cursor-pointer"
+                className="block border-2 text-background border-zinc-800 bg-foreground hover:bg-transparent hover:text-foreground px-6 py-2 transition-colors duration-300 font-medium uppercase text-small rounded-sm cursor-pointer tracking-[0.08em]"
                 style={{ minWidth: 'fit-content', transform: 'translateZ(0)' }}
               >
                 Order
@@ -232,7 +232,7 @@ const Navigation = () => {
                   <a
                     href={item.href}
                     onClick={(e) => handleMobileNavigation(item, e)}
-                    className={`block transition-colors duration-200 uppercase text-small pb-2 cursor-pointer ${
+                    className={`block transition-colors duration-200 uppercase text-small pb-2 cursor-pointer tracking-[0.08em] font-medium ${
                       item.label === "BEATS"
                         ? "text-[#FFC60B] hover:text-[#FFC60B]/80 font-semibold"
                         : activeSection === item.section
@@ -280,7 +280,7 @@ const Navigation = () => {
                       }
                     }, 100);
                   }}
-                  className="block border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background px-6 py-2 transition-all duration-300 font-medium text-center uppercase text-small rounded-sm relative z-10 cursor-pointer"
+                  className="block border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background px-6 py-2 transition-all duration-300 font-medium text-center uppercase text-small rounded-sm relative z-10 cursor-pointer tracking-[0.08em]"
                 >
                   Order
                 </a>

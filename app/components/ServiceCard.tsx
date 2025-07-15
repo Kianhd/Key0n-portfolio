@@ -13,6 +13,7 @@ interface ServiceCardProps {
   accentColor?: "red" | "yellow" | "blue" | "green" | "purple" | "pink" | "orange" | "white" | "gray" | "default";
   icon?: IconType;
   textIcon?: string;
+  comingSoon?: boolean;
 }
 
 export default function ServiceCard({
@@ -23,6 +24,7 @@ export default function ServiceCard({
   accentColor = "default",
   icon: Icon,
   textIcon,
+  comingSoon = false,
 }: ServiceCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -115,6 +117,20 @@ export default function ServiceCard({
           }}
         />
 
+        {/* Coming Soon Tag */}
+        {comingSoon && (
+          <div className="absolute top-4 right-4 z-20">
+            <span 
+              className="inline-flex items-center px-2 py-1 rounded-full text-[10px] uppercase tracking-[0.1em] font-semibold transition-all duration-300 bg-[#FFC60B]/15 border border-[#FFC60B]/30 text-[#FFD23F]"
+              style={{
+                boxShadow: '0 0 12px rgba(255, 198, 11, 0.1)',
+              }}
+            >
+              Coming Soon
+            </span>
+          </div>
+        )}
+
         {/* Content */}
         <div className="flex flex-col h-full p-6 sm:p-8 lg:p-10 relative z-10">
           {/* Header */}
@@ -133,7 +149,7 @@ export default function ServiceCard({
                   />
                 ) : (
                   <div 
-                    className="text-xl sm:text-2xl lg:text-3xl font-semibold tracking-wider transition-all duration-300 hover:scale-110"
+                    className="text-xl sm:text-2xl lg:text-3xl font-semibold tracking-wider transition-all duration-300 hover:scale-110 inline-block"
                     style={{
                       fontFamily: "Subway Berlin OT, sans-serif",
                       color: isActive 

@@ -298,85 +298,50 @@ const WorkSection: React.FC<WorkSectionProps> = ({ projects }) => {
             >
               <motion.button
                 onClick={() => setShowAll(!showAll)}
-                className="group relative inline-flex items-center justify-center px-10 py-4 font-medium text-base uppercase tracking-[0.12em] transition-all duration-500 overflow-hidden"
+                className="group relative inline-flex items-center justify-center px-6 py-3 rounded-full text-[13px] uppercase tracking-[0.08em] font-semibold transition-all duration-300 backdrop-blur-sm overflow-hidden bg-[#dc2626]/15 border border-[#dc2626]/30 text-[#ff6b6b] hover:bg-[#dc2626]/25 hover:border-[#dc2626]/50 hover:text-[#ff8a8a]"
                 whileHover={{ 
-                  scale: browserOpts.simplifyFramerMotion ? 1 : 1.03,
+                  scale: browserOpts.simplifyFramerMotion ? 1 : 1.05,
                   transition: { duration: 0.3, ease: "easeOut" }
                 }}
                 whileTap={{ 
-                  scale: browserOpts.simplifyFramerMotion ? 1 : 0.97,
+                  scale: browserOpts.simplifyFramerMotion ? 1 : 0.95,
                   transition: { duration: 0.15 }
                 }}
                 style={{
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 100%)',
-                  backdropFilter: browserOpts.disableBackdropFilter ? 'none' : 'blur(10px)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  borderRadius: '2px',
-                  color: 'rgba(255, 255, 255, 0.9)',
-                  boxShadow: `
-                    0 2px 20px rgba(0, 0, 0, 0.1),
-                    0 1px 3px rgba(0, 0, 0, 0.08),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-                    inset 0 -1px 0 rgba(0, 0, 0, 0.1)
-                  `,
+                  boxShadow: '0 0 24px rgba(220, 38, 38, 0.1), inset 0 0 12px rgba(255, 107, 107, 0.1)',
                   willChange: browserOpts.forceHardwareAcceleration ? "transform" : "auto",
                 }}
               >
-                {/* Gradient shine effect */}
-                <div 
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{
-                    background: 'linear-gradient(135deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%)',
-                    transform: 'translateX(-100%)',
-                    animation: 'shimmerSlide 2s ease-out infinite'
-                  }}
-                />
+                {/* Subtle gradient overlay */}
+                <div className="absolute inset-0 opacity-30 bg-gradient-to-r from-[#dc2626]/0 via-[#dc2626]/20 to-[#dc2626]/0" />
                 
-                {/* Hover glow */}
-                <div 
-                  className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-xl"
-                  style={{
-                    background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.4) 0%, transparent 70%)'
-                  }}
-                />
-                
-                <span className="relative z-10 flex items-center gap-3">
-                  <span className="font-normal">{showAll ? 'View Less' : 'View More Projects'}</span>
+                {/* Content */}
+                <span className="relative z-10 flex items-center gap-2">
+                  <span>{showAll ? 'Less' : 'View More'}</span>
+                  
+                  {/* Simple animated arrow */}
                   <motion.div
                     animate={{ 
-                      rotate: showAll ? 180 : 0,
-                      y: showAll ? 0 : 0
+                      rotate: showAll ? 180 : 0
                     }}
-                    transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                    transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                     className="flex items-center justify-center"
                   >
                     <svg
-                      width="16"
-                      height="16"
+                      width="14"
+                      height="14"
                       viewBox="0 0 24 24"
                       fill="none"
-                      className="opacity-70"
+                      stroke="currentColor"
                       strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="opacity-80"
                     >
-                      <path
-                        d="M6 9L12 15L18 9"
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
+                      <path d="M6 9l6 6 6-6" />
                     </svg>
                   </motion.div>
                 </span>
-                
-                {/* Border glow on hover */}
-                <div 
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                  style={{
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    borderRadius: '2px',
-                    boxShadow: '0 0 20px rgba(255, 255, 255, 0.1)'
-                  }}
-                />
               </motion.button>
             </motion.div>
           )}
