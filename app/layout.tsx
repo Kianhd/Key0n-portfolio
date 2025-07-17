@@ -9,7 +9,7 @@ import "./globals.css";
 import "./fonts/fonts.css";
 
 export const metadata: Metadata = {
-  title: "KEY0N | Commercial Music Producer | Custom Music for TV Commercials & Brand Ads",
+  title: "KEY0N | Professional Music Producer | Custom Music for TV Commercials & Brand Ads",
   description:
     "KEY0N (Keyon) | Kian Hamed - Professional music producer based in Dubai, UAE, specializing in custom music for commercial ads and TV commercials. Serving advertising agencies worldwide who create campaigns for major brands. Premium quality commercial music production, film scoring, and artists. Fast delivery, memorable music that drives brand engagement.",
   keywords: [
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://key0n.com",
     siteName: "KEY0N Music Production",
-    title: "KEY0N | Commercial Music Producer | Custom Music for TV Commercials & Brand Ads",
+    title: "KEY0N | Professional Music Producer | Custom Music for TV Commercials & Brand Ads",
     description:
       "Professional commercial music producer specializing in custom music for TV commercials, brand advertising, film scoring, and artists. Fast, premium quality music production for agencies, brands, and filmmakers worldwide.",
     images: [
@@ -91,7 +91,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "KEY0N | Commercial Music Producer | Custom Music for TV Commercials & Brand Ads",
+    title: "KEY0N | Professional Music Producer | Custom Music for TV Commercials & Brand Ads",
     description:
       "Professional commercial music producer specializing in custom music for TV commercials, brand advertising, film scoring, and artists. Fast, premium quality music production worldwide.",
     images: ["/og-image.jpg"],
