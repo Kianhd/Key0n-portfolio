@@ -5,14 +5,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: 'https://key0n.com',
       lastModified: new Date(),
-      changeFrequency: 'yearly',
+      changeFrequency: 'monthly',
       priority: 1,
-    },
-    {
-      url: 'https://key0n.com/beats',
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
     },
   ]
 }
