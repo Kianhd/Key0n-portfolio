@@ -199,6 +199,4 @@ export default function Home() {
       <Footer socialLinks={socialLinks} />
     </div>
   );
- 
-
-  
+}

@@ -205,6 +205,47 @@ const ContactSection: React.FC = () => {
                   </button>
                 </div>
               </form>
+              
+              {/* Alternative Contact Option */}
+              <div className="mt-8 pt-6 border-t border-border/30">
+                <div className="text-center">
+                  <p className="text-muted/60 text-sm mb-3">Prefer to call directly?</p>
+                  <a
+                    href="tel:+971585127979"
+                    className="inline-flex items-center gap-3 px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105 active:scale-95"
+                    style={{
+                      background: "linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%)",
+                      border: "1px solid rgba(255, 255, 255, 0.08)",
+                      color: "rgba(255, 255, 255, 0.85)",
+                      boxShadow: "0 4px 16px -4px rgba(0, 0, 0, 0.2)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "linear-gradient(135deg, rgba(220, 38, 38, 0.08) 0%, rgba(220, 38, 38, 0.04) 100%)";
+                      e.currentTarget.style.borderColor = "rgba(220, 38, 38, 0.2)";
+                      e.currentTarget.style.color = "rgba(255, 255, 255, 0.95)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%)";
+                      e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.08)";
+                      e.currentTarget.style.color = "rgba(255, 255, 255, 0.85)";
+                    }}
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      className="opacity-70"
+                    >
+                      <path
+                        d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    <span className="tracking-wide">+971 58 512 7979</span>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
