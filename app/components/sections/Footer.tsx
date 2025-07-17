@@ -18,7 +18,7 @@ const Footer: React.FC<FooterProps> = ({ socialLinks }) => {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="text-small text-muted uppercase font-normal">
-            © 2024 Music Producer. All rights reserved.
+            © 2025 Kian Hamed. All rights reserved.
           </div>
           <div className="flex gap-8">
             {socialLinks.map((link) => (

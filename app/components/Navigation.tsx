@@ -17,8 +17,8 @@ const Navigation = () => {
   const menuItems = [
     { label: "Home", href: "/", section: "home" },
     { label: "About", href: "/#about", section: "about" },
-    { label: "Services", href: "/#services", section: "services" },
     { label: "Work", href: "/#work", section: "work" },
+    { label: "Services", href: "/#services", section: "services" },
     { label: "Contact", href: "/#contact", section: "contact" },
     { label: "BEATS", href: "/beats", section: "beats", bold: true },
   ];
@@ -180,7 +180,7 @@ const Navigation = () => {
                 )}
               </div>
             ))}
-            <div className="relative flex-shrink-0 ml-4">
+            <div className="relative flex-shrink-0 ml-6">
               <a
                 href="/#contact"
                 onClick={(e) => {
@@ -194,10 +194,49 @@ const Navigation = () => {
                     window.location.href = '/#contact';
                   }
                 }}
-                className="block border-2 text-background border-zinc-800 bg-foreground hover:bg-transparent hover:text-foreground px-6 py-2 transition-colors duration-300 font-medium uppercase text-small rounded-sm cursor-pointer tracking-[0.08em]"
-                style={{ minWidth: 'fit-content', transform: 'translateZ(0)' }}
+                className="block relative overflow-hidden font-medium uppercase transition-all duration-500 cursor-pointer tracking-[0.08em] group"
+                style={{
+                  minWidth: 'fit-content',
+                  transform: 'translateZ(0px) translateY(0px)',
+                  padding: '8px 12px',
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 245, 245, 0.9) 100%)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  color: 'rgba(10, 10, 10, 0.9)',
+                  boxShadow: '0 4px 20px -4px rgba(255, 255, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
+                  borderRadius: '6px',
+                  fontSize: '0.9rem',
+                  backdropFilter: browserOpts.disableBackdropFilter ? 'none' : 'blur(12px)',
+                  WebkitBackdropFilter: browserOpts.disableBackdropFilter ? 'none' : 'blur(12px)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(15, 15, 15, 0.95) 0%, rgba(25, 25, 25, 0.9) 100%)';
+                  e.currentTarget.style.borderColor = 'rgba(220, 38, 38, 0.4)';
+                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.95)';
+                  e.currentTarget.style.boxShadow = '0 8px 32px -8px rgba(220, 38, 38, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 0 1px rgba(220, 38, 38, 0.2)';
+                  e.currentTarget.style.transform = 'translateZ(0) translateY(-2px) scale(1.02)';
+                  e.currentTarget.style.backdropFilter = browserOpts.disableBackdropFilter ? 'none' : 'blur(20px)';
+                  e.currentTarget.style.WebkitBackdropFilter = browserOpts.disableBackdropFilter ? 'none' : 'blur(20px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 245, 245, 0.9) 100%)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                  e.currentTarget.style.color = 'rgba(10, 10, 10, 0.9)';
+                  e.currentTarget.style.boxShadow = '0 4px 20px -4px rgba(255, 255, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.4)';
+                  e.currentTarget.style.transform = 'translateZ(0) translateY(0) scale(1)';
+                  e.currentTarget.style.backdropFilter = browserOpts.disableBackdropFilter ? 'none' : 'blur(12px)';
+                  e.currentTarget.style.WebkitBackdropFilter = browserOpts.disableBackdropFilter ? 'none' : 'blur(12px)';
+                }}
               >
-                Order
+                <span className="relative z-10 transition-all duration-300">
+                  Get In Touch
+                </span>
+                <div 
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(185, 28, 28, 0.05) 100%)',
+                    borderRadius: '6px',
+                  }}
+                />
               </a>
             </div>
           </div>
@@ -280,16 +319,29 @@ const Navigation = () => {
                       }
                     }, 100);
                   }}
-                  className="block border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background px-6 py-2 transition-all duration-300 font-medium text-center uppercase text-small rounded-sm relative z-10 cursor-pointer tracking-[0.08em]"
+                  className="block relative overflow-hidden rounded-md font-medium text-center uppercase text-small transition-all duration-300 cursor-pointer tracking-[0.08em]"
+                  style={{
+                    padding: '12px 24px',
+                    background: 'linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(185, 28, 28, 0.95) 100%)',
+                    border: '1px solid rgba(220, 38, 38, 0.6)',
+                    color: 'rgba(255, 255, 255, 0.98)',
+                    boxShadow: '0 4px 20px -4px rgba(220, 38, 38, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(220, 38, 38, 1) 0%, rgba(185, 28, 28, 1) 100%)';
+                    e.currentTarget.style.borderColor = 'rgba(220, 38, 38, 0.8)';
+                    e.currentTarget.style.boxShadow = '0 6px 24px -4px rgba(220, 38, 38, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25)';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(185, 28, 28, 0.95) 100%)';
+                    e.currentTarget.style.borderColor = 'rgba(220, 38, 38, 0.6)';
+                    e.currentTarget.style.boxShadow = '0 4px 20px -4px rgba(220, 38, 38, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
                 >
                   Order
                 </a>
-                <div className="absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                  <div className="absolute inset-0 border-2 border-foreground rounded-sm" />
-                  {!browserOpts.limitGlowLayers && (
-                    <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-sm opacity-70" style={{ transform: 'translateZ(0)' }} />
-                  )}
-                </div>
               </div>
             </div>
           </div>

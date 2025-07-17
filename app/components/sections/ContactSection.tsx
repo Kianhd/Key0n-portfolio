@@ -3,6 +3,7 @@
 import React from "react";
 import { useBrowserOptimizations } from "@/app/hooks/useBrowserOptimizations";
 import { IoSend } from "react-icons/io5";
+import { Logo } from "../Logo";
 
 const ContactSection: React.FC = () => {
   const browserOpts = useBrowserOptimizations();
@@ -17,7 +18,17 @@ const ContactSection: React.FC = () => {
               <div>
                 <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold mb-8 leading-tight tracking-tight">
                   <span className="block text-foreground/90">Let&apos;s Create</span>
-                  <span className="block bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
+                  <span 
+                    className="block"
+                    style={{
+                      background: "linear-gradient(135deg, rgba(220, 38, 38, 0.95) 0%, rgba(239, 68, 68, 0.88) 25%, rgba(200, 35, 35, 0.92) 50%, rgba(185, 28, 28, 0.9) 75%, rgba(230, 55, 55, 0.93) 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                      textShadow: "0 2px 6px rgba(220, 38, 38, 0.12), 0 0 30px rgba(220, 38, 38, 0.06)",
+                      filter: "contrast(1.06) saturate(0.96) drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
+                    }}
+                  >
                     Something Amazing
                   </span>
                 </h2>
@@ -31,7 +42,7 @@ const ContactSection: React.FC = () => {
                   <div className="w-2 h-2 bg-foreground/40 rounded-full mt-3 flex-shrink-0"></div>
                   <div>
                     <h3 className="text-lg font-medium text-foreground/90 mb-2">Quick Response</h3>
-                    <p className="text-muted/60 leading-relaxed">We typically respond within 24 hours to discuss your project requirements and creative vision.</p>
+                    <p className="text-muted/60 leading-relaxed">We typically respond within 48 hours to discuss your project requirements and creative vision.</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -53,6 +64,22 @@ const ContactSection: React.FC = () => {
               {/* Decorative element */}
               <div className="pt-8">
                 <div className="h-px bg-gradient-to-r from-foreground/20 via-foreground/10 to-transparent"></div>
+              </div>
+
+              {/* Logo Section */}
+              <div className="pt-12 flex justify-center">
+                <div className="relative">
+                  <img
+                    src="/assets/Key0n-Logo.svg"
+                    alt="Key0n Logo"
+                    width={200}
+                    height={200}
+                    className="opacity-8 hover:opacity-15 transition-opacity duration-300 w-[200px] h-[200px] object-contain"
+                    style={{
+                      filter: "invert(1) brightness(1)",
+                    }}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -152,12 +179,13 @@ const ContactSection: React.FC = () => {
                 <div className="pt-4">
                   <button
                     type="submit"
-                    className="w-full group relative overflow-hidden rounded-xl py-4 px-8 font-medium text-lg transition-all duration-500 transform hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full group relative overflow-hidden py-4 px-8 font-medium text-lg transition-all duration-500 transform hover:scale-[1.02] active:scale-[0.98]"
                     style={{
                       background: "linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%)",
                       border: "1px solid rgba(255, 255, 255, 0.12)",
                       color: "rgba(255, 255, 255, 0.9)",
-                      boxShadow: "0 8px 32px -8px rgba(0, 0, 0, 0.3)"
+                      boxShadow: "0 8px 32px -8px rgba(0, 0, 0, 0.3)",
+                      borderRadius: "6px"
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%)";
@@ -179,6 +207,106 @@ const ContactSection: React.FC = () => {
               </form>
             </div>
           </div>
+        </div>
+        
+        {/* Premium Bottom Spotlight Effect */}
+        <div className="relative mt-24 overflow-hidden">
+          {/* Main spotlight effect - browser optimized */}
+          {!browserOpts.isFirefoxBrowser ? (
+            <div 
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: `
+                  radial-gradient(
+                    ellipse 120% 50% at 50% 100%,
+                    rgba(220, 38, 38, 0.12) 0%,
+                    rgba(220, 38, 38, 0.08) 20%,
+                    rgba(220, 38, 38, 0.04) 40%,
+                    transparent 70%
+                  ),
+                  radial-gradient(
+                    ellipse 80% 40% at 50% 100%,
+                    rgba(255, 255, 255, 0.06) 0%,
+                    rgba(255, 255, 255, 0.03) 30%,
+                    transparent 60%
+                  )
+                `,
+                mixBlendMode: 'screen',
+                height: '200px',
+              }}
+            />
+          ) : (
+            <div 
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: 'radial-gradient(ellipse at center bottom, rgba(220, 38, 38, 0.06) 0%, transparent 50%)',
+                height: '200px',
+              }}
+            />
+          )}
+          
+          {/* Subtle pattern overlay */}
+          {!browserOpts.isFirefoxBrowser && (
+            <div 
+              className="absolute inset-0 opacity-5"
+              style={{
+                backgroundImage: `radial-gradient(circle at 1px 1px, rgba(220, 38, 38, 0.8) 1px, transparent 0)`,
+                backgroundSize: "30px 30px",
+                height: '200px',
+              }}
+            />
+          )}
+          
+          {/* Elegant glow bars */}
+          <div className="absolute bottom-0 left-0 right-0 flex justify-center space-x-1">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div
+                key={i}
+                className="transition-all duration-1000 ease-out"
+                style={{
+                  width: '2px',
+                  height: `${20 + i * 8}px`,
+                  background: `linear-gradient(to top, 
+                    rgba(220, 38, 38, ${0.4 - i * 0.05}) 0%, 
+                    rgba(220, 38, 38, ${0.2 - i * 0.03}) 50%, 
+                    transparent 100%
+                  )`,
+                  borderRadius: '1px',
+                  filter: browserOpts.reduceBlur ? 'none' : 'blur(0.5px)',
+                  animation: `pulseGlow ${2 + i * 0.3}s ease-in-out infinite alternate`,
+                }}
+              />
+            ))}
+          </div>
+          
+          {/* Floating accent particles */}
+          {!browserOpts.reduceMotionComplexity && (
+            <div className="absolute inset-0 overflow-hidden">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-1 h-1 rounded-full opacity-30"
+                  style={{
+                    background: 'rgba(220, 38, 38, 0.6)',
+                    left: `${30 + i * 20}%`,
+                    bottom: `${10 + i * 15}px`,
+                    animation: `floatParticle ${4 + i}s ease-in-out infinite alternate`,
+                    animationDelay: `${i * 0.5}s`,
+                  }}
+                />
+              ))}
+            </div>
+          )}
+          
+          {/* Executive accent line */}
+          <div 
+            className="absolute bottom-0 left-1/2 transform -translate-x-1/2"
+            style={{
+              width: '100px',
+              height: '1px',
+              background: 'linear-gradient(90deg, transparent 0%, rgba(220, 38, 38, 0.4) 50%, transparent 100%)',
+            }}
+          />
         </div>
       </div>
     </section>

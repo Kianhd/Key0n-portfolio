@@ -190,13 +190,15 @@ export default function Home() {
 
       <AboutSection />
 
-      <ServicesSection />
-
       <WorkSection projects={projects} />
+
+      <ServicesSection />
 
       <ContactSection />
 
       <Footer socialLinks={socialLinks} />
     </div>
   );
-}
+ 
+
+  

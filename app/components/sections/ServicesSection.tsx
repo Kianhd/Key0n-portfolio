@@ -99,7 +99,8 @@ const ServicesSection: React.FC = () => {
           </p>
           <a
             href="#contact"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-foreground/5 hover:bg-foreground/10 border border-foreground/20 hover:border-foreground/30 rounded-sm transition-all duration-300 group"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-foreground/5 hover:bg-foreground/10 border border-foreground/20 hover:border-foreground/30 transition-all duration-300 group"
+            style={{ borderRadius: "6px" }}
           >
             <span className="text-foreground/90 font-medium">
               Let's create something amazing

@@ -232,12 +232,14 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             </span>{" "}
             discover and express their true voice through unforgettable,{" "}
             <span 
-              className="relative font-medium"
+              className="relative font-bold"
               style={{
-                background: "linear-gradient(135deg, rgba(245, 158, 11, 0.9) 0%, rgba(217, 119, 6, 0.8) 100%)",
+                background: "linear-gradient(135deg, rgba(220, 38, 38, 1) 0%, rgba(239, 68, 68, 1) 25%, rgba(255, 82, 82, 1) 50%, rgba(248, 113, 113, 1) 75%, rgba(220, 38, 38, 1) 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
+                textShadow: "0 2px 8px rgba(220, 38, 38, 0.3), 0 0 30px rgba(220, 38, 38, 0.2)",
+                filter: "contrast(1.15) saturate(1.1) drop-shadow(0 1px 2px rgba(220, 38, 38, 0.3))",
               }}
             >
               custom-crafted
@@ -252,28 +254,29 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             >
               <a
                 href="#work"
-                className={`border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background text-small uppercase font-medium transition-all duration-300 inline-block rounded-sm relative z-10 text-center ${
+                className={`border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background text-small uppercase font-medium transition-all duration-300 inline-block relative z-10 text-center ${
                   browserOpts.disableBackdropFilter
                     ? "bg-background/80"
                     : "backdrop-blur-[20px]"
                 }`}
-                style={{ width: "180px", padding: "20px 12px" }}
+                style={{ width: "180px", padding: "20px 12px", borderRadius: "6px" }}
               >
-                View Our Work
+                View My Work
               </a>
-              <div className="absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ borderRadius: "6px" }}>
                 {browserOpts.reduceBlur ? (
                   <div
-                    className="absolute inset-0 border-2 border-foreground rounded-sm"
+                    className="absolute inset-0 border-2 border-foreground"
                     style={{
                       boxShadow: "0 0 8px rgba(250, 250, 250, 0.5)",
+                      borderRadius: "6px",
                     }}
                   />
                 ) : (
                   <>
-                    <div className="absolute inset-0 border-2 border-foreground rounded-sm" />
-                    <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-sm" />
-                    <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-md opacity-50" />
+                    <div className="absolute inset-0 border-2 border-foreground" style={{ borderRadius: "6px" }} />
+                    <div className="absolute inset-0 border-2 border-foreground blur-sm" style={{ borderRadius: "6px" }} />
+                    <div className="absolute inset-0 border-2 border-foreground blur-md opacity-50" style={{ borderRadius: "6px" }} />
                   </>
                 )}
               </div>
@@ -285,28 +288,36 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             >
               <a
                 href="#contact"
-                className={`border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background text-small uppercase font-medium transition-all duration-300 inline-block rounded-sm relative z-10 text-center ${
-                  browserOpts.disableBackdropFilter
-                    ? "bg-background/80"
-                    : "backdrop-blur-[20px]"
-                }`}
-                style={{ width: "180px", padding: "20px 12px" }}
+                className="text-foreground hover:text-white text-small uppercase font-medium transition-all duration-300 inline-block relative z-10 text-center"
+                style={{ 
+                  width: "180px", 
+                  padding: "20px 12px", 
+                  borderRadius: "6px",
+                  border: "2px solid rgba(220, 38, 38, 0.3)",
+                  background: browserOpts.disableBackdropFilter 
+                    ? "rgba(220, 38, 38, 0.05)" 
+                    : "rgba(220, 38, 38, 0.08)",
+                  backdropFilter: browserOpts.disableBackdropFilter ? "none" : "blur(20px)",
+                  WebkitBackdropFilter: browserOpts.disableBackdropFilter ? "none" : "blur(20px)",
+                }}
               >
                 Get In Touch
               </a>
-              <div className="absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ borderRadius: "6px" }}>
                 {browserOpts.reduceBlur ? (
                   <div
-                    className="absolute inset-0 border-2 border-foreground rounded-sm"
+                    className="absolute inset-0 border-2"
                     style={{
-                      boxShadow: "0 0 8px rgba(250, 250, 250, 0.5)",
+                      borderColor: "rgba(220, 38, 38, 0.6)",
+                      boxShadow: "0 0 8px rgba(220, 38, 38, 0.4)",
+                      borderRadius: "6px",
                     }}
                   />
                 ) : (
                   <>
-                    <div className="absolute inset-0 border-2 border-foreground rounded-sm" />
-                    <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-sm" />
-                    <div className="absolute inset-0 border-2 border-foreground rounded-sm blur-md opacity-50" />
+                    <div className="absolute inset-0 border-2" style={{ borderColor: "rgba(220, 38, 38, 0.6)", borderRadius: "6px" }} />
+                    <div className="absolute inset-0 border-2 blur-sm" style={{ borderColor: "rgba(220, 38, 38, 0.5)", borderRadius: "6px" }} />
+                    <div className="absolute inset-0 border-2 blur-md opacity-50" style={{ borderColor: "rgba(220, 38, 38, 0.4)", borderRadius: "6px" }} />
                   </>
                 )}
               </div>
