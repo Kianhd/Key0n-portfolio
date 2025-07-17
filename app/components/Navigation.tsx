@@ -194,49 +194,40 @@ const Navigation = () => {
                     window.location.href = '/#contact';
                   }
                 }}
-                className="block relative overflow-hidden font-medium uppercase transition-all duration-500 cursor-pointer tracking-[0.08em] group"
-                style={{
-                  minWidth: 'fit-content',
-                  transform: 'translateZ(0px) translateY(0px)',
-                  padding: '8px 12px',
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 245, 245, 0.9) 100%)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: 'rgba(10, 10, 10, 0.9)',
-                  boxShadow: '0 4px 20px -4px rgba(255, 255, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
-                  borderRadius: '6px',
-                  fontSize: '0.9rem',
-                  backdropFilter: browserOpts.disableBackdropFilter ? 'none' : 'blur(12px)',
-                  WebkitBackdropFilter: browserOpts.disableBackdropFilter ? 'none' : 'blur(12px)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(15, 15, 15, 0.95) 0%, rgba(25, 25, 25, 0.9) 100%)';
-                  e.currentTarget.style.borderColor = 'rgba(220, 38, 38, 0.4)';
-                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.95)';
-                  e.currentTarget.style.boxShadow = '0 8px 32px -8px rgba(220, 38, 38, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 0 1px rgba(220, 38, 38, 0.2)';
-                  e.currentTarget.style.transform = 'translateZ(0) translateY(-2px) scale(1.02)';
-                  e.currentTarget.style.backdropFilter = browserOpts.disableBackdropFilter ? 'none' : 'blur(20px)';
-                  e.currentTarget.style.WebkitBackdropFilter = browserOpts.disableBackdropFilter ? 'none' : 'blur(20px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 245, 245, 0.9) 100%)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                  e.currentTarget.style.color = 'rgba(10, 10, 10, 0.9)';
-                  e.currentTarget.style.boxShadow = '0 4px 20px -4px rgba(255, 255, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.4)';
-                  e.currentTarget.style.transform = 'translateZ(0) translateY(0) scale(1)';
-                  e.currentTarget.style.backdropFilter = browserOpts.disableBackdropFilter ? 'none' : 'blur(12px)';
-                  e.currentTarget.style.WebkitBackdropFilter = browserOpts.disableBackdropFilter ? 'none' : 'blur(12px)';
-                }}
+                className="group relative overflow-hidden"
               >
-                <span className="relative z-10 transition-all duration-300">
-                  Get In Touch
-                </span>
-                <div 
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                <div
+                  className="relative px-6 py-3 text-sm font-medium uppercase tracking-[0.08em] transition-all duration-500"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(185, 28, 28, 0.05) 100%)',
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%)',
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
                     borderRadius: '6px',
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    fontWeight: 300,
                   }}
-                />
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(220, 38, 38, 0.15) 0%, rgba(185, 28, 28, 0.08) 100%)';
+                    e.currentTarget.style.borderColor = 'rgba(220, 38, 38, 0.3)';
+                    e.currentTarget.style.color = 'rgba(255, 255, 255, 1)';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                    e.currentTarget.style.color = 'rgba(255, 255, 255, 0.9)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  Get In Touch
+                  
+                  {/* Subtle accent line */}
+                  <div 
+                    className="absolute bottom-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{
+                      background: 'linear-gradient(90deg, transparent 0%, rgba(220, 38, 38, 0.4) 50%, transparent 100%)'
+                    }}
+                  />
+                </div>
               </a>
             </div>
           </div>
