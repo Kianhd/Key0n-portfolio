@@ -111,8 +111,8 @@ const Navigation = () => {
   }, [pathname]);
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 bg-background/95 ${browserOpts.disableBackdropFilter || browserOpts.disableSafariBackdrop ? '' : 'backdrop-blur-md'} border-b border-border z-50`} style={{ transform: 'translateZ(0)', backgroundColor: browserOpts.disableBackdropFilter || browserOpts.disableSafariBackdrop ? 'rgba(0, 0, 0, 0.98)' : undefined }}>
-      <div className="max-w-7xl mx-auto px-6 sm:px-8">
+    <nav className={`fixed top-0 left-0 right-0 bg-background/95 ${browserOpts.disableBackdropFilter || browserOpts.disableSafariBackdrop ? '' : 'backdrop-blur-md'} border-b border-border z-50 px-6 sm:px-8 lg:px-12`} style={{ transform: 'translateZ(0)', backgroundColor: browserOpts.disableBackdropFilter || browserOpts.disableSafariBackdrop ? 'rgba(0, 0, 0, 0.98)' : undefined }}>
+      <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center space-x-3">
             <Logo
