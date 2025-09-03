@@ -144,7 +144,10 @@ const AboutSection: React.FC = () => {
               >
                 <span className="text-foreground/90">I'm </span>
                 <span className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                  Key0n
+                  Kian Hamed
+                </span>
+                <span className="text-foreground/50 text-2xl lg:text-3xl block mt-2 font-normal">
+                  — also known as Key0n.
                 </span>
               </motion.h2>
             </div>
@@ -157,11 +160,11 @@ const AboutSection: React.FC = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                Music has been my true language since I was 13. I don't just compose tracks — I shape{" "}
+                Since 13, music has been my true language. I craft sound identities that give{" "}
                 <span className="text-foreground font-medium">
-                  living sound identities
+                  brands, films, and artists a heartbeat
                 </span>{" "}
-                that breathe life into brands and make them{" "}
+                — making them{" "}
                 <span className="text-foreground font-medium">
                   unforgettable
                 </span>
@@ -169,14 +172,14 @@ const AboutSection: React.FC = () => {
               </motion.p>
 
               <motion.p
-                className="text-lg text-muted/80 leading-relaxed"
+                className="text-xl lg:text-2xl leading-relaxed text-foreground/80 font-normal"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
-                Each project is a deep collaboration, turning brand stories into{" "}
-                <span className="italic">emotional soundscapes</span> that people don't just hear, but truly feel.
+                Every project is a collaboration, turning stories into{" "}
+                <span className="text-foreground font-medium italic">emotional soundscapes</span> people don't just hear, but feel.
               </motion.p>
 
               <motion.div
@@ -187,10 +190,10 @@ const AboutSection: React.FC = () => {
               >
                 <div className="inline-flex items-center gap-4 pt-4">
                   <div className="h-px w-12 bg-foreground/30" />
-                  <p className="text-lg font-medium italic text-foreground/90">
-                    Your brand deserves to be heard,
+                  <p className="text-xl lg:text-2xl font-medium italic text-foreground/90 leading-relaxed">
+                    I don't make tracks.
                     <br />
-                    not just seen.
+                    I make identities you can feel in your bones.
                   </p>
                 </div>
               </motion.div>

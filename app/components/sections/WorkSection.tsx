@@ -154,9 +154,13 @@ const WorkSection: React.FC<WorkSectionProps> = ({ projects }) => {
                 </div>
 
                 {/* Video Navigation Hint */}
-                {project.videos.length > 1 && (
+                {project.videos.length > 1 ? (
                   <div className="text-caption text-muted/60 uppercase tracking-wide font-normal">
-                    Use arrow keys or click to navigate videos
+                    Click arrows to browse • Press unmute to start video
+                  </div>
+                ) : (
+                  <div className="text-caption text-muted/60 uppercase tracking-wide font-normal">
+                    Press unmute to start video
                   </div>
                 )}
               </div>
@@ -272,9 +276,13 @@ const WorkSection: React.FC<WorkSectionProps> = ({ projects }) => {
                       </div>
 
                       {/* Video Navigation Hint */}
-                      {project.videos.length > 1 && (
+                      {project.videos.length > 1 ? (
                         <div className="text-caption text-muted/60 uppercase tracking-wide font-normal">
-                          Use arrow keys or click to navigate videos
+                          Click arrows to browse • Press unmute to start video
+                        </div>
+                      ) : (
+                        <div className="text-caption text-muted/60 uppercase tracking-wide font-normal">
+                          Press unmute to start video
                         </div>
                       )}
                     </div>

@@ -39,12 +39,12 @@ export default function VideoCarousel({ videos }: VideoCarouselProps) {
     setCurrentIndex(newIndex);
     setIsUnmuted(false);
 
-    // Auto-play new video (muted)
+    // Reset video to beginning (no auto-play)
     if (videoRefs.current[newIndex]) {
       const video = videoRefs.current[newIndex];
       video!.currentTime = 0;
       video!.muted = true;
-      video!.play();
+      // Removed auto-play
     }
   };
 
@@ -59,13 +59,13 @@ export default function VideoCarousel({ videos }: VideoCarouselProps) {
   };
 
   const handleVideoLoad = (index: number) => {
-    // Auto-play current video when it loads
+    // Reset current video when it loads (no auto-play)
     if (index === currentIndex) {
       const video = videoRefs.current[index];
       if (video) {
         video.currentTime = 0;
         video.muted = true;
-        video.play();
+        // Removed auto-play
       }
     }
   };
