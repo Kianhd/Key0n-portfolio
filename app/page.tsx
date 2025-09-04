@@ -10,6 +10,7 @@ import WorkSection from "./components/sections/WorkSection";
 import ServicesSection from "./components/sections/ServicesSection";
 import ContactSection from "./components/sections/ContactSection";
 import Footer from "./components/sections/Footer";
+import GradualBlur from "@/components/ui/gradual-blur";
 import { useScrollAnimation } from "./hooks/useScrollAnimation";
 import { useBrowserOptimizations } from "./hooks/useBrowserOptimizations";
 import {
@@ -177,7 +178,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
+    <div className="min-h-screen bg-background overflow-x-hidden relative">
       <SchemaMarkup />
       <Navigation />
 
@@ -197,6 +198,20 @@ export default function Home() {
       <ContactSection />
 
       <Footer socialLinks={socialLinks} />
+      
+      {/* Gradual blur at the bottom of the page */}
+      <GradualBlur
+        target="parent"
+        position="bottom"
+        height="8rem"
+        strength={1.5}
+        divCount={3}
+        curve="ease-out"
+        exponential={false}
+        opacity={1}
+        className="pointer-events-none"
+        style={{ position: 'fixed' }}
+      />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import React, { useMemo } from "react";
 import { motion } from "motion/react";
+import ScrollReveal from "@/components/ui/scroll-reveal";
 
 // Optimized Waveform Component
 const WaveformVisualization = React.memo(() => {
@@ -153,34 +154,27 @@ const AboutSection: React.FC = () => {
             </div>
 
             <div className="space-y-6">
-              <motion.p
-                className="text-xl lg:text-2xl leading-relaxed text-foreground/80 font-normal"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2 }}
+              <ScrollReveal
+                baseOpacity={0}
+                enableBlur={true}
+                baseRotation={3}
+                blurStrength={8}
+                containerClassName="mb-6"
+                textClassName="text-xl lg:text-2xl leading-relaxed text-foreground/80 font-normal"
               >
-                Since 13, music has been my true language. I craft sound identities that give{" "}
-                <span className="text-foreground font-medium">
-                  brands, films, and artists a heartbeat
-                </span>{" "}
-                — making them{" "}
-                <span className="text-foreground font-medium">
-                  unforgettable
-                </span>
-                .
-              </motion.p>
+                Since 13, music has been my true language. I craft sound identities that give brands, films, and artists a heartbeat — making them unforgettable.
+              </ScrollReveal>
 
-              <motion.p
-                className="text-xl lg:text-2xl leading-relaxed text-foreground/80 font-normal"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.3 }}
+              <ScrollReveal
+                baseOpacity={0}
+                enableBlur={true}
+                baseRotation={3}
+                blurStrength={8}
+                containerClassName="mb-6"
+                textClassName="text-xl lg:text-2xl leading-relaxed text-foreground/80 font-normal"
               >
-                Every project is a collaboration, turning stories into{" "}
-                <span className="text-foreground font-medium italic">emotional soundscapes</span> people don't just hear, but feel.
-              </motion.p>
+                Every project is a collaboration, turning stories into emotional soundscapes people don't just hear, but feel.
+              </ScrollReveal>
 
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -190,11 +184,16 @@ const AboutSection: React.FC = () => {
               >
                 <div className="inline-flex items-center gap-4 pt-4">
                   <div className="h-px w-12 bg-foreground/30" />
-                  <p className="text-xl lg:text-2xl font-medium italic text-foreground/90 leading-relaxed">
-                    I don't make tracks.
-                    <br />
-                    I make identities you can feel in your bones.
-                  </p>
+                  <ScrollReveal
+                    baseOpacity={0}
+                    enableBlur={true}
+                    baseRotation={4}
+                    blurStrength={10}
+                    containerClassName="my-0"
+                    textClassName="text-xl lg:text-2xl font-medium italic text-foreground/90 leading-relaxed"
+                  >
+                    I don't make tracks. I make identities you can feel in your bones.
+                  </ScrollReveal>
                 </div>
               </motion.div>
             </div>
@@ -241,14 +240,16 @@ const AboutSection: React.FC = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.5 }}
         >
-          <p className="text-lg text-muted/70 max-w-3xl mx-auto leading-relaxed">
-            Together with my team, we create distinctive sonic signatures for
-            <span className="text-foreground/80"> artists</span>,
-            <span className="text-foreground/80"> brands</span>,
-            <span className="text-foreground/80"> films</span>, and
-            <span className="text-foreground/80"> experiences</span> that
-            connect on a deeper level.
-          </p>
+          <ScrollReveal
+            baseOpacity={0.1}
+            enableBlur={true}
+            baseRotation={2}
+            blurStrength={6}
+            containerClassName="my-5"
+            textClassName="text-lg text-muted/70 max-w-3xl mx-auto leading-relaxed"
+          >
+            Together with my team, we create distinctive sonic signatures for artists, brands, films, and experiences that connect on a deeper level.
+          </ScrollReveal>
         </motion.div>
       </div>
     </section>
