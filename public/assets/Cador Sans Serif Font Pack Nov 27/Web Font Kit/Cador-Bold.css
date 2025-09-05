@@ -1,0 +1,12 @@
+/* Webfont: Cador-Bold */@font-face {
+    font-family: 'Cador';
+    src: url('Cador-Bold.eot'); /* IE9 Compat Modes */
+    src: url('Cador-Bold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('Cador-Bold.woff') format('woff'), /* Modern Browsers */
+         url('Cador-Bold.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('Cador-Bold.svg#Cador-Bold') format('svg'); /* Legacy iOS */
+    font-style: normal;
+    font-weight: bold;
+    text-rendering: optimizeLegibility;
+}
+

@@ -2,8 +2,8 @@
 
 import React from "react";
 import { motion } from "motion/react";
-import WaveformBackground from "../WaveformBackground";
 import { useBrowserOptimizations } from "@/app/hooks/useBrowserOptimizations";
+import PrismaticBurst from "@/components/PrismaticBurst";
 
 interface HeroSectionProps {
   isButtonHovered: boolean;
@@ -18,358 +18,257 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
   return (
     <section id="home" className="min-h-screen relative pt-16">
-      <WaveformBackground
-        waveColor="#dc2626"
-        backgroundColor="#0a0a0a"
-        enableMouseInteraction={!browserOpts.isZenBrowser}
-        amplitude={60}
-        speed={0.008}
-        speedMultiplier={isButtonHovered ? 2 : 1}
-        className="gradient-fade-bottom overflow-visible"
-      >
-        <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 text-center relative z-10 py-36 sm:py-44">
-          <motion.div
-            className="mb-16 relative"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{
-              duration: browserOpts.simplifyFramerMotion ? 0.6 : 1.2,
-              delay: browserOpts.simplifyFramerMotion ? 0 : 0.3,
-              ease: browserOpts.useSimpleEasing ? "easeOut" : [0.25, 0.46, 0.45, 0.94],
-            }}
-            style={{
-              willChange: browserOpts.forceHardwareAcceleration ? "transform, opacity" : "auto",
-            }}
-          >
-            {/* Executive Typography Container */}
-            <div 
-              className="relative text-center"
-              style={{
-                fontSize: "clamp(3.2rem, 7.5vw, 7rem)",
-                lineHeight: "1.05",
-                letterSpacing: "-0.015em",
-                fontVariantNumeric: "lining-nums",
-                textRendering: "optimizeLegibility",
-                WebkitFontSmoothing: "antialiased",
-                MozOsxFontSmoothing: "grayscale",
-                paddingTop: "clamp(0.5rem, 1vw, 1rem)",
-                paddingBottom: "clamp(0.25rem, 0.5vw, 0.5rem)",
-              }}
-            >
-              {/* Subtle background glow for depth */}
+      {/* PrismaticBurst Background */}
+      <div style={{ 
+        width: '100%', 
+        height: '100%', 
+        position: 'absolute', 
+        top: 0, 
+        left: 0, 
+        zIndex: 0 
+      }}>
+        <PrismaticBurst
+          animationType="hover"
+          intensity={2}
+          speed={0.45}
+          distort={4.6}
+          paused={false}
+          offset={{ x: 0, y: 0 }}
+          hoverDampness={0.56}
+          rayCount={0}
+          mixBlendMode="lighten"
+          colors={['#3D0000', '#2E2600', '#000319']}
+        />
+      </div>
+
+      {/* Subtle Vignette Overlay */}
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `
+            radial-gradient(
+              ellipse 120% 80% at 50% 40%, 
+              transparent 0%, 
+              transparent 40%, 
+              rgba(0, 0, 0, 0.1) 70%, 
+              rgba(0, 0, 0, 0.3) 85%, 
+              rgba(0, 0, 0, 0.6) 95%, 
+              rgba(0, 0, 0, 0.9) 100%
+            ),
+            linear-gradient(
+              180deg, 
+              transparent 0%, 
+              transparent 70%, 
+              rgba(0, 0, 0, 0.1) 80%, 
+              rgba(0, 0, 0, 0.4) 90%, 
+              rgba(0, 0, 0, 0.8) 100%
+            )
+          `,
+          zIndex: 1,
+        }}
+      />
+
+      {/* Content Layer */}
+      <div className="relative z-10 min-h-screen pointer-events-auto">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16 text-center relative z-10 py-32 sm:py-40 lg:py-48">
+          
+          {/* KEY0N Logo */}
+          <div className="mb-12 flex justify-center">
+            <div className="relative group">
+              <img 
+                src="/assets/Key0n Logo-White.png" 
+                alt="KEY0N Logo" 
+                className="h-30 w-auto transition-all duration-300 group-hover:scale-110"
+              />
               <div 
-                className="absolute inset-0 pointer-events-none"
+                className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300"
                 style={{
-                  background: "radial-gradient(ellipse 120% 50% at 50% 40%, rgba(255,255,255,0.02) 0%, transparent 70%)",
-                  filter: "blur(40px)",
-                }}
-              />
-
-              <motion.div
-                className="relative block"
-                initial={{ opacity: 0, y: browserOpts.simplifyFramerMotion ? 8 : 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: browserOpts.simplifyFramerMotion ? 0.5 : 0.8,
-                  delay: browserOpts.simplifyFramerMotion ? 0.1 : 0.4,
-                  ease: [0.25, 0.46, 0.45, 0.94],
-                }}
-                style={{ marginBottom: "clamp(0.5rem, 1.5vw, 1.2rem)" }}
-              >
-                <span 
-                  className="block"
-                  style={{
-                    fontWeight: 275,
-                    fontSize: "1em",
-                    letterSpacing: "clamp(0.02em, 0.3vw, 0.08em)",
-                    background: "linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 245, 245, 0.92) 25%, rgba(220, 220, 220, 0.88) 50%, rgba(200, 200, 200, 0.85) 75%, rgba(240, 240, 240, 0.9) 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    textShadow: "0 2px 4px rgba(0,0,0,0.12), 0 0 30px rgba(255,255,255,0.04)",
-                    filter: "contrast(1.03) brightness(1.02) drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
-                  }}
-                >
-                  MUSIC THAT
-                </span>
-              </motion.div>
-              
-              <motion.div
-                className="relative block"
-                initial={{ opacity: 0, y: browserOpts.simplifyFramerMotion ? 8 : 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: browserOpts.simplifyFramerMotion ? 0.5 : 0.8,
-                  delay: browserOpts.simplifyFramerMotion ? 0.15 : 0.5,
-                  ease: [0.25, 0.46, 0.45, 0.94],
-                }}
-                style={{ 
-                  marginBottom: "clamp(0.8rem, 2vw, 1.6rem)",
-                }}
-              >
-                <span 
-                  className="block"
-                  style={{
-                    fontWeight: 275,
-                    fontSize: "1em",
-                    letterSpacing: "clamp(0.02em, 0.3vw, 0.08em)",
-                    background: "linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 245, 245, 0.92) 25%, rgba(220, 220, 220, 0.88) 50%, rgba(200, 200, 200, 0.85) 75%, rgba(240, 240, 240, 0.9) 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    textShadow: "0 2px 4px rgba(0,0,0,0.12), 0 0 30px rgba(255,255,255,0.04)",
-                    textTransform: "uppercase",
-                    filter: "contrast(1.03) brightness(1.02) drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
-                  }}
-                >
-                  TELLS
-                </span>
-              </motion.div>
-              
-              {browserOpts.isZenBrowser ? (
-                <div 
-                  className="relative block"
-                >
-                  <span 
-                    className="block"
-                    style={{
-                      fontWeight: 275,
-                      fontSize: "1em",
-                      letterSpacing: "clamp(0.02em, 0.3vw, 0.08em)",
-                      background: "linear-gradient(135deg, rgba(220, 38, 38, 0.95) 0%, rgba(239, 68, 68, 0.88) 25%, rgba(200, 35, 35, 0.92) 50%, rgba(185, 28, 28, 0.9) 75%, rgba(230, 55, 55, 0.93) 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                      textShadow: "0 2px 6px rgba(220, 38, 38, 0.12), 0 0 30px rgba(220, 38, 38, 0.06)",
-                      filter: "contrast(1.06) saturate(0.96) drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
-                    }}
-                  >
-                    YOUR STORY
-                  </span>
-                </div>
-              ) : (
-                <motion.div
-                  className="relative block"
-                  initial={{ 
-                    opacity: 0, 
-                    y: browserOpts.simplifyFramerMotion ? 8 : 12,
-                    scale: 0.98,
-                  }}
-                  animate={{ 
-                    opacity: 1, 
-                    y: 0,
-                    scale: 1,
-                  }}
-                  transition={{
-                    duration: browserOpts.simplifyFramerMotion ? 0.5 : 0.9,
-                    delay: browserOpts.simplifyFramerMotion ? 0.2 : 0.6,
-                    ease: [0.25, 0.46, 0.45, 0.94],
-                  }}
-                  style={{}}
-                >
-                  <span 
-                    className="block relative"
-                    style={{
-                      fontWeight: 275,
-                      fontSize: "1em",
-                      letterSpacing: "clamp(0.02em, 0.3vw, 0.08em)",
-                      background: "linear-gradient(135deg, rgba(220, 38, 38, 0.95) 0%, rgba(239, 68, 68, 0.88) 25%, rgba(200, 35, 35, 0.92) 50%, rgba(185, 28, 28, 0.9) 75%, rgba(230, 55, 55, 0.93) 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                      textShadow: "0 2px 6px rgba(220, 38, 38, 0.12), 0 0 30px rgba(220, 38, 38, 0.06)",
-                      filter: "contrast(1.06) saturate(0.96) drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
-                    }}
-                  >
-                    YOUR STORY
-                  </span>
-                </motion.div>
-              )}
-
-              {/* Executive accent line */}
-              <motion.div
-                className="absolute -bottom-4 left-0"
-                initial={{ width: 0, opacity: 0 }}
-                animate={{ width: "clamp(2rem, 8vw, 4rem)", opacity: 0.15 }}
-                transition={{
-                  duration: browserOpts.simplifyFramerMotion ? 0.6 : 1.2,
-                  delay: browserOpts.simplifyFramerMotion ? 0.3 : 0.9,
-                  ease: [0.25, 0.46, 0.45, 0.94],
-                }}
-                style={{
-                  height: "1px",
-                  background: "linear-gradient(90deg, rgba(255,255,255,0.2) 0%, transparent 100%)",
+                  background: "radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%)",
+                  filter: "blur(8px)",
                 }}
               />
             </div>
-          </motion.div>
-          <motion.p
-            className="text-body-large text-muted/60 mb-16 max-w-2xl mx-auto leading-relaxed font-normal tracking-wide"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{
-              duration: browserOpts.simplifyFramerMotion ? 0.3 : 1,
-              delay: browserOpts.simplifyFramerMotion ? 0.2 : 1.2,
-              ease: browserOpts.useSimpleEasing ? "easeOut" : [0.4, 0, 0.2, 1],
-            }}
+          </div>
+
+          {/* Main Heading */}
+          <div 
+            className="relative mb-8"
             style={{
-              willChange: browserOpts.forceHardwareAcceleration
-                ? "opacity"
-                : "auto",
+              fontSize: "clamp(3.8rem, 9vw, 8.5rem)",
+              lineHeight: "0.9",
+              letterSpacing: "-0.03em",
+              fontWeight: 400,
+              fontFamily: "'Cador', Georgia, 'Times New Roman', serif",
             }}
           >
-            Helping{" "}
-            <span 
-              className="relative font-medium text-white/85"
-              style={{
-                background: "linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(220, 220, 220, 0.8) 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              brands, films, and artists
-            </span>{" "}
-            discover and express their true voice through unforgettable,{" "}
-            <span 
-              className="relative font-bold"
-              style={{
-                background: "linear-gradient(135deg, rgba(220, 38, 38, 1) 0%, rgba(239, 68, 68, 1) 25%, rgba(255, 82, 82, 1) 50%, rgba(248, 113, 113, 1) 75%, rgba(220, 38, 38, 1) 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                textShadow: "0 2px 8px rgba(220, 38, 38, 0.3), 0 0 30px rgba(220, 38, 38, 0.2)",
-                filter: "contrast(1.15) saturate(1.1) drop-shadow(0 1px 2px rgba(220, 38, 38, 0.3))",
-              }}
-            >
-              custom-crafted
-            </span>{" "}
-            music.
-          </motion.p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center max-w-md mx-auto sm:max-w-none">
-            <div 
-              className="relative group"
-              onMouseEnter={() => setIsButtonHovered(true)}
-              onMouseLeave={() => setIsButtonHovered(false)}
-            >
-              <a
-                href="#work"
-                className={`border-2 border-zinc-800 text-foreground hover:bg-foreground hover:text-background text-small uppercase font-medium transition-all duration-300 inline-block relative z-10 text-center ${
-                  browserOpts.disableBackdropFilter
-                    ? "bg-background/80"
-                    : "backdrop-blur-[20px]"
-                }`}
-                style={{ width: "180px", padding: "20px 12px", borderRadius: "6px" }}
+            <div className="block mb-3">
+              <span 
+                className="block"
+                style={{
+                  background: "linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(230, 230, 230, 0.9) 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  textShadow: "0 1px 3px rgba(0,0,0,0.12)",
+                }}
               >
-                View My Work
-              </a>
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ borderRadius: "6px" }}>
-                {browserOpts.reduceBlur ? (
-                  <div
-                    className="absolute inset-0 border-2 border-foreground"
-                    style={{
-                      boxShadow: "0 0 8px rgba(250, 250, 250, 0.5)",
-                      borderRadius: "6px",
-                    }}
-                  />
-                ) : (
-                  <>
-                    <div className="absolute inset-0 border-2 border-foreground" style={{ borderRadius: "6px" }} />
-                    <div className="absolute inset-0 border-2 border-foreground blur-sm" style={{ borderRadius: "6px" }} />
-                    <div className="absolute inset-0 border-2 border-foreground blur-md opacity-50" style={{ borderRadius: "6px" }} />
-                  </>
-                )}
-              </div>
+                MUSIC THAT TELLS
+              </span>
             </div>
+            
+            <div className="block">
+              <span 
+                className="block relative"
+                style={{
+                  background: "linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  textShadow: "0 2px 8px rgba(220, 38, 38, 0.3)",
+                }}
+              >
+                YOUR STORY
+              </span>
+            </div>
+          </div>
+
+          {/* Enhanced Description */}
+          <div className="mb-16 max-w-4xl mx-auto">
+            <p 
+              className="leading-relaxed"
+              style={{
+                fontSize: "clamp(1.125rem, 2.5vw, 1.5rem)",
+                lineHeight: "1.6",
+                color: "rgba(255, 255, 255, 0.90)",
+                fontFamily: "League Spartan, -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Arial, sans-serif",
+                letterSpacing: "-0.015em",
+                fontWeight: 300,
+              }}
+            >
+              Helping{" "}
+              <span 
+                style={{
+                  fontWeight: 400,
+                  color: "rgba(255, 255, 255, 1)",
+                }}
+              >
+                brands, films, and artists
+              </span>{" "}
+              discover their sonic identity through{" "}
+              <span 
+                style={{
+                  fontWeight: 450,
+                  background: "linear-gradient(135deg, #dc2626 0%, #ef4444 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                custom-crafted music
+              </span>{" "}
+              that resonates and inspires.
+            </p>
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center max-w-2xl mx-auto">
+            {/* Primary CTA - Get In Touch (styled like nav) */}
             <div 
-              className="relative group"
+              className="relative group w-full sm:w-auto"
               onMouseEnter={() => setIsButtonHovered(true)}
               onMouseLeave={() => setIsButtonHovered(false)}
             >
               <a
                 href="#contact"
-                className="text-foreground hover:text-white text-small uppercase font-medium transition-all duration-300 inline-block relative z-10 text-center"
-                style={{ 
-                  width: "180px", 
-                  padding: "20px 12px", 
-                  borderRadius: "6px",
-                  border: "2px solid rgba(220, 38, 38, 0.3)",
-                  background: browserOpts.disableBackdropFilter 
-                    ? "rgba(220, 38, 38, 0.05)" 
-                    : "rgba(220, 38, 38, 0.08)",
-                  backdropFilter: browserOpts.disableBackdropFilter ? "none" : "blur(20px)",
-                  WebkitBackdropFilter: browserOpts.disableBackdropFilter ? "none" : "blur(20px)",
+                onClick={(e) => {
+                  e.preventDefault();
+                  const element = document.getElementById('contact');
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                  }
                 }}
+                className="group relative overflow-hidden"
               >
-                Get In Touch
-              </a>
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ borderRadius: "6px" }}>
-                {browserOpts.reduceBlur ? (
-                  <div
-                    className="absolute inset-0 border-2"
+                <div
+                  className="relative text-sm font-medium uppercase tracking-[0.08em] transition-all duration-500 ease-out"
+                  style={{
+                    padding: '12px 24px',
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%)',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    borderRadius: '6px',
+                    color: 'rgba(0, 0, 0, 0.9)',
+                    fontWeight: 400,
+                    boxShadow: '0 2px 8px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(185, 28, 28, 0.95) 100%)';
+                    e.currentTarget.style.borderColor = 'rgba(220, 38, 38, 0.6)';
+                    e.currentTarget.style.color = 'rgba(255, 255, 255, 1)';
+                    e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(220, 38, 38, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                    e.currentTarget.style.color = 'rgba(0, 0, 0, 0.9)';
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+                  }}
+                >
+                  Get In Touch
+                  
+                  {/* Subtle accent line */}
+                  <div 
+                    className="absolute bottom-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                     style={{
-                      borderColor: "rgba(220, 38, 38, 0.6)",
-                      boxShadow: "0 0 8px rgba(220, 38, 38, 0.4)",
-                      borderRadius: "6px",
+                      background: 'linear-gradient(90deg, transparent 0%, rgba(220, 38, 38, 0.4) 50%, transparent 100%)'
                     }}
                   />
-                ) : (
-                  <>
-                    <div className="absolute inset-0 border-2" style={{ borderColor: "rgba(220, 38, 38, 0.6)", borderRadius: "6px" }} />
-                    <div className="absolute inset-0 border-2 blur-sm" style={{ borderColor: "rgba(220, 38, 38, 0.5)", borderRadius: "6px" }} />
-                    <div className="absolute inset-0 border-2 blur-md opacity-50" style={{ borderColor: "rgba(220, 38, 38, 0.4)", borderRadius: "6px" }} />
-                  </>
-                )}
-              </div>
+                </div>
+              </a>
+            </div>
+
+            {/* Secondary CTA - View My Work (Inverted Hover Effect) */}
+            <div 
+              className="relative group w-full sm:w-auto"
+              onMouseEnter={() => setIsButtonHovered(true)}
+              onMouseLeave={() => setIsButtonHovered(false)}
+            >
+              <a
+                href="#work"
+                className="relative overflow-hidden inline-flex items-center justify-center font-medium transition-all duration-300 ease-out w-full sm:w-auto"
+                style={{
+                  padding: "12px 24px",
+                  background: "transparent",
+                  border: "1px solid rgba(255, 255, 255, 0.12)",
+                  color: "rgba(255, 255, 255, 0.9)",
+                  borderRadius: "6px",
+                  fontFamily: "system-ui, -apple-system, sans-serif",
+                  fontSize: "0.875rem",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  fontWeight: 300,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "linear-gradient(135deg, rgba(139, 69, 19, 0.15) 0%, rgba(101, 51, 15, 0.1) 100%)";
+                  e.currentTarget.style.borderColor = "rgba(139, 69, 19, 0.3)";
+                  e.currentTarget.style.color = "rgba(255, 255, 255, 1)";
+                  e.currentTarget.style.transform = "translateY(-1px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.12)";
+                  e.currentTarget.style.color = "rgba(255, 255, 255, 0.9)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
+              >
+                View My Work
+              </a>
             </div>
           </div>
 
-          {/* Scroll indicator */}
-          <motion.div
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-            initial={{
-              opacity: 0,
-              y: browserOpts.simplifyFramerMotion ? -10 : -20,
-            }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: browserOpts.simplifyFramerMotion ? 0.2 : 0.6,
-              delay: browserOpts.simplifyFramerMotion ? 0.25 : 1.4,
-              ease: browserOpts.useSimpleEasing ? "easeOut" : [0.4, 0, 0.2, 1],
-            }}
-            style={{
-              willChange: browserOpts.forceHardwareAcceleration
-                ? "transform, opacity"
-                : "auto",
-            }}
-          >
-            <motion.div
-              className="flex flex-col items-center gap-2"
-              animate={
-                browserOpts.reduceMotionComplexity
-                  ? { y: [0, 3, 0] }
-                  : { y: [0, 8, 0] }
-              }
-              transition={{
-                duration: browserOpts.reduceMotionComplexity ? 2.5 : 2,
-                repeat: Infinity,
-                ease: browserOpts.useSimpleEasing ? "linear" : "easeInOut",
-                repeatType: "reverse",
-              }}
-              style={{
-                willChange: browserOpts.forceHardwareAcceleration
-                  ? "transform"
-                  : "auto",
-              }}
-            >
-              <span className="text-xs text-muted/60 uppercase tracking-wider">
-                Scroll
-              </span>
-              <div className="w-[1px] h-8 bg-gradient-to-b from-muted/40 to-transparent" />
-            </motion.div>
-          </motion.div>
         </div>
-      </WaveformBackground>
+      </div>
     </section>
   );
 };

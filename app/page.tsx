@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import Navigation from "./components/Navigation";
 import SchemaMarkup from "./components/SchemaMarkup";
-import BrandMarquee from "./components/BrandMarquee";
+import LogoLoop from "@/components/ui/logo-loop";
 import HeroSection from "./components/sections/HeroSection";
 import AboutSection from "./components/sections/AboutSection";
 import WorkSection from "./components/sections/WorkSection";
@@ -52,6 +52,7 @@ export default function Home() {
   useScrollAnimation();
   const browserOpts = useBrowserOptimizations();
   const [isButtonHovered, setIsButtonHovered] = React.useState(false);
+  const [isNearBottom, setIsNearBottom] = React.useState(false);
 
   // Performance monitoring for Firefox debugging (development only)
   if (process.env.NODE_ENV === "development") {
@@ -68,6 +69,36 @@ export default function Home() {
       document.body.removeAttribute("data-zen-browser");
     };
   }, [browserOpts.isZenBrowser]);
+
+  // Smart scroll detection for gradual blur fade-out near footer
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight;
+      const scrollTop = window.scrollY;
+      const clientHeight = window.innerHeight;
+      const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
+      
+      // Fade out blur when within 200px of bottom
+      setIsNearBottom(distanceFromBottom < 200);
+    };
+
+    // Throttle scroll events for performance
+    let ticking = false;
+    const throttledHandleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', throttledHandleScroll);
+    handleScroll(); // Check initial position
+    
+    return () => window.removeEventListener('scroll', throttledHandleScroll);
+  }, []);
 
   const brands: Brand[] = [
     { name: "Always", logo: "/Brands/Always Logo.png" },
@@ -187,7 +218,34 @@ export default function Home() {
         setIsButtonHovered={setIsButtonHovered}
       />
 
-      <BrandMarquee brands={brands} />
+      {/* Brand logos using LogoLoop */}
+      <div className="w-full overflow-hidden py-20 bg-background">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="text-center mb-12">
+            <h3 className="text-small uppercase tracking-wider text-muted/60 font-light">
+              Trusted by Industry Leaders
+            </h3>
+          </div>
+        </div>
+        
+        <LogoLoop
+          logos={brands.map(brand => ({
+            src: brand.logo,
+            alt: `${brand.name} logo`,
+            title: brand.name
+          }))}
+          speed={40}
+          direction="left"
+          logoHeight={48}
+          gap={96}
+          pauseOnHover={false}
+          fadeOut={true}
+          fadeOutColor="#0a0a0a"
+          scaleOnHover={false}
+          ariaLabel="Brand partners"
+          className="opacity-80"
+        />
+      </div>
 
       <AboutSection />
 
@@ -199,18 +257,21 @@ export default function Home() {
 
       <Footer socialLinks={socialLinks} />
       
-      {/* Gradual blur at the bottom of the page */}
+      {/* Smart gradual blur that fades near footer for optimal UX */}
       <GradualBlur
         target="parent"
         position="bottom"
-        height="8rem"
+        height={isNearBottom ? "0rem" : "4rem"}
         strength={1.5}
         divCount={3}
         curve="ease-out"
         exponential={false}
-        opacity={1}
-        className="pointer-events-none"
-        style={{ position: 'fixed' }}
+        opacity={isNearBottom ? 0 : 0.8}
+        className="pointer-events-none transition-all duration-500 ease-out"
+        style={{ 
+          position: 'fixed',
+          transition: 'height 0.5s ease-out, opacity 0.5s ease-out'
+        }}
       />
     </div>
   );

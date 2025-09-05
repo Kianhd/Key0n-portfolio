@@ -4,5 +4,26 @@
 /* Import Subway Berlin OT for BEATS branding */
 @import url('./Reisenberg.css');
 
+/* Cador Sans Serif - Elegant serif font for headings */
+@font-face {
+    font-family: 'Cador';
+    src: url('/fonts/cador/Cador-regular.woff') format('woff'),
+         url('/fonts/cador/Cador-regular.ttf') format('truetype');
+    font-style: normal;
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Cador';
+    src: url('/fonts/cador/Cador-Bold.woff') format('woff'),
+         url('/fonts/cador/Cador-Bold.ttf') format('truetype');
+    font-style: normal;
+    font-weight: 700;
+    text-rendering: optimizeLegibility;
+    font-display: swap;
+}
+
 /* League Spartan - Professional geometric sans-serif */
 /* Perfect for modern music producer branding with clean, bold aesthetics */

@@ -197,25 +197,28 @@ const Navigation = () => {
                 className="group relative overflow-hidden"
               >
                 <div
-                  className="relative px-6 py-3 text-sm font-medium uppercase tracking-[0.08em] transition-all duration-500"
+                  className="relative px-6 py-3 text-sm font-medium uppercase tracking-[0.08em] transition-all duration-500 ease-out"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%)',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%)',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
                     borderRadius: '6px',
-                    color: 'rgba(255, 255, 255, 0.9)',
-                    fontWeight: 300,
+                    color: 'rgba(0, 0, 0, 0.9)',
+                    fontWeight: 400,
+                    boxShadow: '0 2px 8px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(220, 38, 38, 0.15) 0%, rgba(185, 28, 28, 0.08) 100%)';
-                    e.currentTarget.style.borderColor = 'rgba(220, 38, 38, 0.3)';
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(185, 28, 28, 0.95) 100%)';
+                    e.currentTarget.style.borderColor = 'rgba(220, 38, 38, 0.6)';
                     e.currentTarget.style.color = 'rgba(255, 255, 255, 1)';
-                    e.currentTarget.style.transform = 'translateY(-1px)';
+                    e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(220, 38, 38, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%)';
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
-                    e.currentTarget.style.color = 'rgba(255, 255, 255, 0.9)';
-                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                    e.currentTarget.style.color = 'rgba(0, 0, 0, 0.9)';
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
                   }}
                 >
                   Get In Touch
@@ -310,25 +313,28 @@ const Navigation = () => {
                       }
                     }, 100);
                   }}
-                  className="block relative overflow-hidden rounded-md font-medium text-center uppercase text-small transition-all duration-300 cursor-pointer tracking-[0.08em]"
+                  className="block relative overflow-hidden rounded-md font-medium text-center uppercase text-small transition-all duration-500 ease-out cursor-pointer tracking-[0.08em]"
                   style={{
                     padding: '12px 24px',
-                    background: 'linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(185, 28, 28, 0.95) 100%)',
-                    border: '1px solid rgba(220, 38, 38, 0.6)',
-                    color: 'rgba(255, 255, 255, 0.98)',
-                    boxShadow: '0 4px 20px -4px rgba(220, 38, 38, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%)',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    color: 'rgba(0, 0, 0, 0.9)',
+                    boxShadow: '0 2px 8px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                    fontWeight: 400,
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(220, 38, 38, 1) 0%, rgba(185, 28, 28, 1) 100%)';
-                    e.currentTarget.style.borderColor = 'rgba(220, 38, 38, 0.8)';
-                    e.currentTarget.style.boxShadow = '0 6px 24px -4px rgba(220, 38, 38, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25)';
-                    e.currentTarget.style.transform = 'translateY(-1px)';
-                  }}
-                  onMouseLeave={(e) => {
                     e.currentTarget.style.background = 'linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(185, 28, 28, 0.95) 100%)';
                     e.currentTarget.style.borderColor = 'rgba(220, 38, 38, 0.6)';
-                    e.currentTarget.style.boxShadow = '0 4px 20px -4px rgba(220, 38, 38, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15)';
-                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.color = 'rgba(255, 255, 255, 1)';
+                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(220, 38, 38, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+                    e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                    e.currentTarget.style.color = 'rgba(0, 0, 0, 0.9)';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
                   }}
                 >
                   Order
