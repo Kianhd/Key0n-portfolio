@@ -58,13 +58,66 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             linear-gradient(
               180deg, 
               transparent 0%, 
-              transparent 70%, 
-              rgba(0, 0, 0, 0.1) 80%, 
+              transparent 60%, 
+              rgba(0, 0, 0, 0.05) 70%, 
+              rgba(0, 0, 0, 0.15) 80%, 
               rgba(0, 0, 0, 0.4) 90%, 
-              rgba(0, 0, 0, 0.8) 100%
+              rgba(0, 0, 0, 0.8) 95%, 
+              rgba(0, 0, 0, 1) 100%
             )
           `,
           zIndex: 1,
+        }}
+      />
+
+      {/* Ultra-Smooth Bottom Blur Transition */}
+      <div 
+        className="absolute bottom-0 left-0 right-0 pointer-events-none"
+        style={{
+          height: '300px',
+          background: `
+            linear-gradient(
+              180deg,
+              transparent 0%,
+              rgba(10, 10, 10, 0.02) 10%,
+              rgba(10, 10, 10, 0.05) 15%,
+              rgba(10, 10, 10, 0.1) 25%,
+              rgba(10, 10, 10, 0.18) 35%,
+              rgba(10, 10, 10, 0.28) 45%,
+              rgba(10, 10, 10, 0.4) 55%,
+              rgba(10, 10, 10, 0.55) 65%,
+              rgba(10, 10, 10, 0.7) 75%,
+              rgba(10, 10, 10, 0.82) 85%,
+              rgba(10, 10, 10, 0.92) 90%,
+              rgba(10, 10, 10, 0.98) 95%,
+              rgba(10, 10, 10, 1) 100%
+            )
+          `,
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          zIndex: 2,
+        }}
+      />
+
+      {/* Additional Feather Layer for Ultra-Smooth Transition */}
+      <div 
+        className="absolute bottom-0 left-0 right-0 pointer-events-none"
+        style={{
+          height: '150px',
+          background: `
+            linear-gradient(
+              180deg,
+              transparent 0%,
+              rgba(10, 10, 10, 0.05) 30%,
+              rgba(10, 10, 10, 0.2) 60%,
+              rgba(10, 10, 10, 0.5) 80%,
+              rgba(10, 10, 10, 0.8) 90%,
+              rgba(10, 10, 10, 1) 100%
+            )
+          `,
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          zIndex: 3,
         }}
       />
 
