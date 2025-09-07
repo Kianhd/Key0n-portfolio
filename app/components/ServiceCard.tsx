@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { useState, useEffect } from "react";
 import { IoCheckmark } from "react-icons/io5";
 import { IconType } from "react-icons";
+import { FiChevronDown } from "react-icons/fi";
 
 interface ServiceCardProps {
   title: string;
@@ -14,6 +15,9 @@ interface ServiceCardProps {
   icon?: IconType;
   textIcon?: string;
   comingSoon?: boolean;
+  onExpandToggle?: () => void;
+  isExpanded?: boolean;
+  serviceId?: string;
 }
 
 export default function ServiceCard({
@@ -25,6 +29,9 @@ export default function ServiceCard({
   icon: Icon,
   textIcon,
   comingSoon = false,
+  onExpandToggle,
+  isExpanded = false,
+  serviceId,
 }: ServiceCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -39,8 +46,8 @@ export default function ServiceCard({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Use scroll-triggered animation on mobile, hover on desktop
-  const isActive = isMobile ? isInView : isHovered;
+  // Use scroll-triggered animation on mobile, hover on desktop, or when expanded
+  const isActive = isMobile ? isInView : (isHovered || isExpanded);
 
   // Subtle accent colors for Fortune 500 aesthetic
   const accentColors = {
@@ -91,6 +98,7 @@ export default function ServiceCard({
           flex flex-col
           shadow-xl sm:shadow-2xl shadow-black/20
           hover:shadow-2xl sm:hover:shadow-3xl hover:shadow-black/30
+          ${onExpandToggle && !comingSoon ? 'cursor-pointer' : ''}
         `}
         style={{
           background: `linear-gradient(135deg, 
@@ -106,6 +114,7 @@ export default function ServiceCard({
             ${isActive ? `0 0 40px -10px ${accentColors[accentColor]}` : ""}
           `
         }}
+        onClick={onExpandToggle && !comingSoon ? onExpandToggle : undefined}
       >
         {/* Subtle top accent line */}
         <div 
@@ -166,9 +175,10 @@ export default function ServiceCard({
             <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-4 sm:mb-6 text-white/95 tracking-wide leading-tight">
               {title}
             </h3>
-            <p className="text-white/70 font-normal leading-relaxed text-sm sm:text-base lg:text-lg">
-              {description}
-            </p>
+            <p 
+              className="text-white/70 font-normal leading-relaxed text-sm sm:text-base lg:text-lg"
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
           </div>
 
           {/* Features */}
@@ -197,6 +207,36 @@ export default function ServiceCard({
               </div>
             </div>
           </div>
+
+          {/* Expand Timeline Button */}
+          {serviceId && onExpandToggle && !comingSoon && (
+            <motion.button
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent double-clicking when card is also clickable
+                onExpandToggle();
+              }}
+              className="absolute bottom-4 right-4 p-2 rounded-full transition-all duration-300 hover:scale-110"
+              style={{
+                backgroundColor: isExpanded 
+                  ? accentBorders[accentColor].replace('0.2)', '0.15)')
+                  : 'rgba(255, 255, 255, 0.05)',
+                border: `1px solid ${isExpanded 
+                  ? accentBorders[accentColor] 
+                  : 'rgba(255, 255, 255, 0.1)'}`,
+              }}
+              whileHover={{ rotate: isExpanded ? 180 : 0 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <FiChevronDown 
+                className={`w-5 h-5 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+                style={{
+                  color: isExpanded 
+                    ? accentBorders[accentColor].replace('0.2)', '0.8)')
+                    : 'rgba(255, 255, 255, 0.6)',
+                }}
+              />
+            </motion.button>
+          )}
         </div>
 
         {/* Subtle background pattern */}
