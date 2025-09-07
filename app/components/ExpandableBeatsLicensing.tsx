@@ -125,8 +125,34 @@ export default function ExpandableBeatsLicensing({
             </div>
 
             {/* Table */}
-            <div className="overflow-x-auto">
-              <table className="w-full">
+            <div className="overflow-x-auto relative">
+              {/* Badges positioned absolutely outside table flow */}
+              <div className="absolute top-0 left-0 w-full h-0 z-20">
+                {/* Popular badge - positioned over Premium Lease column */}
+                <span 
+                  className="absolute transform -translate-x-1/2 inline-flex items-center justify-center px-3 py-1.5 rounded-full text-[10px] uppercase tracking-[0.1em] font-semibold transition-all duration-300 backdrop-blur-sm relative overflow-hidden bg-[#1442B5]/15 border border-[#1442B5]/30 text-[#6B9BFF] hover:bg-[#1442B5]/25 hover:border-[#1442B5]/50 hover:text-[#85ADFF] z-10 whitespace-nowrap"
+                  style={{
+                    left: '53.6%',
+                    boxShadow: '0 0 20px rgba(20, 66, 181, 0.1), inset 0 0 10px rgba(107, 155, 255, 0.1)'
+                  }}
+                >
+                  <span className="relative z-10">Popular</span>
+                  <div className="absolute inset-0 opacity-30 bg-gradient-to-r from-[#1442B5]/0 via-[#1442B5]/20 to-[#1442B5]/0" />
+                </span>
+                {/* Custom badge - positioned over Custom Beats column */}
+                <span 
+                  className="absolute transform -translate-x-1/2 inline-flex items-center justify-center px-3 py-1.5 rounded-full text-[10px] uppercase tracking-[0.1em] font-semibold transition-all duration-300 backdrop-blur-sm relative overflow-hidden bg-[#FFC60B]/15 border border-[#FFC60B]/30 text-[#FFD23F] hover:bg-[#FFC60B]/25 hover:border-[#FFC60B]/50 hover:text-[#FFDB66] z-10 whitespace-nowrap"
+                  style={{
+                    left: '87%',
+                    boxShadow: '0 0 20px rgba(255, 198, 11, 0.1), inset 0 0 10px rgba(255, 210, 63, 0.1)'
+                  }}
+                >
+                  <span className="relative z-10">Custom</span>
+                  <div className="absolute inset-0 opacity-30 bg-gradient-to-r from-[#FFC60B]/0 via-[#FFC60B]/20 to-[#FFC60B]/0" />
+                </span>
+              </div>
+              
+              <table className="w-full mt-8">
                 <thead>
                   <tr className="border-b border-white/10">
                     <th className="text-left p-3 text-sm font-medium text-white/70 uppercase tracking-wider">
@@ -140,33 +166,17 @@ export default function ExpandableBeatsLicensing({
                       <div>Standard Lease</div>
                       <div className="text-xs text-white/50 font-normal mt-1">(WAV + MP3)</div>
                     </th>
-                    <th className="text-center p-3 text-sm font-medium text-white/90 relative">
-                      <div className="flex flex-col items-center">
-                        <span 
-                          className="text-xs px-2 py-1 rounded-full font-bold mb-1"
-                          style={{ backgroundColor: accentColor, color: '#000' }}
-                        >
-                          Popular
-                        </span>
-                        <div>Premium Lease</div>
-                        <div className="text-xs text-white/50 font-normal mt-1">(Stems + WAV/MP3)</div>
-                      </div>
+                    <th className="text-center p-3 text-sm font-medium text-white/90">
+                      <div>Premium Lease</div>
+                      <div className="text-xs text-white/50 font-normal mt-1">(Stems + WAV/MP3)</div>
                     </th>
                     <th className="text-center p-3 text-sm font-medium text-white/90">
                       <div>Exclusive License</div>
                       <div className="text-xs text-white/50 font-normal mt-1">(Unlimited)</div>
                     </th>
-                    <th className="text-center p-3 text-sm font-medium text-white/90 relative">
-                      <div className="flex flex-col items-center">
-                        <span 
-                          className="text-xs px-2 py-1 rounded-full font-bold mb-1"
-                          style={{ backgroundColor: '#f59e0b', color: '#000' }}
-                        >
-                          Custom
-                        </span>
-                        <div>Custom Beats</div>
-                        <div className="text-xs text-white/50 font-normal mt-1">(Made-to-Order)</div>
-                      </div>
+                    <th className="text-center p-3 text-sm font-medium text-white/90">
+                      <div>Custom Beats</div>
+                      <div className="text-xs text-white/50 font-normal mt-1">(Made-to-Order)</div>
                     </th>
                   </tr>
                 </thead>

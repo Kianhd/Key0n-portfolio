@@ -70,6 +70,39 @@ const ServicesSection: React.FC = () => {
               }
             }
           }, 200); // Increased delay for better element detection
+        } else if (serviceId === 'content-creators') {
+          // Special handling for Beats Licensing - same scroll behavior as Film Music
+          setTimeout(() => {
+            // Look for the beats licensing header with multiple possible text matches
+            const beatsHeaderElements = Array.from(document.querySelectorAll('h3, h2, h1')).filter(
+              el => (el.textContent?.includes('Beat Licensing') || 
+                     el.textContent?.includes('Licensing Options') ||
+                     el.textContent?.includes('Custom Production')) && 
+                    el.offsetParent !== null
+            );
+            
+            if (beatsHeaderElements.length > 0) {
+              const headerElement = beatsHeaderElements[0] as HTMLElement;
+              const headerRect = headerElement.getBoundingClientRect();
+              const headerTop = window.pageYOffset + headerRect.top;
+              
+              // Position header at same distance as film header (80px from top)
+              window.scrollTo({
+                top: headerTop - 80,
+                behavior: 'smooth'
+              });
+            } else {
+              // Better fallback: scroll to the beats licensing container specifically
+              const timelineRect = timelineContainerRef.current.getBoundingClientRect();
+              const timelineTop = window.pageYOffset + timelineRect.top;
+              
+              // Position the licensing table at the top with proper margin
+              window.scrollTo({
+                top: timelineTop - 100,
+                behavior: 'smooth'
+              });
+            }
+          }, 300); // Longer delay to ensure beats table is fully expanded
         } else {
           // Timeline services (Custom Brand Music, Sonic Logos) - show timeline content at top
           setTimeout(() => {
@@ -167,7 +200,7 @@ const ServicesSection: React.FC = () => {
       ],
       accentColor: "yellow" as const,
       textIcon: "BEATS",
-      comingSoon: false,
+      comingSoon: true,
       hasTimeline: false,
       hasTextExpansion: false,
       hasBeatsLicensing: true

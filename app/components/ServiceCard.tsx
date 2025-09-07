@@ -98,7 +98,7 @@ export default function ServiceCard({
           flex flex-col
           shadow-xl sm:shadow-2xl shadow-black/20
           hover:shadow-2xl sm:hover:shadow-3xl hover:shadow-black/30
-          ${onExpandToggle && !comingSoon ? 'cursor-pointer' : ''}
+          ${onExpandToggle ? 'cursor-pointer' : ''}
         `}
         style={{
           background: `linear-gradient(135deg, 
@@ -114,7 +114,7 @@ export default function ServiceCard({
             ${isActive ? `0 0 40px -10px ${accentColors[accentColor]}` : ""}
           `
         }}
-        onClick={onExpandToggle && !comingSoon ? onExpandToggle : undefined}
+        onClick={onExpandToggle ? onExpandToggle : undefined}
       >
         {/* Subtle top accent line */}
         <div 
@@ -209,7 +209,7 @@ export default function ServiceCard({
           </div>
 
           {/* Expand Timeline Button */}
-          {serviceId && onExpandToggle && !comingSoon && (
+          {serviceId && onExpandToggle && (
             <motion.button
               onClick={(e) => {
                 e.stopPropagation(); // Prevent double-clicking when card is also clickable
