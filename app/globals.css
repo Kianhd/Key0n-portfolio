@@ -1,5 +1,22 @@
 @import "tailwindcss";
 
+/* Cador Sans Font Face */
+@font-face {
+  font-family: 'Cador Sans';
+  src: url('/assets/Cador Sans Serif Font Pack Nov 27/OTF/Cador-regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cador Sans';
+  src: url('/assets/Cador Sans Serif Font Pack Nov 27/OTF/Cador-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --color-background: #0a0a0a;
   --color-foreground: #fafafa;
@@ -807,6 +824,16 @@ input[type="range"].mobile-progress-below:focus::-moz-range-thumb {
 
   .text-body {
     font-size: clamp(1rem, 3vw, 1.125rem);
+  }
+}
+
+/* Shimmer animation for premium package */
+@keyframes shimmer {
+  0%, 100% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
   }
 }
 

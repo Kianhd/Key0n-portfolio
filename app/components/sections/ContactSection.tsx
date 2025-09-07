@@ -116,7 +116,7 @@ const ContactSection: React.FC = () => {
               <form className="space-y-8">
                 <div className="grid grid-cols-1 gap-6">
                   <div className="relative group">
-                    <label className="block text-sm font-medium text-muted/70 mb-3 tracking-wide">
+                    <label className="block text-base font-semibold text-foreground/90 mb-3 tracking-wide">
                       Your Name
                     </label>
                     <input
@@ -127,7 +127,7 @@ const ContactSection: React.FC = () => {
                     />
                   </div>
                   <div className="relative group">
-                    <label className="block text-sm font-medium text-muted/70 mb-3 tracking-wide">
+                    <label className="block text-base font-semibold text-foreground/90 mb-3 tracking-wide">
                       Your Email
                     </label>
                     <input
@@ -138,8 +138,18 @@ const ContactSection: React.FC = () => {
                     />
                   </div>
                   <div className="relative group">
-                    <label className="block text-sm font-medium text-muted/70 mb-3 tracking-wide">
-                      Phone Number <span className="text-muted/50">(Optional)</span>
+                    <label className="block text-base font-semibold text-foreground/90 mb-3 tracking-wide">
+                      Your Company <span className="text-muted/60">(Optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full px-0 py-3 bg-transparent border-b border-border/50 focus:border-foreground/40 focus:outline-none transition-all duration-300 text-foreground text-lg placeholder:text-muted/40"
+                      placeholder="Company or organization name"
+                    />
+                  </div>
+                  <div className="relative group">
+                    <label className="block text-base font-semibold text-foreground/90 mb-3 tracking-wide">
+                      Phone Number <span className="text-muted/60">(Optional)</span>
                     </label>
                     <input
                       type="tel"
@@ -149,7 +159,7 @@ const ContactSection: React.FC = () => {
                   </div>
                 </div>
                 <div className="relative group">
-                  <label className="block text-sm font-medium text-muted/70 mb-3 tracking-wide">
+                  <label className="block text-base font-semibold text-foreground/90 mb-3 tracking-wide">
                     Project Type
                   </label>
                   <select
@@ -157,23 +167,21 @@ const ContactSection: React.FC = () => {
                     required
                   >
                     <option value="" className="bg-background text-foreground">Select project type</option>
-                    <option value="commercial" className="bg-background text-foreground">Commercial Production</option>
-                    <option value="artist" className="bg-background text-foreground">Artist Collaboration</option>
-                    <option value="beats" className="bg-background text-foreground">Custom Beats</option>
-                    <option value="film" className="bg-background text-foreground">Film Scoring</option>
-                    <option value="mixing" className="bg-background text-foreground">Mixing & Mastering</option>
+                    <option value="custom-brand-music" className="bg-background text-foreground">Custom Brand Music</option>
+                    <option value="sonic-logos" className="bg-background text-foreground">Sonic Logos and Jingles</option>
+                    <option value="ready-to-use-beats" className="bg-background text-foreground">Ready-to-use Beats & Tracks</option>
+                    <option value="music-for-film" className="bg-background text-foreground">Music for Film</option>
                     <option value="other" className="bg-background text-foreground">Other</option>
                   </select>
                 </div>
                 <div className="relative group">
-                  <label className="block text-sm font-medium text-muted/70 mb-3 tracking-wide">
+                  <label className="block text-base font-semibold text-foreground/90 mb-3 tracking-wide">
                     Project Details
                   </label>
                   <textarea
                     placeholder="Tell us about your project vision, timeline, budget, and any specific requirements..."
                     rows={6}
                     className="w-full px-0 py-3 bg-transparent border-b border-border/50 focus:border-foreground/40 focus:outline-none transition-all duration-300 resize-none text-foreground text-lg leading-relaxed placeholder:text-muted/40"
-                    required
                   />
                 </div>
                 <div className="pt-4">
@@ -199,52 +207,20 @@ const ContactSection: React.FC = () => {
                     }}
                   >
                     <span className="relative z-10 flex items-center justify-center gap-3">
-                      <span className="tracking-wide">Send Message</span>
-                      <IoSend className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <span className="tracking-wide">Book Discovery Call</span>
                     </span>
                   </button>
                 </div>
               </form>
-              
-              {/* Alternative Contact Option */}
-              <div className="mt-8 pt-6 border-t border-border/30">
-                <div className="text-center">
-                  <p className="text-muted/60 text-sm mb-3">Prefer to call directly?</p>
-                  <a
-                    href="tel:+971585127979"
-                    className="inline-flex items-center gap-3 px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105 active:scale-95"
-                    style={{
-                      background: "linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%)",
-                      border: "1px solid rgba(255, 255, 255, 0.08)",
-                      color: "rgba(255, 255, 255, 0.85)",
-                      boxShadow: "0 4px 16px -4px rgba(0, 0, 0, 0.2)",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "linear-gradient(135deg, rgba(220, 38, 38, 0.08) 0%, rgba(220, 38, 38, 0.04) 100%)";
-                      e.currentTarget.style.borderColor = "rgba(220, 38, 38, 0.2)";
-                      e.currentTarget.style.color = "rgba(255, 255, 255, 0.95)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%)";
-                      e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.08)";
-                      e.currentTarget.style.color = "rgba(255, 255, 255, 0.85)";
-                    }}
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      className="opacity-70"
-                    >
-                      <path
-                        d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                    <span className="tracking-wide">+971 58 512 7979</span>
-                  </a>
-                </div>
+
+
+              {/* Discovery Call Info */}
+              <div className="mt-6 text-center">
+                <p className="text-sm text-muted/70 mb-2">📅 30-minute discovery call</p>
+                <p className="text-xs text-muted/50">Free consultation • No commitment required</p>
               </div>
             </div>
           </div>

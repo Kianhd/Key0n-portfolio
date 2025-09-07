@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beat Licensing Options</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Tailwind config for custom colors and dark mode
+        tailwind.config = {
+            darkMode: 'media',
+            theme: {
+                extend: {
+                    colors: {
+                        'accent': '#dc2626',
+                        'accent-light': '#ef4444',
+                        'border-light': '#e5e7eb',
+                        'border-dark': '#374151',
+                    },
+                    animation: {
+                        'subtle-pulse': 'subtle-pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        'subtle-pulse': {
+                            '0%, 100%': { opacity: 1 },
+                            '50%': { opacity: 0.8 },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for horizontal scroll on mobile */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Tooltip styles */
+        .tooltip {
+            position: relative;
+        }
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            z-index: 50;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1f2937;
+            color: white;
+            text-align: center;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            transition: opacity 0.3s, visibility 0.3s;
+            pointer-events: none;
+        }
+        .tooltip:hover .tooltip-text,
+        .tooltip:focus-within .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        .tooltip .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1f2937 transparent transparent transparent;
+        }
+        
+        /* Dark mode tooltip */
+        @media (prefers-color-scheme: dark) {
+            .tooltip .tooltip-text {
+                background-color: #f3f4f6;
+                color: #1f2937;
+            }
+            .tooltip .tooltip-text::after {
+                border-color: #f3f4f6 transparent transparent transparent;
+            }
+        }
+        
+        /* Smooth gradient backgrounds for tier headers */
+        .tier-gradient-basic {
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+        }
+        .tier-gradient-standard {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        }
+        .tier-gradient-premium {
+            background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+        }
+        .tier-gradient-exclusive {
+            background: linear-gradient(135deg, #ddd6fe 0%, #c4b5fd 100%);
+        }
+        
+        /* Dark mode gradients */
+        @media (prefers-color-scheme: dark) {
+            .tier-gradient-basic {
+                background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+            }
+            .tier-gradient-standard {
+                background: linear-gradient(135deg, #78350f 0%, #92400e 100%);
+            }
+            .tier-gradient-premium {
+                background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+            }
+            .tier-gradient-exclusive {
+                background: linear-gradient(135deg, #4c1d95 0%, #5b21b6 100%);
+            }
+        }
+        
+        /* Mobile swipe indicator */
+        .swipe-indicator {
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1));
+        }
+        @media (prefers-color-scheme: dark) {
+            .swipe-indicator {
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1));
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto">
+        <!-- Header Section -->
+        <div class="text-center mb-10">
+            <h1 class="text-4xl sm:text-5xl font-bold mb-3 bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
+                Beat Licensing Options
+            </h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400">
+                Choose the license that fits your project. Upgrade anytime.
+            </p>
+        </div>
+
+        <!-- Mobile Tier Selector (visible on mobile only) -->
+        <div class="lg:hidden mb-6">
+            <div class="flex space-x-2 overflow-x-auto hide-scrollbar pb-2">
+                <button onclick="showMobileTier(0)" class="tier-pill px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-2 border-gray-300 dark:border-gray-600" data-tier="0">
+                    Basic Lease
+                </button>
+                <button onclick="showMobileTier(1)" class="tier-pill px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-2 border-transparent" data-tier="1">
+                    Standard Lease
+                </button>
+                <button onclick="showMobileTier(2)" class="tier-pill px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-2 border-transparent relative" data-tier="2">
+                    <span class="absolute -top-2 -right-2 bg-accent text-white text-xs px-2 py-0.5 rounded-full">Popular</span>
+                    Premium Lease
+                </button>
+                <button onclick="showMobileTier(3)" class="tier-pill px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-2 border-transparent" data-tier="3">
+                    Exclusive License
+                </button>
+            </div>
+        </div>
+
+        <!-- Desktop Table (hidden on mobile) -->
+        <div class="hidden lg:block overflow-hidden rounded-xl shadow-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <div class="overflow-x-auto">
+                <table class="w-full" role="table" aria-label="Beat licensing comparison table">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="sticky left-0 z-20 bg-gray-50 dark:bg-gray-900 px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-gray-100 border-r border-gray-200 dark:border-gray-700">
+                                Features
+                            </th>
+                            <th scope="col" class="px-6 py-4 text-center tier-gradient-basic">
+                                <div class="text-lg font-bold text-gray-900 dark:text-gray-100">Basic Lease</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">(MP3)</div>
+                            </th>
+                            <th scope="col" class="px-6 py-4 text-center tier-gradient-standard">
+                                <div class="text-lg font-bold text-gray-900 dark:text-gray-100">Standard Lease</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">(WAV + MP3)</div>
+                            </th>
+                            <th scope="col" class="px-6 py-4 text-center tier-gradient-premium relative">
+                                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                                    <span class="bg-accent text-white text-xs font-bold px-3 py-1 rounded-full animate-subtle-pulse">
+                                        Most Popular
+                                    </span>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 dark:text-gray-100 mt-3">Premium Lease</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">(Stems + WAV/MP3)</div>
+                            </th>
+                            <th scope="col" class="px-6 py-4 text-center tier-gradient-exclusive">
+                                <div class="text-lg font-bold text-gray-900 dark:text-gray-100">Exclusive License</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">(Unlimited)</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <!-- Audio Quality Row -->
+                        <tr>
+                            <th scope="row" class="sticky left-0 z-10 bg-white dark:bg-gray-800 px-6 py-4 text-left text-sm font-medium text-gray-900 dark:text-gray-100 border-r border-gray-200 dark:border-gray-700">
+                                Audio Quality
+                            </th>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">MP3 (High-Quality)</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">WAV + MP3 (Studio Quality)</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400 bg-red-50/30 dark:bg-red-900/10">WAV + MP3 + Full Stems</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">WAV + MP3 + Stems (All Rights)</td>
+                        </tr>
+                        
+                        <!-- Use For Row -->
+                        <tr>
+                            <th scope="row" class="sticky left-0 z-10 bg-white dark:bg-gray-800 px-6 py-4 text-left text-sm font-medium text-gray-900 dark:text-gray-100 border-r border-gray-200 dark:border-gray-700">
+                                Use For
+                            </th>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">Demo / Small Projects</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">Streaming, Social, Live Shows</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400 bg-red-50/30 dark:bg-red-900/10">Commercial Releases, Sync Projects</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">Unlimited Commercial Use</td>
+                        </tr>
+                        
+                        <!-- Streams/Views Cap Row -->
+                        <tr>
+                            <th scope="row" class="sticky left-0 z-10 bg-white dark:bg-gray-800 px-6 py-4 text-left text-sm font-medium text-gray-900 dark:text-gray-100 border-r border-gray-200 dark:border-gray-700">
+                                <span class="tooltip">
+                                    Streams / Views Cap
+                                    <svg class="inline-block w-4 h-4 ml-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span class="tooltip-text">Set per project</span>
+                                </span>
+                            </th>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">Limited</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">Higher Limit</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400 bg-red-50/30 dark:bg-red-900/10">Very High Limit</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">Unlimited</td>
+                        </tr>
+                        
+                        <!-- Radio/TV Use Row -->
+                        <tr>
+                            <th scope="row" class="sticky left-0 z-10 bg-white dark:bg-gray-800 px-6 py-4 text-left text-sm font-medium text-gray-900 dark:text-gray-100 border-r border-gray-200 dark:border-gray-700">
+                                Radio / TV Use
+                            </th>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">
+                                <span class="text-gray-400 dark:text-gray-600">No</span>
+                            </td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">Limited</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400 bg-red-50/30 dark:bg-red-900/10">
+                                <span class="text-green-600 dark:text-green-400 font-medium">Yes</span>
+                            </td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">Unlimited</td>
+                        </tr>
+                        
+                        <!-- Live Performances Row -->
+                        <tr>
+                            <th scope="row" class="sticky left-0 z-10 bg-white dark:bg-gray-800 px-6 py-4 text-left text-sm font-medium text-gray-900 dark:text-gray-100 border-r border-gray-200 dark:border-gray-700">
+                                Live Performances
+                            </th>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">Local Only</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">Regional / Online</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400 bg-red-50/30 dark:bg-red-900/10">Global</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">Unlimited</td>
+                        </tr>
+                        
+                        <!-- Edits/Remixes Row -->
+                        <tr>
+                            <th scope="row" class="sticky left-0 z-10 bg-white dark:bg-gray-800 px-6 py-4 text-left text-sm font-medium text-gray-900 dark:text-gray-100 border-r border-gray-200 dark:border-gray-700">
+                                Edits / Remixes Allowed
+                            </th>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">
+                                <span class="text-gray-400 dark:text-gray-600">No</span>
+                            </td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">Basic Edits Only</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400 bg-red-50/30 dark:bg-red-900/10">Full Flexibility (with stems)</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">Full Flexibility</td>
+                        </tr>
+                        
+                        <!-- Ownership Row -->
+                        <tr>
+                            <th scope="row" class="sticky left-0 z-10 bg-white dark:bg-gray-800 px-6 py-4 text-left text-sm font-medium text-gray-900 dark:text-gray-100 border-r border-gray-200 dark:border-gray-700">
+                                Ownership
+                            </th>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">Non-Exclusive</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">Non-Exclusive</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400 bg-red-50/30 dark:bg-red-900/10">Non-Exclusive</td>
+                            <td class="px-6 py-4 text-center text-sm font-medium text-purple-600 dark:text-purple-400">Exclusive (beat removed from catalog)</td>
+                        </tr>
+                        
+                        <!-- License Length Row -->
+                        <tr>
+                            <th scope="row" class="sticky left-0 z-10 bg-white dark:bg-gray-800 px-6 py-4 text-left text-sm font-medium text-gray-900 dark:text-gray-100 border-r border-gray-200 dark:border-gray-700">
+                                License Length
+                            </th>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">1 Year</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">2–3 Years</td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400 bg-red-50/30 dark:bg-red-900/10">5 Years</td>
+                            <td class="px-6 py-4 text-center text-sm font-medium text-purple-600 dark:text-purple-400">Lifetime</td>
+                        </tr>
+                        
+                        <!-- Upgrades Available Row -->
+                        <tr>
+                            <th scope="row" class="sticky left-0 z-10 bg-white dark:bg-gray-800 px-6 py-4 text-left text-sm font-medium text-gray-900 dark:text-gray-100 border-r border-gray-200 dark:border-gray-700">
+                                Upgrades Available
+                            </th>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">
+                                <span class="text-green-600 dark:text-green-400 font-medium">Yes</span>
+                            </td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">
+                                <span class="text-green-600 dark:text-green-400 font-medium">Yes</span>
+                            </td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400 bg-red-50/30 dark:bg-red-900/10">
+                                <span class="text-green-600 dark:text-green-400 font-medium">Yes</span>
+                            </td>
+                            <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">N/A</td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="bg-gray-50 dark:bg-gray-900">
+                        <tr>
+                            <td class="sticky left-0 z-10 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700"></td>
+                            <td class="px-6 py-6 text-center">
+                                <button class="px-6 py-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 dark:focus:ring-gray-100">
+                                    Choose Basic
+                                </button>
+                            </td>
+                            <td class="px-6 py-6 text-center">
+                                <button class="px-6 py-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 dark:focus:ring-gray-100">
+                                    Choose Standard
+                                </button>
+                            </td>
+                            <td class="px-6 py-6 text-center bg-red-50/30 dark:bg-red-900/10">
+                                <button class="px-6 py-3 bg-accent hover:bg-accent-light text-white rounded-lg font-medium transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent shadow-lg hover:shadow-xl">
+                                    Choose Premium
+                                </button>
+                            </td>
+                            <td class="px-6 py-6 text-center">
+                                <button class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-600">
+                                    Contact for Exclusive
+                                </button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <!-- Mobile Cards (visible on mobile only) -->
+        <div class="lg:hidden">
+            <!-- Basic Lease Card -->
+            <div class="mobile-tier-card rounded-xl shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-6" data-tier="0">
+                <div class="tier-gradient-basic p-6 rounded-t-xl">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">Basic Lease</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">(MP3)</p>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Audio Quality</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">MP3 (High-Quality)</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Use For</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Demo / Small Projects</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Streams / Views Cap</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Limited</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Radio / TV Use</span>
+                        <p class="text-sm text-gray-400 dark:text-gray-600 mt-1">No</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Live Performances</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Local Only</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Edits / Remixes</span>
+                        <p class="text-sm text-gray-400 dark:text-gray-600 mt-1">No</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Ownership</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Non-Exclusive</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">License Length</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">1 Year</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Upgrades Available</span>
+                        <p class="text-sm text-green-600 dark:text-green-400 font-medium mt-1">Yes</p>
+                    </div>
+                    <button class="w-full mt-6 px-6 py-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors duration-200">
+                        Choose Basic
+                    </button>
+                </div>
+            </div>
+
+            <!-- Standard Lease Card -->
+            <div class="mobile-tier-card hidden rounded-xl shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-6" data-tier="1">
+                <div class="tier-gradient-standard p-6 rounded-t-xl">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">Standard Lease</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">(WAV + MP3)</p>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Audio Quality</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">WAV + MP3 (Studio Quality)</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Use For</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Streaming, Social, Live Shows</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Streams / Views Cap</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Higher Limit</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Radio / TV Use</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Limited</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Live Performances</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Regional / Online</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Edits / Remixes</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Basic Edits Only</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Ownership</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Non-Exclusive</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">License Length</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">2–3 Years</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Upgrades Available</span>
+                        <p class="text-sm text-green-600 dark:text-green-400 font-medium mt-1">Yes</p>
+                    </div>
+                    <button class="w-full mt-6 px-6 py-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors duration-200">
+                        Choose Standard
+                    </button>
+                </div>
+            </div>
+
+            <!-- Premium Lease Card -->
+            <div class="mobile-tier-card hidden rounded-xl shadow-lg bg-white dark:bg-gray-800 border-2 border-accent/50 mb-6 relative" data-tier="2">
+                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                    <span class="bg-accent text-white text-xs font-bold px-3 py-1 rounded-full animate-subtle-pulse">
+                        Most Popular
+                    </span>
+                </div>
+                <div class="tier-gradient-premium p-6 rounded-t-xl">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-2">Premium Lease</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">(Stems + WAV/MP3)</p>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Audio Quality</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">WAV + MP3 + Full Stems</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Use For</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Commercial Releases, Sync Projects</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Streams / Views Cap</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Very High Limit</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Radio / TV Use</span>
+                        <p class="text-sm text-green-600 dark:text-green-400 font-medium mt-1">Yes</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Live Performances</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Global</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Edits / Remixes</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Full Flexibility (with stems)</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Ownership</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Non-Exclusive</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">License Length</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">5 Years</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Upgrades Available</span>
+                        <p class="text-sm text-green-600 dark:text-green-400 font-medium mt-1">Yes</p>
+                    </div>
+                    <button class="w-full mt-6 px-6 py-3 bg-accent hover:bg-accent-light text-white rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                        Choose Premium
+                    </button>
+                </div>
+            </div>
+
+            <!-- Exclusive License Card -->
+            <div class="mobile-tier-card hidden rounded-xl shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-6" data-tier="3">
+                <div class="tier-gradient-exclusive p-6 rounded-t-xl">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">Exclusive License</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">(Unlimited)</p>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Audio Quality</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">WAV + MP3 + Stems (All Rights)</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Use For</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Unlimited Commercial Use</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Streams / Views Cap</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Unlimited</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Radio / TV Use</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Unlimited</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Live Performances</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Unlimited</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Edits / Remixes</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">Full Flexibility</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Ownership</span>
+                        <p class="text-sm text-purple-600 dark:text-purple-400 font-medium mt-1">Exclusive (beat removed from catalog)</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">License Length</span>
+                        <p class="text-sm text-purple-600 dark:text-purple-400 font-medium mt-1">Lifetime</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Upgrades Available</span>
+                        <p class="text-sm text-gray-900 dark:text-gray-100 mt-1">N/A</p>
+                    </div>
+                    <button class="w-full mt-6 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors duration-200">
+                        Contact for Exclusive
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footnotes Section -->
+        <div class="mt-8 p-6 bg-gray-100 dark:bg-gray-800 rounded-xl">
+            <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li class="flex items-start">
+                    <svg class="w-4 h-4 mr-2 mt-0.5 text-gray-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    All limits are configurable in your license. Upgrade anytime; you only pay the difference.
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-4 h-4 mr-2 mt-0.5 text-gray-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    Exclusive purchases remove the beat from the catalog.
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-4 h-4 mr-2 mt-0.5 text-gray-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    Delivery includes BPM, Key, and platform-optimized formats; stems included where noted.
+                </li>
+            </ul>
+        </div>
+
+        <!-- Brand Notes Section -->
+        <div class="mt-8 space-y-4 text-center">
+            <p class="text-gray-700 dark:text-gray-300">
+                Works for artists, ads, TV commercials, films, trailers, games, and creators.
+            </p>
+            <p class="text-gray-700 dark:text-gray-300">
+                Start small with a lease. Upgrade to stems or exclusive when you're ready.
+            </p>
+            <p class="text-gray-700 dark:text-gray-300">
+                Clear, BeatStars-style licensing with premium delivery.
+            </p>
+        </div>
+    </div>
+
+    <!-- JavaScript for Mobile Tier Switching -->
+    <script>
+        // Mobile tier switching functionality
+        function showMobileTier(tierIndex) {
+            // Hide all tier cards
+            const allCards = document.querySelectorAll('.mobile-tier-card');
+            allCards.forEach(card => card.classList.add('hidden'));
+            
+            // Show selected tier card
+            const selectedCard = document.querySelector(`.mobile-tier-card[data-tier="${tierIndex}"]`);
+            if (selectedCard) {
+                selectedCard.classList.remove('hidden');
+            }
+            
+            // Update pill buttons
+            const allPills = document.querySelectorAll('.tier-pill');
+            allPills.forEach(pill => {
+                pill.classList.remove('border-gray-300', 'dark:border-gray-600');
+                pill.classList.add('border-transparent');
+            });
+            
+            const selectedPill = document.querySelector(`.tier-pill[data-tier="${tierIndex}"]`);
+            if (selectedPill) {
+                selectedPill.classList.remove('border-transparent');
+                selectedPill.classList.add('border-gray-300', 'dark:border-gray-600');
+            }
+        }
+
+        // Initialize with Basic tier selected
+        showMobileTier(0);
+
+        // Add keyboard navigation for tier pills
+        document.querySelectorAll('.tier-pill').forEach(pill => {
+            pill.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const tierIndex = pill.getAttribute('data-tier');
+                    showMobileTier(parseInt(tierIndex));
+                }
+            });
+        });
+
+        // Add smooth scroll behavior for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

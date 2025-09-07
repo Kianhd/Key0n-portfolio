@@ -10,7 +10,6 @@ import WorkSection from "./components/sections/WorkSection";
 import ServicesSection from "./components/sections/ServicesSection";
 import ContactSection from "./components/sections/ContactSection";
 import Footer from "./components/sections/Footer";
-import GradualBlur from "@/components/ui/gradual-blur";
 import { useScrollAnimation } from "./hooks/useScrollAnimation";
 import { useBrowserOptimizations } from "./hooks/useBrowserOptimizations";
 import {
@@ -52,7 +51,6 @@ export default function Home() {
   useScrollAnimation();
   const browserOpts = useBrowserOptimizations();
   const [isButtonHovered, setIsButtonHovered] = React.useState(false);
-  const [isNearBottom, setIsNearBottom] = React.useState(false);
 
   // Performance monitoring for Firefox debugging (development only)
   if (process.env.NODE_ENV === "development") {
@@ -70,35 +68,6 @@ export default function Home() {
     };
   }, [browserOpts.isZenBrowser]);
 
-  // Smart scroll detection for gradual blur fade-out near footer
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight;
-      const scrollTop = window.scrollY;
-      const clientHeight = window.innerHeight;
-      const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
-      
-      // Fade out blur when within 200px of bottom
-      setIsNearBottom(distanceFromBottom < 200);
-    };
-
-    // Throttle scroll events for performance
-    let ticking = false;
-    const throttledHandleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          handleScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener('scroll', throttledHandleScroll);
-    handleScroll(); // Check initial position
-    
-    return () => window.removeEventListener('scroll', throttledHandleScroll);
-  }, []);
 
   const brands: Brand[] = [
     { name: "Always", logo: "/Brands/Always Logo.png" },
@@ -256,23 +225,6 @@ export default function Home() {
       <ContactSection />
 
       <Footer socialLinks={socialLinks} />
-      
-      {/* Smart gradual blur that fades near footer for optimal UX */}
-      <GradualBlur
-        target="parent"
-        position="bottom"
-        height={isNearBottom ? "0rem" : "4rem"}
-        strength={1.5}
-        divCount={3}
-        curve="ease-out"
-        exponential={false}
-        opacity={isNearBottom ? 0 : 0.8}
-        className="pointer-events-none transition-all duration-500 ease-out"
-        style={{ 
-          position: 'fixed',
-          transition: 'height 0.5s ease-out, opacity 0.5s ease-out'
-        }}
-      />
     </div>
   );
 }
