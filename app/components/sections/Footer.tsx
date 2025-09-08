@@ -18,7 +18,20 @@ const Footer: React.FC<FooterProps> = ({ socialLinks }) => {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="text-small text-muted uppercase font-normal">
-            © 2025 Kian Hamed. All rights reserved.
+            <div className="flex flex-col items-center md:items-start gap-1">
+              <div>© 2025 Kian Hamed. All rights reserved.</div>
+              <div className="text-sm opacity-75 normal-case">
+                Crafted with precision by{" "}
+                <a 
+                  href="https://faezansari-portfolio.vercel.app/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-accent hover:text-accent/80 transition-colors duration-200 underline decoration-accent/50 hover:decoration-accent/80 underline-offset-2"
+                >
+                  Faez Ansari
+                </a>
+              </div>
+            </div>
           </div>
           <div className="flex gap-8">
             {socialLinks.map((link) => (
